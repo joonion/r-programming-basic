@@ -13,6 +13,10 @@ sample_metadata <- read.csv(input_path)
 head(sample_metadata)
 str(sample_metadata)
 
+# dplyr이 설치되지 않았다면 다음 줄을 콘솔에서 한 번 실행하세요.
+# install.packages("dplyr")
+library(dplyr)
+
 # 이 실습의 수치는 R 조건식 연습을 위한 예시입니다.
 # 실제 전사체 QC 기준은 데이터 분포와 실험 맥락을 검토해 정합니다.
 
@@ -56,7 +60,54 @@ sum(is_treated)
 # TODO: 선택된 샘플이 몇 개인지 계산하세요.
 
 
-# 실습 3: 여러 범주 중 하나 선택하기 ---------------------------------
+# 실습 3: 기본 R과 dplyr 필터링 비교하기 -----------------------------
+
+# 기본 R로 세포 수가 1200 이상인 행을 선택하세요.
+base_result <- sample_metadata[
+  sample_metadata$cell_count >= 1200,
+]
+
+# dplyr::filter()로 같은 행을 선택하세요.
+dplyr_result <- sample_metadata %>%
+  filter(cell_count >= 1200)
+
+base_result
+dplyr_result
+
+# 결과의 행 수와 sample_id를 비교하세요.
+nrow(base_result)
+nrow(dplyr_result)
+
+base_result$sample_id
+dplyr_result$sample_id
+
+# TODO: 기본 R과 filter()를 각각 사용하여
+# TODO: condition이 "treated"인 행을 선택하고 결과를 비교하세요.
+
+
+# 실습 4: 파이프와 데이터 마스킹 사용하기 ---------------------------
+
+# filter() 안에서는 데이터 프레임의 열 이름을 직접 사용합니다.
+min_cells <- 1200
+
+filtered_metadata <- sample_metadata %>%
+  filter(
+    cell_count >= min_cells,
+    median_genes >= 2000,
+    mito_percent < 8
+  ) %>%
+  select(sample_id, condition, cell_count, median_genes, mito_percent)
+
+filtered_metadata
+
+# dplyr:: 표기를 사용하면 함수의 패키지를 명시할 수 있습니다.
+dplyr::filter(sample_metadata, passed_qc)
+
+# TODO: doublet_rate가 결측값이 아닌 행을 filter()로 선택하세요.
+# TODO: 결과에서 sample_id와 doublet_rate 열만 select()로 선택하세요.
+
+
+# 실습 5: 여러 범주 중 하나 선택하기 ---------------------------------
 
 # batch_1 또는 batch_3에 속하는지 확인하세요.
 selected_batches <- c("batch_1", "batch_3")
@@ -70,7 +121,7 @@ sample_metadata[in_selected_batch, ]
 # TODO: %in%을 사용하여 선택하세요.
 
 
-# 실습 4: 논리 연산자로 조건 결합하기 --------------------------------
+# 실습 6: 논리 연산자로 조건 결합하기 --------------------------------
 
 # 세포 수와 미토콘드리아 비율 기준을 모두 만족하는지 확인하세요.
 cell_and_mito_condition <- enough_cells & low_mito
@@ -92,7 +143,7 @@ sample_metadata[failed_qc, ]
 # TODO: control 조건이면서 batch_1인 샘플을 선택하세요.
 
 
-# 실습 5: 여러 QC 조건으로 필터링하기 --------------------------------
+# 실습 7: 여러 QC 조건으로 필터링하기 --------------------------------
 
 # 각 QC 조건을 별도로 만드세요.
 enough_cells <- sample_metadata$cell_count >= 1200
@@ -118,7 +169,7 @@ nrow(sample_metadata)
 # 힌트: 비율은 sum(qc_condition) / length(qc_condition)입니다.
 
 
-# 실습 6: 결측값이 있는 조건 처리하기 -------------------------------
+# 실습 8: 결측값이 있는 조건 처리하기 -------------------------------
 
 # doublet_rate가 4 이하인지 비교하세요.
 low_doublet_rate <- sample_metadata$doublet_rate <= 4
@@ -139,7 +190,7 @@ sample_metadata[missing_doublet_rate, ]
 # TODO: doublet_rate가 측정됐고 3.5 미만인 샘플을 선택하세요.
 
 
-# 실습 7: any(), all(), which() 사용하기 ------------------------------
+# 실습 9: any(), all(), which() 사용하기 ------------------------------
 
 # 하나라도 높은 mito_percent 값을 가지는지 확인하세요.
 any(sample_metadata$mito_percent >= 8)
@@ -154,7 +205,7 @@ which(sample_metadata$passed_qc)
 # 힌트: duplicated(), any(), !를 사용합니다.
 
 
-# 실습 8: if와 if ... else 사용하기 ----------------------------------
+# 실습 10: if와 if ... else 사용하기 ---------------------------------
 
 # 단일 샘플의 값에 따라 메시지를 만드세요.
 cell_count <- 1240
@@ -182,7 +233,7 @@ qc_message
 # TODO: duplicate_message에 저장하는 if ... else 문을 작성하세요.
 
 
-# 실습 9: ifelse()로 열 만들기 ---------------------------------------
+# 실습 11: ifelse()로 열 만들기 --------------------------------------
 
 # 각 샘플의 조건에 따라 QC 레이블을 만드세요.
 sample_metadata$qc_label <- ifelse(
@@ -206,7 +257,7 @@ sample_metadata[, c("sample_id", "cell_count", "cell_count_group")]
 # TODO: condition_code 열을 만드세요.
 
 
-# 실습 10: 필터링 결과 저장하기 --------------------------------------
+# 실습 12: 필터링 결과 저장하기 --------------------------------------
 
 dir.create("results", showWarnings = FALSE)
 

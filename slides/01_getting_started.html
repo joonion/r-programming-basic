@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 1차시: R과 RStudio 시작하기</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -267,7 +270,7 @@
 <li>Enter를 누르면 명령이 즉시 실행됩니다.</li>
 <li>빠른 확인과 간단한 계산에 적합합니다.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="dv">10</span> <span class="sc">+</span> <span class="dv">5</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="dv">10</span> <span class="sc">+</span> <span class="dv">5</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="스크립트는-코드를-기록하는-파일이다" class="slide level2">
 <h2>스크립트는 코드를 기록하는 파일이다</h2>
@@ -279,9 +282,9 @@
 </section>
 <section id="r은-계산기처럼-사용할-수-있다" class="slide level2">
 <h2>R은 계산기처럼 사용할 수 있다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="dv">10</span> <span class="sc">+</span> <span class="dv">5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="dv">10</span> <span class="sc">+</span> <span class="dv">5</span></span>
 <span id="cb2-2"><a></a><span class="dv">20</span> <span class="sc">/</span> <span class="dv">4</span></span>
-<span id="cb2-3"><a></a>(<span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">4</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a></a>(<span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">4</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>괄호를 사용하면 계산 순서를 지정할 수 있습니다.</li>
 <li>입력한 코드와 출력된 결과를 구분해서 읽습니다.</li>
@@ -289,7 +292,7 @@
 </section>
 <section id="변수는-값에-붙이는-이름이다" class="slide level2">
 <h2>변수는 값에 붙이는 이름이다</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>계산에 사용할 값을 이름으로 저장합니다.</li>
 <li>저장한 값은 같은 이름으로 다시 사용할 수 있습니다.</li>
@@ -298,7 +301,7 @@
 </section>
 <section id="는-값을-저장하는-연산자다" class="slide level2">
 <h2><code>&lt;-</code>는 값을 저장하는 연산자다</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote>
 <p>오른쪽의 <code>1250</code>을 왼쪽의 <code>cell_count</code>에 저장합니다.</p>
 </blockquote>
@@ -308,8 +311,8 @@
 </section>
 <section id="주석은-코드를-설명하는-메모다" class="slide level2">
 <h2>주석은 코드를 설명하는 메모다</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># 세 샘플의 전체 세포 수를 계산한다.</span></span>
-<span id="cb5-2"><a></a>total_cells <span class="ot">&lt;-</span> <span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># 세 샘플의 전체 세포 수를 계산한다.</span></span>
+<span id="cb5-2"><a></a>total_cells <span class="ot">&lt;-</span> <span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>#</code> 뒤의 내용은 실행되지 않습니다.</li>
 <li>코드의 목적이나 중요한 학습 포인트를 기록합니다.</li>
@@ -322,7 +325,7 @@
 <li>주석을 한 줄 입력합니다.</li>
 <li><code>labs/01_getting_started.R</code>로 저장합니다.</li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># 1차시 실습: R과 RStudio 시작하기</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># 1차시 실습: R과 RStudio 시작하기</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="한-줄의-코드를-실행하기" class="slide level2">
 <h2>한 줄의 코드를 실행하기</h2>
@@ -331,16 +334,16 @@
 <li><code>Ctrl + Enter</code>를 누릅니다.</li>
 <li>Console에서 결과를 확인합니다.</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
-<span id="cb7-2"><a></a>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<span id="cb7-2"><a></a>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="여러-줄의-코드를-실행하기" class="slide level2">
 <h2>여러 줄의 코드를 실행하기</h2>
 <p>실행할 영역을 선택하고 <code>Ctrl + Enter</code>를 누릅니다.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>control_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>control_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
 <span id="cb8-2"><a></a>treated_cells <span class="ot">&lt;-</span> <span class="dv">1350</span></span>
 <span id="cb8-3"><a></a>total_cells <span class="ot">&lt;-</span> control_cells <span class="sc">+</span> treated_cells</span>
-<span id="cb8-4"><a></a>total_cells</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a></a>total_cells</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>코드는 위에서 아래로 실행됩니다.</p>
 </section>
 <section id="environment에서-변수-확인하기" class="slide level2">
@@ -356,8 +359,8 @@
 </section>
 <section id="오류-메시지를-읽는-첫-번째-방법" class="slide level2">
 <h2>오류 메시지를 읽는 첫 번째 방법</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
-<span id="cb9-2"><a></a>cell_cout</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<span id="cb9-2"><a></a>cell_cout</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li>오류가 발생한 코드와 메시지를 함께 봅니다.</li>
 <li>변수 이름의 철자를 먼저 확인합니다.</li>
@@ -371,14 +374,14 @@
 <li>자신의 이름과 날짜를 주석으로 작성합니다.</li>
 <li>파일을 저장합니다.</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># 이름: 홍길동</span></span>
-<span id="cb10-2"><a></a><span class="co"># 날짜: 2026-07-12</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># 이름: 홍길동</span></span>
+<span id="cb10-2"><a></a><span class="co"># 날짜: 2026-07-12</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="실습-1-기본-계산-실행하기" class="slide level2">
 <h2>실습 1: 기본 계산 실행하기</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span></span>
 <span id="cb11-2"><a></a><span class="dv">1200</span> <span class="sc">/</span> <span class="dv">3</span></span>
-<span id="cb11-3"><a></a>(<span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span>) <span class="sc">/</span> <span class="dv">3</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-3"><a></a>(<span class="dv">1200</span> <span class="sc">+</span> <span class="dv">1350</span> <span class="sc">+</span> <span class="dv">980</span>) <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>세 값의 합계는 얼마입니까?</li>
 <li>세 값의 평균은 얼마입니까?</li>
@@ -386,9 +389,9 @@
 </section>
 <section id="실습-2-값을-변수에-저장하기" class="slide level2">
 <h2>실습 2: 값을 변수에 저장하기</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>control_1_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>control_1_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
 <span id="cb12-2"><a></a>control_2_cells <span class="ot">&lt;-</span> <span class="dv">1350</span></span>
-<span id="cb12-3"><a></a>treated_cells <span class="ot">&lt;-</span> <span class="dv">980</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a></a>treated_cells <span class="ot">&lt;-</span> <span class="dv">980</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>세 줄을 실행합니다.</li>
 <li>Environment에서 변수 이름과 값을 확인합니다.</li>
@@ -396,20 +399,20 @@
 </section>
 <section id="실습-3-저장한-값으로-계산하기" class="slide level2">
 <h2>실습 3: 저장한 값으로 계산하기</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>total_cells <span class="ot">&lt;-</span> control_1_cells <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>total_cells <span class="ot">&lt;-</span> control_1_cells <span class="sc">+</span></span>
 <span id="cb13-2"><a></a>  control_2_cells <span class="sc">+</span></span>
 <span id="cb13-3"><a></a>  treated_cells</span>
 <span id="cb13-4"><a></a></span>
-<span id="cb13-5"><a></a>total_cells</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-5"><a></a>total_cells</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>세 샘플의 평균을 계산해 <code>mean_cells</code>에 저장합니다.</p>
 </section>
 <section id="실습-4-오류를-찾아-수정하기" class="slide level2">
 <h2>실습 4: 오류를 찾아 수정하기</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_volume <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_volume <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb14-2"><a></a>sample_concentration <span class="ot">&lt;-</span> <span class="dv">20</span></span>
 <span id="cb14-3"><a></a></span>
 <span id="cb14-4"><a></a>sample_amount <span class="ot">&lt;-</span> sample_volum <span class="sc">*</span> sample_concentration</span>
-<span id="cb14-5"><a></a>sample_amount</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a></a>sample_amount</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li>오류 메시지를 확인합니다.</li>
 <li>잘못된 변수 이름을 찾습니다.</li>
@@ -627,7 +630,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -701,13 +704,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -722,7 +726,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

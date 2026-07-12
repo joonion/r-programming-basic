@@ -361,7 +361,7 @@
     "href": "slides/10_summaries_and_visualization.html#오늘의-학습-목표",
     "title": "10차시: 데이터 요약과 시각화",
     "section": "오늘의 학습 목표",
-    "text": "오늘의 학습 목표\n\n전체 데이터와 그룹별 데이터를 기초 통계량으로 요약할 수 있다.\n분석 질문과 자료형에 맞는 기본 그래프를 선택할 수 있다.\n제목, 축 이름, 색상이 포함된 그래프를 작성할 수 있다.\n요약표와 그래프를 파일로 저장하고 확인할 수 있다."
+    "text": "오늘의 학습 목표\n\n전체 데이터와 그룹별 데이터를 기초 통계량으로 요약할 수 있다.\n분석 질문과 자료형에 맞는 ggplot2 그래프를 선택할 수 있다.\n그래프를 객체로 저장하고 patchwork로 조합할 수 있다.\n요약표와 그래프를 파일로 저장하고 확인할 수 있다."
   },
   {
     "objectID": "slides/10_summaries_and_visualization.html#선수-지식",
@@ -518,6 +518,62 @@
     "text": "표시할 자릿수를 정리한다\ncondition_summary$cell_count &lt;-\n  round(condition_summary$cell_count, digits = 1)\n\ncondition_summary$mito_percent &lt;-\n  round(condition_summary$mito_percent, digits = 2)\n\nround()는 표시할 소수점 자릿수를 정리합니다.\n원본 측정값을 바꾸기보다 요약 결과의 표시를 정리합니다."
   },
   {
+    "objectID": "slides/10_summaries_and_visualization.html#dplyr로-그룹별-요약을-읽기-쉽게-표현한다",
+    "href": "slides/10_summaries_and_visualization.html#dplyr로-그룹별-요약을-읽기-쉽게-표현한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "dplyr로 그룹별 요약을 읽기 쉽게 표현한다",
+    "text": "dplyr로 그룹별 요약을 읽기 쉽게 표현한다\nlibrary(dplyr)\n\ndplyr_summary &lt;- sample_metadata %&gt;%\n  group_by(condition) %&gt;%\n  summarise(\n    mean_cells = mean(cell_count),\n    .groups = \"drop\"\n  )\n\ndplyr_summary\n기본 R의 tapply()와 aggregate()를 다른 문법으로 표현한 것입니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#group_by는-뒤의-계산에-사용할-그룹을-지정한다",
+    "href": "slides/10_summaries_and_visualization.html#group_by는-뒤의-계산에-사용할-그룹을-지정한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "group_by()는 뒤의 계산에 사용할 그룹을 지정한다",
+    "text": "group_by()는 뒤의 계산에 사용할 그룹을 지정한다\ngrouped_metadata &lt;- sample_metadata %&gt;%\n  group_by(condition)\n\ngrouped_metadata\n\n데이터의 행이 즉시 분리되는 것은 아닙니다.\n객체에 그룹 정보가 추가됩니다.\n이후 summarise()와 slice_head() 등이 그룹별로 동작합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#summarise는-그룹마다-요약-행을-만든다",
+    "href": "slides/10_summaries_and_visualization.html#summarise는-그룹마다-요약-행을-만든다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "summarise()는 그룹마다 요약 행을 만든다",
+    "text": "summarise()는 그룹마다 요약 행을 만든다\ncondition_summary_dplyr &lt;- sample_metadata %&gt;%\n  group_by(condition) %&gt;%\n  summarise(\n    sample_count = n(),\n    mean_cells = mean(cell_count),\n    median_cells = median(cell_count),\n    mean_mito = mean(mito_percent),\n    .groups = \"drop\"\n  )\n\ncondition_summary_dplyr\n\nn()은 각 그룹의 행 개수를 반환합니다.\n각 요약식은 결과 데이터의 한 열이 됩니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#결측값-처리는-기존-함수와-같다",
+    "href": "slides/10_summaries_and_visualization.html#결측값-처리는-기존-함수와-같다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "결측값 처리는 기존 함수와 같다",
+    "text": "결측값 처리는 기존 함수와 같다\ndoublet_summary &lt;- sample_metadata %&gt;%\n  group_by(condition) %&gt;%\n  summarise(\n    mean_doublet = mean(doublet_rate, na.rm = TRUE),\n    missing_count = sum(is.na(doublet_rate)),\n    .groups = \"drop\"\n  )\n데이터 마스킹으로 열 이름을 직접 쓰지만 mean()과 is.na()의 의미는 같습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#ungroup은-그룹-상태를-제거한다",
+    "href": "slides/10_summaries_and_visualization.html#ungroup은-그룹-상태를-제거한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "ungroup()은 그룹 상태를 제거한다",
+    "text": "ungroup()은 그룹 상태를 제거한다\ngrouped_metadata &lt;- sample_metadata %&gt;%\n  group_by(condition)\n\nungrouped_metadata &lt;- grouped_metadata %&gt;%\n  ungroup()\n\n그룹 상태가 필요 없어진 시점에 제거할 수 있습니다.\nsummarise(.groups = \"drop\")도 요약 후 그룹을 제거합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#arrange는-행의-순서를-정한다",
+    "href": "slides/10_summaries_and_visualization.html#arrange는-행의-순서를-정한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "arrange()는 행의 순서를 정한다",
+    "text": "arrange()는 행의 순서를 정한다\nsample_metadata %&gt;%\n  arrange(desc(cell_count))\n\narrange(cell_count)는 작은 값부터 정렬합니다.\ndesc(cell_count)는 큰 값부터 정렬합니다.\n원본 데이터의 값은 바뀌지 않고 행 순서만 달라집니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#slice_head는-그룹마다-처음-n개-행을-선택한다",
+    "href": "slides/10_summaries_and_visualization.html#slice_head는-그룹마다-처음-n개-행을-선택한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "slice_head()는 그룹마다 처음 n개 행을 선택한다",
+    "text": "slice_head()는 그룹마다 처음 n개 행을 선택한다\ntop_samples &lt;- sample_metadata %&gt;%\n  group_by(condition) %&gt;%\n  arrange(desc(cell_count)) %&gt;%\n  slice_head(n = 2) %&gt;%\n  ungroup()\n\ntop_samples\n먼저 정렬한 뒤 slice_head()를 사용해야 큰 값 순서의 상위 행을 선택할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#seurat-마커-결과도-같은-흐름으로-정리한다",
+    "href": "slides/10_summaries_and_visualization.html#seurat-마커-결과도-같은-흐름으로-정리한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "Seurat 마커 결과도 같은 흐름으로 정리한다",
+    "text": "Seurat 마커 결과도 같은 흐름으로 정리한다\ntop_markers &lt;- pbmc_markers %&gt;%\n  group_by(cluster) %&gt;%\n  filter(avg_log2FC &gt; 1) %&gt;%\n  arrange(desc(avg_log2FC)) %&gt;%\n  slice_head(n = 2) %&gt;%\n  ungroup()\n공식 PBMC 튜토리얼의 그룹별 상위 마커 선택과 같은 구조입니다."
+  },
+  {
     "objectID": "slides/10_summaries_and_visualization.html#그래프는-질문에-맞게-선택한다",
     "href": "slides/10_summaries_and_visualization.html#그래프는-질문에-맞게-선택한다",
     "title": "10차시: 데이터 요약과 시각화",
@@ -616,6 +672,69 @@
     "text": "축 이름에는 변수와 단위를 적는다\nxlab = \"미토콘드리아 유전자 비율 (%)\"\nylab = \"세포 수\"\n\n열 이름을 그대로 복사하기보다 사람이 이해할 표현을 사용합니다.\n단위가 있으면 괄호 안에 표시합니다."
   },
   {
+    "objectID": "slides/10_summaries_and_visualization.html#ggplot2는-같은-문법으로-여러-그래프를-만든다",
+    "href": "slides/10_summaries_and_visualization.html#ggplot2는-같은-문법으로-여러-그래프를-만든다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "ggplot2는 같은 문법으로 여러 그래프를 만든다",
+    "text": "ggplot2는 같은 문법으로 여러 그래프를 만든다\n# 콘솔에서 한 번만 실행\n# install.packages(\"ggplot2\")\n# install.packages(\"patchwork\")\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n기본 R 그래프는 빠른 확인에 유용합니다.\nggplot2는 데이터, 표현 규칙, 그래프 종류를 층으로 조합합니다.\npatchwork는 완성된 그래프 여러 개를 한 화면에 배치합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프는-데이터-aes-geom_에서-시작한다",
+    "href": "slides/10_summaries_and_visualization.html#그래프는-데이터-aes-geom_에서-시작한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프는 데이터, aes(), geom_*()에서 시작한다",
+    "text": "그래프는 데이터, aes(), geom_*()에서 시작한다\nggplot(\n  data = sample_metadata,\n  mapping = aes(x = cell_count, y = median_genes)\n) +\n  geom_point()\n\ndata: 사용할 데이터 프레임\naes(): 열을 축, 색상 등에 연결하는 규칙\ngeom_*(): 점, 막대, 상자와 같은 표현 방법"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#aes에서도-데이터-마스킹-문법을-사용한다",
+    "href": "slides/10_summaries_and_visualization.html#aes에서도-데이터-마스킹-문법을-사용한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "aes()에서도 데이터 마스킹 문법을 사용한다",
+    "text": "aes()에서도 데이터 마스킹 문법을 사용한다\nggplot(sample_metadata,\n       aes(x = cell_count, y = median_genes,\n           color = condition)) +\n  geom_point(size = 3)\naes() 안에서는 sample_metadata$cell_count 대신 열 이름을 바로 씁니다. 7차시의 filter()와 같은 데이터 마스킹 문법입니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#연결할-값과-고정할-값은-위치가-다르다",
+    "href": "slides/10_summaries_and_visualization.html#연결할-값과-고정할-값은-위치가-다르다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "연결할 값과 고정할 값은 위치가 다르다",
+    "text": "연결할 값과 고정할 값은 위치가 다르다\n# condition 값에 따라 색상이 달라진다.\naes(color = condition)\n\n# 모든 점을 같은 색으로 그린다.\ngeom_point(color = \"#2563EB\")\n데이터 열과 연결할 값은 aes() 안에, 고정할 값은 밖에 둡니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#질문에-맞는-geom_을-선택한다",
+    "href": "slides/10_summaries_and_visualization.html#질문에-맞는-geom_을-선택한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "질문에 맞는 geom_*()을 선택한다",
+    "text": "질문에 맞는 geom_*()을 선택한다\nggplot(sample_metadata, aes(x = condition)) +\n  geom_bar()\n\nggplot(sample_metadata, aes(x = cell_count)) +\n  geom_histogram(binwidth = 150)\n\nggplot(sample_metadata,\n       aes(x = condition, y = cell_count)) +\n  geom_boxplot()\n막대는 개수, 히스토그램은 분포, 상자그림은 그룹별 분포를 보여 줍니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#labs와-테마로-설명을-정돈한다",
+    "href": "slides/10_summaries_and_visualization.html#labs와-테마로-설명을-정돈한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "labs()와 테마로 설명을 정돈한다",
+    "text": "labs()와 테마로 설명을 정돈한다\nrelationship_plot &lt;- ggplot(\n  sample_metadata,\n  aes(x = cell_count, y = median_genes,\n      color = condition)\n) +\n  geom_point(size = 3) +\n  labs(\n    title = \"세포 수와 검출 유전자 수의 관계\",\n    x = \"세포 수\",\n    y = \"검출 유전자 수 중앙값\",\n    color = \"실험 조건\"\n  ) +\n  theme_minimal(base_size = 14)"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#범주-색상은-분석-전체에서-일관되게-사용한다",
+    "href": "slides/10_summaries_and_visualization.html#범주-색상은-분석-전체에서-일관되게-사용한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "범주 색상은 분석 전체에서 일관되게 사용한다",
+    "text": "범주 색상은 분석 전체에서 일관되게 사용한다\ncondition_colors &lt;- c(\n  control = \"#2563EB\",\n  treated = \"#B45309\"\n)\n\nrelationship_plot &lt;- relationship_plot +\n  scale_color_manual(values = condition_colors)\n같은 범주는 여러 그래프에서 같은 색으로 표현합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프도-이름을-붙여-저장하는-r-객체다",
+    "href": "slides/10_summaries_and_visualization.html#그래프도-이름을-붙여-저장하는-r-객체다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프도 이름을 붙여 저장하는 R 객체다",
+    "text": "그래프도 이름을 붙여 저장하는 R 객체다\nclass(relationship_plot)\n\nrelationship_plot\n그래프 객체는 다시 표시하거나, 제목과 층을 더하거나, 다른 그래프와 조합할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#patchwork로-그래프를-조합한다",
+    "href": "slides/10_summaries_and_visualization.html#patchwork로-그래프를-조합한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "patchwork로 그래프를 조합한다",
+    "text": "patchwork로 그래프를 조합한다\ncell_box_plot &lt;- ggplot(\n  sample_metadata,\n  aes(x = condition, y = cell_count,\n      fill = condition)\n) +\n  geom_boxplot()\n\ncombined_plot &lt;- cell_box_plot | relationship_plot\n\ncombined_plot +\n  plot_annotation(title = \"PBMC 샘플 QC 요약\")\n\n|: 좌우 배치\n/: 위아래 배치\nSeurat의 여러 QC 그래프도 같은 방식으로 조합할 수 있습니다."
+  },
+  {
     "objectID": "slides/10_summaries_and_visualization.html#그래프를-해석할-때-주의한다",
     "href": "slides/10_summaries_and_visualization.html#그래프를-해석할-때-주의한다",
     "title": "10차시: 데이터 요약과 시각화",
@@ -700,18 +819,32 @@
     "text": "실습 4: 결과 저장하기\nwrite.csv(\n  condition_summary,\n  \"results/condition_summary.csv\",\n  row.names = FALSE\n)\n\npng(\"results/cell_count_by_condition.png\")\nboxplot(cell_count ~ condition, data = sample_metadata)\ndev.off()\n저장한 표와 그래프 파일을 직접 열어 확인합니다."
   },
   {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-5-dplyr로-그룹별-요약하기",
+    "href": "slides/10_summaries_and_visualization.html#실습-5-dplyr로-그룹별-요약하기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 5: dplyr로 그룹별 요약하기",
+    "text": "실습 5: dplyr로 그룹별 요약하기\ncondition_summary_dplyr &lt;- sample_metadata %&gt;%\n  group_by(condition) %&gt;%\n  summarise(\n    sample_count = n(),\n    mean_cells = mean(cell_count),\n    mean_genes = mean(median_genes),\n    .groups = \"drop\"\n  )\naggregate() 결과와 행 수 및 평균값을 비교합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-6-그룹별-상위-마커-선택하기",
+    "href": "slides/10_summaries_and_visualization.html#실습-6-그룹별-상위-마커-선택하기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 6: 그룹별 상위 마커 선택하기",
+    "text": "실습 6: 그룹별 상위 마커 선택하기\ntop_markers &lt;- pbmc_markers %&gt;%\n  group_by(cluster) %&gt;%\n  filter(avg_log2FC &gt; 1) %&gt;%\n  arrange(desc(avg_log2FC)) %&gt;%\n  slice_head(n = 2) %&gt;%\n  ungroup()\n각 cluster에서 어떤 유전자가 선택됐는지 확인합니다."
+  },
+  {
     "objectID": "slides/10_summaries_and_visualization.html#오늘-배운-내용",
     "href": "slides/10_summaries_and_visualization.html#오늘-배운-내용",
     "title": "10차시: 데이터 요약과 시각화",
     "section": "오늘 배운 내용",
-    "text": "오늘 배운 내용\n\n전체 요약과 그룹별 요약은 서로 다른 질문에 답합니다.\ntable(), tapply(), aggregate()로 그룹 정보를 요약할 수 있습니다.\n질문과 자료형에 맞춰 막대그래프, 히스토그램, 상자그림, 산점도를 선택합니다.\n제목, 축 이름, 범례로 그래프의 의미를 설명합니다.\n요약표는 write.csv(), 그래프는 png()와 dev.off()로 저장합니다."
+    "text": "오늘 배운 내용\n\n전체 요약과 그룹별 요약은 서로 다른 질문에 답합니다.\ntable(), tapply(), aggregate()로 그룹 정보를 요약할 수 있습니다.\ndplyr의 group_by()와 summarise()로 그룹별 요약표를 만들 수 있습니다.\narrange()와 slice_head()로 그룹별 상위 행을 선택할 수 있습니다.\n질문과 자료형에 맞춰 막대그래프, 히스토그램, 상자그림, 산점도를 선택합니다.\n제목, 축 이름, 범례로 그래프의 의미를 설명합니다.\n요약표는 write.csv(), 그래프는 png()와 dev.off()로 저장합니다."
   },
   {
     "objectID": "slides/10_summaries_and_visualization.html#종료-점검과-다음-차시",
     "href": "slides/10_summaries_and_visualization.html#종료-점검과-다음-차시",
     "title": "10차시: 데이터 요약과 시각화",
     "section": "종료 점검과 다음 차시",
-    "text": "종료 점검과 다음 차시\n\ntapply()의 세 가지 주요 인자는 무엇입니까?\n그룹별 숫자형 분포를 비교하려면 어떤 그래프가 적합합니까?\n두 숫자형 변수의 관계는 어떤 그래프로 확인합니까?\nPNG 그래프 저장을 마칠 때 어떤 함수를 실행합니까?\n\n다음 차시: 패키지를 사용하고 리스트와 복잡한 R 객체의 구조 살펴보기"
+    "text": "종료 점검과 다음 차시\n\ntapply()의 세 가지 주요 인자는 무엇입니까?\ngroup_by()와 summarise()는 각각 어떤 역할을 합니까?\n그룹별 상위 행을 선택하기 전에 왜 정렬해야 합니까?\n그룹별 숫자형 분포를 비교하려면 어떤 그래프가 적합합니까?\nPNG 그래프 저장을 마칠 때 어떤 함수를 실행합니까?\n\n다음 차시: 패키지를 사용하고 리스트와 복잡한 R 객체의 구조 살펴보기"
   },
   {
     "objectID": "slides/08_loops_and_vectorization.html#오늘의-학습-목표",
@@ -1239,11 +1372,361 @@
     "text": "종료 점검과 다음 차시\n\n상대 경로를 사용하면 어떤 점이 좋습니까?\n파일을 불러온 직후 어떤 항목을 확인해야 합니까?\n열별 결측값 개수는 어떻게 계산합니까?\nCSV 저장 시 row.names = FALSE를 사용하는 이유는 무엇입니까?\n\n다음 차시: 여러 조건을 결합하여 필요한 행을 선택하고 코드의 실행 흐름 제어하기"
   },
   {
-    "objectID": "slides/04_matrices_and_factors.html#학습-목표",
-    "href": "slides/04_matrices_and_factors.html#학습-목표",
+    "objectID": "slides/04_matrices_and_factors.html#오늘의-학습-목표",
+    "href": "slides/04_matrices_and_factors.html#오늘의-학습-목표",
     "title": "4차시: 행렬과 팩터",
-    "section": "학습 목표",
-    "text": "학습 목표\n\n벡터를 이용해 행렬을 만들 수 있다.\n행과 열을 선택하고 기본 요약값을 계산할 수 있다.\n범주형 데이터를 팩터로 표현할 수 있다."
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n벡터를 행과 열로 배치하여 행렬을 만들 수 있다.\n행렬의 구조를 확인하고 필요한 행, 열, 원소를 선택할 수 있다.\n행과 열 방향으로 기초 요약값을 계산할 수 있다.\n범주형 데이터를 팩터로 표현하고 수준을 확인할 수 있다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#선수-지식",
+    "href": "slides/04_matrices_and_factors.html#선수-지식",
+    "title": "4차시: 행렬과 팩터",
+    "section": "선수 지식",
+    "text": "선수 지식\n\nc()로 벡터를 만들 수 있습니다.\n위치, 이름, 조건을 사용해 벡터의 원소를 선택할 수 있습니다.\n숫자형, 문자형, 논리형 자료를 구분할 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행렬은-같은-자료형의-값을-행과-열로-배치한다",
+    "href": "slides/04_matrices_and_factors.html#행렬은-같은-자료형의-값을-행과-열로-배치한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행렬은 같은 자료형의 값을 행과 열로 배치한다",
+    "text": "행렬은 같은 자료형의 값을 행과 열로 배치한다\n        cell_1  cell_2  cell_3\ngene_1       5       0       3\ngene_2       1       4       0\ngene_3       0       2       6\n\n가로 방향은 행, 세로 방향은 열입니다.\n행렬의 모든 원소는 같은 자료형을 가집니다.\n전사체 count matrix는 보통 유전자가 행, 세포가 열입니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#벡터와-행렬의-차이",
+    "href": "slides/04_matrices_and_factors.html#벡터와-행렬의-차이",
+    "title": "4차시: 행렬과 팩터",
+    "section": "벡터와 행렬의 차이",
+    "text": "벡터와 행렬의 차이\n\n\n\n구조\n차원\n선택 방법\n\n\n\n\n벡터\n1차원\nvalues[position]\n\n\n행렬\n2차원\nvalues[row, column]\n\n\n\n행렬에서는 쉼표 앞이 행, 뒤가 열입니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#matrix로-행렬을-만든다",
+    "href": "slides/04_matrices_and_factors.html#matrix로-행렬을-만든다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "matrix()로 행렬을 만든다",
+    "text": "matrix()로 행렬을 만든다\nexpression_matrix &lt;- matrix(\n  1:12,\n  nrow = 3,\n  ncol = 4\n)\n\nexpression_matrix\n\n첫 번째 인자는 배치할 값입니다.\nnrow는 행 수, ncol은 열 수입니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#기본값은-열-방향으로-값을-채운다",
+    "href": "slides/04_matrices_and_factors.html#기본값은-열-방향으로-값을-채운다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "기본값은 열 방향으로 값을 채운다",
+    "text": "기본값은 열 방향으로 값을 채운다\nmatrix(\n  1:12,\n  nrow = 3,\n  ncol = 4\n)\n     [,1] [,2] [,3] [,4]\n[1,]    1    4    7   10\n[2,]    2    5    8   11\n[3,]    3    6    9   12\nR은 기본적으로 한 열을 먼저 채운 뒤 다음 열로 이동합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#byrow-true는-행-방향으로-채운다",
+    "href": "slides/04_matrices_and_factors.html#byrow-true는-행-방향으로-채운다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "byrow = TRUE는 행 방향으로 채운다",
+    "text": "byrow = TRUE는 행 방향으로 채운다\nmatrix(\n  1:12,\n  nrow = 3,\n  ncol = 4,\n  byrow = TRUE\n)\n값을 읽는 순서에 따라 byrow 설정을 결정합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#값의-개수와-행렬-크기를-맞춘다",
+    "href": "slides/04_matrices_and_factors.html#값의-개수와-행렬-크기를-맞춘다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "값의 개수와 행렬 크기를 맞춘다",
+    "text": "값의 개수와 행렬 크기를 맞춘다\nvalues &lt;- 1:12\n\nlength(values)\n3 * 4\n\n3행 4열에는 원소 12개가 필요합니다.\n값의 개수가 부족하면 R이 값을 반복해서 채울 수 있습니다.\n의도하지 않은 반복을 피하려면 크기를 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행렬의-구조를-확인한다",
+    "href": "slides/04_matrices_and_factors.html#행렬의-구조를-확인한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행렬의 구조를 확인한다",
+    "text": "행렬의 구조를 확인한다\nexpression_matrix &lt;- matrix(1:12, nrow = 3)\n\nclass(expression_matrix)\ntypeof(expression_matrix)\ndim(expression_matrix)\ndim()은 행 수와 열 수를 차례로 반환합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행-수와-열-수를-각각-확인한다",
+    "href": "slides/04_matrices_and_factors.html#행-수와-열-수를-각각-확인한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행 수와 열 수를 각각 확인한다",
+    "text": "행 수와 열 수를 각각 확인한다\nnrow(expression_matrix)\nncol(expression_matrix)\nlength(expression_matrix)\n\nnrow()는 행 수를 반환합니다.\nncol()은 열 수를 반환합니다.\nlength()는 전체 원소 수를 반환합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행과-열에-이름을-붙인다",
+    "href": "slides/04_matrices_and_factors.html#행과-열에-이름을-붙인다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행과 열에 이름을 붙인다",
+    "text": "행과 열에 이름을 붙인다\nrownames(expression_matrix) &lt;- c(\n  \"MS4A1\", \"CD3D\", \"LYZ\"\n)\n\ncolnames(expression_matrix) &lt;- c(\n  \"cell_1\", \"cell_2\", \"cell_3\", \"cell_4\"\n)\n\nexpression_matrix\n행과 열 이름은 각 값의 의미를 알려 줍니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#rownames와-colnames로-이름을-확인한다",
+    "href": "slides/04_matrices_and_factors.html#rownames와-colnames로-이름을-확인한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "rownames()와 colnames()로 이름을 확인한다",
+    "text": "rownames()와 colnames()로 이름을 확인한다\nrownames(expression_matrix)\ncolnames(expression_matrix)\n\n행 이름은 유전자 이름처럼 관측 변수의 식별자일 수 있습니다.\n열 이름은 세포 바코드나 샘플 이름일 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행-열로-원소-하나를-선택한다",
+    "href": "slides/04_matrices_and_factors.html#행-열로-원소-하나를-선택한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "[행, 열]로 원소 하나를 선택한다",
+    "text": "[행, 열]로 원소 하나를 선택한다\nexpression_matrix[1, 2]\nexpression_matrix[\"MS4A1\", \"cell_2\"]\n위치 번호 또는 이름을 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#한-행의-모든-열을-선택한다",
+    "href": "slides/04_matrices_and_factors.html#한-행의-모든-열을-선택한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "한 행의 모든 열을 선택한다",
+    "text": "한 행의 모든 열을 선택한다\nexpression_matrix[1, ]\nexpression_matrix[\"MS4A1\", ]\n쉼표 뒤를 비워 두면 모든 열을 선택합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#한-열의-모든-행을-선택한다",
+    "href": "slides/04_matrices_and_factors.html#한-열의-모든-행을-선택한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "한 열의 모든 행을 선택한다",
+    "text": "한 열의 모든 행을 선택한다\nexpression_matrix[, 2]\nexpression_matrix[, \"cell_2\"]\n쉼표 앞을 비워 두면 모든 행을 선택합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#여러-행과-열을-선택한다",
+    "href": "slides/04_matrices_and_factors.html#여러-행과-열을-선택한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "여러 행과 열을 선택한다",
+    "text": "여러 행과 열을 선택한다\nexpression_matrix[\n  c(\"MS4A1\", \"LYZ\"),\n  c(\"cell_1\", \"cell_3\")\n]\n행 이름 벡터와 열 이름 벡터를 함께 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#한-행이나-열을-선택하면-벡터가-될-수-있다",
+    "href": "slides/04_matrices_and_factors.html#한-행이나-열을-선택하면-벡터가-될-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "한 행이나 열을 선택하면 벡터가 될 수 있다",
+    "text": "한 행이나 열을 선택하면 벡터가 될 수 있다\none_gene &lt;- expression_matrix[\"MS4A1\", ]\n\nclass(one_gene)\ndim(one_gene)\nR은 결과의 차원이 하나만 남으면 기본적으로 벡터로 단순화합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#drop-false로-행렬-구조를-유지한다",
+    "href": "slides/04_matrices_and_factors.html#drop-false로-행렬-구조를-유지한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "drop = FALSE로 행렬 구조를 유지한다",
+    "text": "drop = FALSE로 행렬 구조를 유지한다\none_gene_matrix &lt;- expression_matrix[\n  \"MS4A1\",\n  ,\n  drop = FALSE\n]\n\nclass(one_gene_matrix)\ndim(one_gene_matrix)\n후속 함수가 행렬을 요구할 때 유용합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#조건으로-행렬의-값을-선택할-수-있다",
+    "href": "slides/04_matrices_and_factors.html#조건으로-행렬의-값을-선택할-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "조건으로 행렬의 값을 선택할 수 있다",
+    "text": "조건으로 행렬의 값을 선택할 수 있다\nexpression_matrix &gt; 5\nexpression_matrix[expression_matrix &gt; 5]\n\n비교 결과는 같은 크기의 논리형 행렬입니다.\n조건으로 선택한 최종 결과는 벡터가 됩니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행렬-연산은-모든-원소에-적용된다",
+    "href": "slides/04_matrices_and_factors.html#행렬-연산은-모든-원소에-적용된다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행렬 연산은 모든 원소에 적용된다",
+    "text": "행렬 연산은 모든 원소에 적용된다\nexpression_matrix + 1\nexpression_matrix * 2\nexpression_matrix / 10\n벡터와 마찬가지로 산술 연산이 각 원소에 적용됩니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#같은-크기의-행렬끼리-원소별-계산을-한다",
+    "href": "slides/04_matrices_and_factors.html#같은-크기의-행렬끼리-원소별-계산을-한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "같은 크기의 행렬끼리 원소별 계산을 한다",
+    "text": "같은 크기의 행렬끼리 원소별 계산을 한다\nmatrix_a &lt;- matrix(1:6, nrow = 2)\nmatrix_b &lt;- matrix(7:12, nrow = 2)\n\nmatrix_a + matrix_b\nmatrix_a * matrix_b\n같은 위치의 원소끼리 계산됩니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#는-원소별-곱셈이다",
+    "href": "slides/04_matrices_and_factors.html#는-원소별-곱셈이다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "*는 원소별 곱셈이다",
+    "text": "*는 원소별 곱셈이다\nmatrix_a * matrix_b\n수학의 행렬 곱셈과는 다릅니다. 행렬 곱셈에는 %*%를 사용하지만, 이 과정에서는 원소별 계산을 중심으로 학습합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#rowsums는-행별-합계를-계산한다",
+    "href": "slides/04_matrices_and_factors.html#rowsums는-행별-합계를-계산한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "rowSums()는 행별 합계를 계산한다",
+    "text": "rowSums()는 행별 합계를 계산한다\nrowSums(expression_matrix)\n전사체 행렬에서 행이 유전자라면 각 유전자의 전체 발현량을 계산합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#colsums는-열별-합계를-계산한다",
+    "href": "slides/04_matrices_and_factors.html#colsums는-열별-합계를-계산한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "colSums()는 열별 합계를 계산한다",
+    "text": "colSums()는 열별 합계를 계산한다\ncolSums(expression_matrix)\n전사체 행렬에서 열이 세포라면 각 세포의 전체 count를 계산합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#행과-열-방향의-평균을-계산한다",
+    "href": "slides/04_matrices_and_factors.html#행과-열-방향의-평균을-계산한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "행과 열 방향의 평균을 계산한다",
+    "text": "행과 열 방향의 평균을 계산한다\nrowMeans(expression_matrix)\ncolMeans(expression_matrix)\n\n\n\n함수\n계산 방향\n\n\n\n\nrowMeans()\n각 행의 평균\n\n\ncolMeans()\n각 열의 평균"
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#apply로-방향과-함수를-지정할-수-있다",
+    "href": "slides/04_matrices_and_factors.html#apply로-방향과-함수를-지정할-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "apply()로 방향과 함수를 지정할 수 있다",
+    "text": "apply()로 방향과 함수를 지정할 수 있다\napply(expression_matrix, 1, max)\napply(expression_matrix, 2, max)\n\n두 번째 인자 1은 행 방향입니다.\n두 번째 인자 2는 열 방향입니다.\n합계와 평균은 rowSums() 등의 전용 함수를 우선 사용합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#전사체-count-matrix의-방향을-기억한다",
+    "href": "slides/04_matrices_and_factors.html#전사체-count-matrix의-방향을-기억한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "전사체 count matrix의 방향을 기억한다",
+    "text": "전사체 count matrix의 방향을 기억한다\n                세포 또는 샘플\n             cell_1 cell_2 cell_3\n유전자 MS4A1      5      0      3\n       CD3D       1      4      0\n       LYZ        0      2      6\n\n행: feature 또는 gene\n열: cell 또는 sample\n원소: 해당 유전자와 세포의 count"
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#count-matrix에는-0이-매우-많다",
+    "href": "slides/04_matrices_and_factors.html#count-matrix에는-0이-매우-많다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "count matrix에는 0이 매우 많다",
+    "text": "count matrix에는 0이 매우 많다\n\n단일세포 전사체 행렬의 많은 값은 0입니다.\n모든 0을 메모리에 저장하면 공간이 많이 필요합니다.\nSeurat는 0이 아닌 값 중심으로 저장하는 희소 행렬을 사용합니다.\n희소 행렬의 실제 생성과 조작은 Seurat 부록 차시에서 다룹니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#팩터는-범주형-데이터를-표현한다",
+    "href": "slides/04_matrices_and_factors.html#팩터는-범주형-데이터를-표현한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "팩터는 범주형 데이터를 표현한다",
+    "text": "팩터는 범주형 데이터를 표현한다\nconditions &lt;- factor(\n  c(\"control\", \"control\", \"treated\", \"treated\")\n)\n\nconditions\nclass(conditions)\n팩터는 값과 함께 가능한 범주의 목록을 저장합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#팩터의-범주를-수준이라고-한다",
+    "href": "slides/04_matrices_and_factors.html#팩터의-범주를-수준이라고-한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "팩터의 범주를 수준이라고 한다",
+    "text": "팩터의 범주를 수준이라고 한다\nlevels(conditions)\nnlevels(conditions)\n\nlevels()는 수준 이름을 반환합니다.\nnlevels()는 수준의 개수를 반환합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#문자형-벡터와-팩터는-다르다",
+    "href": "slides/04_matrices_and_factors.html#문자형-벡터와-팩터는-다르다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "문자형 벡터와 팩터는 다르다",
+    "text": "문자형 벡터와 팩터는 다르다\ncondition_text &lt;- c(\n  \"control\", \"control\", \"treated\", \"treated\"\n)\n\ncondition_factor &lt;- factor(condition_text)\n\nclass(condition_text)\nclass(condition_factor)\n팩터는 어떤 범주가 가능한지와 범주의 순서를 함께 관리합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#수준의-순서를-직접-지정할-수-있다",
+    "href": "slides/04_matrices_and_factors.html#수준의-순서를-직접-지정할-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "수준의 순서를 직접 지정할 수 있다",
+    "text": "수준의 순서를 직접 지정할 수 있다\ncondition_factor &lt;- factor(\n  condition_text,\n  levels = c(\"control\", \"treated\")\n)\n\nlevels(condition_factor)\n그래프나 요약표에서 범주가 나타나는 순서에 영향을 줄 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#관측되지-않은-수준도-미리-지정할-수-있다",
+    "href": "slides/04_matrices_and_factors.html#관측되지-않은-수준도-미리-지정할-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "관측되지 않은 수준도 미리 지정할 수 있다",
+    "text": "관측되지 않은 수준도 미리 지정할 수 있다\ncell_types &lt;- factor(\n  c(\"B\", \"T\", \"T\"),\n  levels = c(\"B\", \"T\", \"NK\")\n)\n\ncell_types\nlevels(cell_types)\n현재 값에 NK가 없어도 가능한 범주로 유지됩니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#table로-수준별-개수를-센다",
+    "href": "slides/04_matrices_and_factors.html#table로-수준별-개수를-센다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "table()로 수준별 개수를 센다",
+    "text": "table()로 수준별 개수를 센다\ntable(condition_factor)\ntable(cell_types)\n관측되지 않은 수준은 개수 0으로 표시될 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#팩터의-일부를-선택해도-수준은-남을-수-있다",
+    "href": "slides/04_matrices_and_factors.html#팩터의-일부를-선택해도-수준은-남을-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "팩터의 일부를 선택해도 수준은 남을 수 있다",
+    "text": "팩터의 일부를 선택해도 수준은 남을 수 있다\nselected_types &lt;- cell_types[cell_types != \"NK\"]\n\nselected_types\nlevels(selected_types)\n값을 선택하는 것과 수준을 제거하는 것은 서로 다른 작업입니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#droplevels로-사용하지-않는-수준을-제거한다",
+    "href": "slides/04_matrices_and_factors.html#droplevels로-사용하지-않는-수준을-제거한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "droplevels()로 사용하지 않는 수준을 제거한다",
+    "text": "droplevels()로 사용하지 않는 수준을 제거한다\nselected_types &lt;- droplevels(selected_types)\nlevels(selected_types)\n데이터를 필터링한 뒤 남은 범주만 필요할 때 사용합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#relevel로-기준-수준을-바꿀-수-있다",
+    "href": "slides/04_matrices_and_factors.html#relevel로-기준-수준을-바꿀-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "relevel()로 기준 수준을 바꿀 수 있다",
+    "text": "relevel()로 기준 수준을 바꿀 수 있다\ncondition_factor &lt;- relevel(\n  condition_factor,\n  ref = \"control\"\n)\n\nlevels(condition_factor)\n통계 모델에서 어떤 범주를 기준으로 비교할지 정할 때 중요합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#팩터를-문자형으로-변환한다",
+    "href": "slides/04_matrices_and_factors.html#팩터를-문자형으로-변환한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "팩터를 문자형으로 변환한다",
+    "text": "팩터를 문자형으로 변환한다\nas.character(condition_factor)\n팩터의 표시값을 문자열로 사용할 때 명시적으로 변환합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#숫자처럼-보이는-팩터를-변환할-때-주의한다",
+    "href": "slides/04_matrices_and_factors.html#숫자처럼-보이는-팩터를-변환할-때-주의한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "숫자처럼 보이는 팩터를 변환할 때 주의한다",
+    "text": "숫자처럼 보이는 팩터를 변환할 때 주의한다\nscore_factor &lt;- factor(c(\"10\", \"20\", \"30\"))\n\nas.numeric(score_factor)\nas.numeric(as.character(score_factor))\n\nas.numeric(factor)는 내부 수준 번호를 반환합니다.\n실제 숫자값이 필요하면 문자형을 거쳐 변환합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#cluster-identity는-팩터처럼-관리된다",
+    "href": "slides/04_matrices_and_factors.html#cluster-identity는-팩터처럼-관리된다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "cluster identity는 팩터처럼 관리된다",
+    "text": "cluster identity는 팩터처럼 관리된다\ncluster_ids &lt;- factor(\n  c(\"0\", \"0\", \"1\", \"2\", \"1\"),\n  levels = c(\"0\", \"1\", \"2\")\n)\n\nlevels(cluster_ids)\ntable(cluster_ids)\nSeurat에서는 세포의 cluster identity도 수준이 있는 범주형 정보로 다룹니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#cluster-이름을-세포-유형과-대응할-수-있다",
+    "href": "slides/04_matrices_and_factors.html#cluster-이름을-세포-유형과-대응할-수-있다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "cluster 이름을 세포 유형과 대응할 수 있다",
+    "text": "cluster 이름을 세포 유형과 대응할 수 있다\ncell_type_names &lt;- c(\n  \"0\" = \"T cell\",\n  \"1\" = \"B cell\",\n  \"2\" = \"Monocyte\"\n)\n\ncell_type_names\n이름이 있는 벡터를 사용하면 기존 cluster ID와 새 세포 유형 이름을 대응시킬 수 있습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#흔한-오류-1-행과-열의-순서를-바꾼다",
+    "href": "slides/04_matrices_and_factors.html#흔한-오류-1-행과-열의-순서를-바꾼다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "흔한 오류 1: 행과 열의 순서를 바꾼다",
+    "text": "흔한 오류 1: 행과 열의 순서를 바꾼다\nexpression_matrix[\"MS4A1\", \"cell_2\"]\n대괄호를 볼 때 항상 [행, 열]이라고 읽습니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#흔한-오류-2-존재하지-않는-이름을-선택한다",
+    "href": "slides/04_matrices_and_factors.html#흔한-오류-2-존재하지-않는-이름을-선택한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "흔한 오류 2: 존재하지 않는 이름을 선택한다",
+    "text": "흔한 오류 2: 존재하지 않는 이름을 선택한다\nrownames(expression_matrix)\ncolnames(expression_matrix)\n원소를 선택하기 전에 실제 행과 열 이름의 철자와 대소문자를 확인합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#흔한-오류-3-선택-결과의-차원이-사라진다",
+    "href": "slides/04_matrices_and_factors.html#흔한-오류-3-선택-결과의-차원이-사라진다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "흔한 오류 3: 선택 결과의 차원이 사라진다",
+    "text": "흔한 오류 3: 선택 결과의 차원이 사라진다\nexpression_matrix[\"MS4A1\", , drop = FALSE]\n행렬 구조가 필요한 후속 작업에는 drop = FALSE를 사용합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#흔한-오류-4-팩터를-바로-숫자로-변환한다",
+    "href": "slides/04_matrices_and_factors.html#흔한-오류-4-팩터를-바로-숫자로-변환한다",
+    "title": "4차시: 행렬과 팩터",
+    "section": "흔한 오류 4: 팩터를 바로 숫자로 변환한다",
+    "text": "흔한 오류 4: 팩터를 바로 숫자로 변환한다\nas.numeric(as.character(score_factor))\n표시된 숫자와 팩터 내부 수준 번호를 구분합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#실습-1-작은-발현-행렬-만들기",
+    "href": "slides/04_matrices_and_factors.html#실습-1-작은-발현-행렬-만들기",
+    "title": "4차시: 행렬과 팩터",
+    "section": "실습 1: 작은 발현 행렬 만들기",
+    "text": "실습 1: 작은 발현 행렬 만들기\nexpression_matrix &lt;- matrix(\n  c(\n    5, 0, 3,\n    1, 4, 0,\n    0, 2, 6\n  ),\n  nrow = 3,\n  byrow = TRUE\n)\n행과 열 이름을 붙이고 구조를 확인합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#실습-2-유전자와-세포-선택하기",
+    "href": "slides/04_matrices_and_factors.html#실습-2-유전자와-세포-선택하기",
+    "title": "4차시: 행렬과 팩터",
+    "section": "실습 2: 유전자와 세포 선택하기",
+    "text": "실습 2: 유전자와 세포 선택하기\nexpression_matrix[\"MS4A1\", ]\nexpression_matrix[, \"cell_2\"]\nexpression_matrix[\n  c(\"MS4A1\", \"LYZ\"),\n  c(\"cell_1\", \"cell_3\")\n]\n각 선택 결과의 자료형과 차원을 확인합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#실습-3-행과-열-방향으로-요약하기",
+    "href": "slides/04_matrices_and_factors.html#실습-3-행과-열-방향으로-요약하기",
+    "title": "4차시: 행렬과 팩터",
+    "section": "실습 3: 행과 열 방향으로 요약하기",
+    "text": "실습 3: 행과 열 방향으로 요약하기\nrowSums(expression_matrix)\ncolSums(expression_matrix)\nrowMeans(expression_matrix)\ncolMeans(expression_matrix)\n어떤 함수가 유전자별, 세포별 결과를 만드는지 설명합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#실습-4-조건과-cluster를-팩터로-만들기",
+    "href": "slides/04_matrices_and_factors.html#실습-4-조건과-cluster를-팩터로-만들기",
+    "title": "4차시: 행렬과 팩터",
+    "section": "실습 4: 조건과 cluster를 팩터로 만들기",
+    "text": "실습 4: 조건과 cluster를 팩터로 만들기\nconditions &lt;- factor(\n  c(\"control\", \"control\", \"treated\"),\n  levels = c(\"control\", \"treated\")\n)\n\ncluster_ids &lt;- factor(\n  c(\"0\", \"1\", \"1\"),\n  levels = c(\"0\", \"1\", \"2\")\n)\n각 팩터의 수준과 개수를 확인합니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#오늘-배운-내용",
+    "href": "slides/04_matrices_and_factors.html#오늘-배운-내용",
+    "title": "4차시: 행렬과 팩터",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n행렬은 같은 자료형의 값을 행과 열로 배치합니다.\n행렬 원소는 [행, 열]로 선택합니다.\nrowSums()와 colSums()는 계산 방향이 다릅니다.\n팩터는 값과 가능한 수준을 함께 저장합니다.\n유전자 × 세포 행렬과 cluster factor는 Seurat 객체를 이해하는 기초입니다."
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#종료-점검과-다음-차시",
+    "href": "slides/04_matrices_and_factors.html#종료-점검과-다음-차시",
+    "title": "4차시: 행렬과 팩터",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n전사체 count matrix에서 일반적으로 행과 열은 각각 무엇입니까?\n한 행을 행렬로 유지하려면 어떤 인자를 사용합니까?\nrowMeans()와 colMeans()의 계산 방향은 어떻게 다릅니까?\n팩터의 값과 수준은 어떻게 다릅니까?\n\n다음 차시: 여러 자료형의 열을 하나의 데이터 프레임으로 관리하기"
   },
   {
     "objectID": "slides/02_variables_and_types.html#오늘의-학습-목표",
@@ -2191,6 +2674,69 @@
     "text": "조건을 직접 작성할 수도 있다\nsample_metadata[\n  sample_metadata$cell_count &gt;= 1200,\n]\n조건을 변수에 먼저 저장하면 중간 결과를 확인하기 쉽고, 직접 작성하면 코드가 짧아집니다."
   },
   {
+    "objectID": "slides/07_conditions_and_filtering.html#dplyr은-데이터-프레임-작업을-읽기-쉽게-표현한다",
+    "href": "slides/07_conditions_and_filtering.html#dplyr은-데이터-프레임-작업을-읽기-쉽게-표현한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "dplyr은 데이터 프레임 작업을 읽기 쉽게 표현한다",
+    "text": "dplyr은 데이터 프레임 작업을 읽기 쉽게 표현한다\n# 최초 한 번만 실행한다.\n# install.packages(\"dplyr\")\n\nlibrary(dplyr)\n\ndplyr은 데이터 프레임을 선택하고 변환하는 함수를 제공합니다.\n설치는 한 번, library()는 새 R 세션마다 실행합니다.\n이 차시에서는 기본 R과 dplyr 표현을 함께 비교합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#기본-r과-filter는-같은-조건을-다르게-표현한다",
+    "href": "slides/07_conditions_and_filtering.html#기본-r과-filter는-같은-조건을-다르게-표현한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "기본 R과 filter()는 같은 조건을 다르게 표현한다",
+    "text": "기본 R과 filter()는 같은 조건을 다르게 표현한다\n# 기본 R\nsample_metadata[\n  sample_metadata$cell_count &gt;= 1200,\n]\n\n# dplyr\nfilter(sample_metadata, cell_count &gt;= 1200)\n두 코드는 세포 수가 1200 이상인 행을 선택합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#데이터-마스킹에서는-열-이름을-직접-쓴다",
+    "href": "slides/07_conditions_and_filtering.html#데이터-마스킹에서는-열-이름을-직접-쓴다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "데이터 마스킹에서는 열 이름을 직접 쓴다",
+    "text": "데이터 마스킹에서는 열 이름을 직접 쓴다\n# 함수 밖에서는 객체와 열 이름을 함께 쓴다.\nsample_metadata$cell_count\n\n# filter() 안에서는 열 이름을 직접 쓸 수 있다.\nfilter(sample_metadata, cell_count &gt;= 1200)\nfilter()가 첫 번째 입력 데이터의 열 이름을 먼저 찾기 때문입니다. 이를 데이터 마스킹이라고 합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#데이터-마스킹의-범위를-구분한다",
+    "href": "slides/07_conditions_and_filtering.html#데이터-마스킹의-범위를-구분한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "데이터 마스킹의 범위를 구분한다",
+    "text": "데이터 마스킹의 범위를 구분한다\nmin_cells &lt;- 1200\n\nfilter(\n  sample_metadata,\n  cell_count &gt;= min_cells\n)\n\ncell_count는 sample_metadata 안의 열입니다.\nmin_cells는 함수 밖에서 만든 변수입니다.\n열 이름과 외부 변수 이름을 서로 다르게 작성하면 혼동을 줄일 수 있습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#는-왼쪽-결과를-다음-함수로-전달한다",
+    "href": "slides/07_conditions_and_filtering.html#는-왼쪽-결과를-다음-함수로-전달한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "%>%는 왼쪽 결과를 다음 함수로 전달한다",
+    "text": "%&gt;%는 왼쪽 결과를 다음 함수로 전달한다\nsample_metadata %&gt;%\n  filter(cell_count &gt;= 1200)\n위 코드는 다음 함수 호출과 같은 의미입니다.\nfilter(sample_metadata, cell_count &gt;= 1200)\n\n%&gt;%는 “그다음”이라고 읽으면 분석 순서를 이해하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#파이프를-사용해-여러-단계를-연결한다",
+    "href": "slides/07_conditions_and_filtering.html#파이프를-사용해-여러-단계를-연결한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "파이프를 사용해 여러 단계를 연결한다",
+    "text": "파이프를 사용해 여러 단계를 연결한다\nfiltered_metadata &lt;- sample_metadata %&gt;%\n  filter(cell_count &gt;= 1200) %&gt;%\n  select(sample_id, condition, cell_count)\n\nfiltered_metadata\n\nfilter()는 행을 선택합니다.\nselect()는 열을 선택합니다.\n결과는 기존 방식대로 &lt;-로 저장합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#filter에서-여러-조건을-결합한다",
+    "href": "slides/07_conditions_and_filtering.html#filter에서-여러-조건을-결합한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "filter()에서 여러 조건을 결합한다",
+    "text": "filter()에서 여러 조건을 결합한다\nsample_metadata %&gt;%\n  filter(\n    cell_count &gt;= 1200,\n    median_genes &gt;= 2000,\n    mito_percent &lt; 8\n  )\n쉼표로 나눈 조건은 모두 만족해야 하므로 &로 결합한 것과 같습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#기존-논리-연산자를-그대로-사용할-수-있다",
+    "href": "slides/07_conditions_and_filtering.html#기존-논리-연산자를-그대로-사용할-수-있다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "기존 논리 연산자를 그대로 사용할 수 있다",
+    "text": "기존 논리 연산자를 그대로 사용할 수 있다\nsample_metadata %&gt;%\n  filter(\n    condition == \"treated\" |\n      batch == \"batch_1\"\n  )\n\nsample_metadata %&gt;%\n  filter(!is.na(doublet_rate))\n&, |, !, %in%, is.na()의 의미는 기본 R과 같습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#dplyr로-함수의-출처를-표시할-수-있다",
+    "href": "slides/07_conditions_and_filtering.html#dplyr로-함수의-출처를-표시할-수-있다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "dplyr::로 함수의 출처를 표시할 수 있다",
+    "text": "dplyr::로 함수의 출처를 표시할 수 있다\ndplyr::filter(\n  sample_metadata,\n  cell_count &gt;= 1200\n)\n\n패키지::함수는 어느 패키지의 함수인지 명확히 보여 줍니다.\n같은 이름의 함수가 여러 패키지에 있을 때 특히 유용합니다.\n이 표기는 library(dplyr) 없이도 사용할 수 있습니다."
+  },
+  {
     "objectID": "slides/07_conditions_and_filtering.html#문자형-열도-비교할-수-있다",
     "href": "slides/07_conditions_and_filtering.html#문자형-열도-비교할-수-있다",
     "title": "7차시: 조건식과 데이터 필터링",
@@ -2394,18 +2940,32 @@
     "text": "실습 4: 조건에 따라 결과 만들기\nsample_metadata$qc_label &lt;- ifelse(\n  qc_condition,\n  \"pass\",\n  \"review\"\n)\n\nsample_metadata[, c(\"sample_id\", \"qc_label\")]\nif ... else로 전체 데이터의 QC 상태 메시지도 만듭니다."
   },
   {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-5-기본-r과-dplyr-비교하기",
+    "href": "slides/07_conditions_and_filtering.html#실습-5-기본-r과-dplyr-비교하기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 5: 기본 R과 dplyr 비교하기",
+    "text": "실습 5: 기본 R과 dplyr 비교하기\nbase_result &lt;- sample_metadata[\n  sample_metadata$cell_count &gt;= 1200,\n]\n\ndplyr_result &lt;- sample_metadata %&gt;%\n  filter(cell_count &gt;= 1200)\n두 결과의 행 수와 샘플 ID를 비교합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-6-파이프로-행과-열-선택하기",
+    "href": "slides/07_conditions_and_filtering.html#실습-6-파이프로-행과-열-선택하기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 6: 파이프로 행과 열 선택하기",
+    "text": "실습 6: 파이프로 행과 열 선택하기\nqc_overview &lt;- sample_metadata %&gt;%\n  filter(passed_qc, !is.na(doublet_rate)) %&gt;%\n  select(sample_id, condition, cell_count, doublet_rate)\n\nqc_overview\n각 함수가 행과 열 중 무엇을 선택하는지 설명합니다."
+  },
+  {
     "objectID": "slides/07_conditions_and_filtering.html#오늘-배운-내용",
     "href": "slides/07_conditions_and_filtering.html#오늘-배운-내용",
     "title": "7차시: 조건식과 데이터 필터링",
     "section": "오늘 배운 내용",
-    "text": "오늘 배운 내용\n\n비교 연산자는 조건별 TRUE, FALSE를 만듭니다.\n&, |, !로 여러 조건을 결합하거나 반대로 바꿉니다.\n논리형 벡터를 [행, 열]의 행 위치에 사용해 필터링합니다.\n결측값이 있는 조건에는 is.na() 처리를 함께 고려합니다.\n단일 실행 흐름에는 if, 원소별 결과에는 ifelse()를 사용합니다."
+    "text": "오늘 배운 내용\n\n비교 연산자는 조건별 TRUE, FALSE를 만듭니다.\n&, |, !로 여러 조건을 결합하거나 반대로 바꿉니다.\n논리형 벡터를 [행, 열]의 행 위치에 사용해 필터링합니다.\ndplyr의 filter()와 select()로 행과 열을 선택할 수 있습니다.\n데이터 마스킹에서는 함수 안에서 열 이름을 직접 사용합니다.\n%&gt;%로 분석 단계를 위에서 아래로 연결할 수 있습니다.\n결측값이 있는 조건에는 is.na() 처리를 함께 고려합니다.\n단일 실행 흐름에는 if, 원소별 결과에는 ifelse()를 사용합니다."
   },
   {
     "objectID": "slides/07_conditions_and_filtering.html#종료-점검과-다음-차시",
     "href": "slides/07_conditions_and_filtering.html#종료-점검과-다음-차시",
     "title": "7차시: 조건식과 데이터 필터링",
     "section": "종료 점검과 다음 차시",
-    "text": "종료 점검과 다음 차시\n\n=와 ==는 어떻게 다릅니까?\n두 조건을 모두 만족하는 행은 어떤 연산자로 찾습니까?\n결측값 여부는 어떤 함수로 확인합니까?\nif와 ifelse()는 언제 각각 사용합니까?\n\n다음 차시: 여러 값에 같은 작업을 반복하고 벡터화 연산과 비교하기"
+    "text": "종료 점검과 다음 차시\n\n=와 ==는 어떻게 다릅니까?\n두 조건을 모두 만족하는 행은 어떤 연산자로 찾습니까?\n결측값 여부는 어떤 함수로 확인합니까?\nfilter() 안에서 열 이름을 직접 쓸 수 있는 이유는 무엇입니까?\nif와 ifelse()는 언제 각각 사용합니까?\n\n다음 차시: 여러 값에 같은 작업을 반복하고 벡터화 연산과 비교하기"
   },
   {
     "objectID": "slides/09_functions.html#오늘의-학습-목표",
@@ -2727,7 +3287,7 @@
     "href": "slides/11_packages_lists_and_objects.html#오늘의-학습-목표",
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "오늘의 학습 목표",
-    "text": "오늘의 학습 목표\n\n패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.\n서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.\nclass(), str(), attributes()로 객체 구조를 조사할 수 있다.\n복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다."
+    "text": "오늘의 학습 목표\n\n패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.\n서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.\nclass(), str(), attributes()로 객체 구조를 조사할 수 있다.\nggplot2와 Seurat의 시각화 결과가 R 객체임을 설명할 수 있다.\n복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#선수-지식",
@@ -3022,6 +3582,41 @@
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "사용 가능한 메서드를 확인할 수 있다",
     "text": "사용 가능한 메서드를 확인할 수 있다\nhead(methods(\"summary\"))\n\nR의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.\n입문 단계에서는 먼저 class()와 도움말로 올바른 사용법을 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#ggplot2-그래프도-조사할-수-있는-r-객체다",
+    "href": "slides/11_packages_lists_and_objects.html#ggplot2-그래프도-조사할-수-있는-r-객체다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "ggplot2 그래프도 조사할 수 있는 R 객체다",
+    "text": "ggplot2 그래프도 조사할 수 있는 R 객체다\nlibrary(ggplot2)\n\nqc_plot &lt;- ggplot(\n  sample_metadata,\n  aes(x = condition, y = cell_count)\n) +\n  geom_boxplot()\n\nclass(qc_plot)\n그래프를 화면에 그리는 명령의 결과를 이름에 저장하면 다시 사용하고 수정할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#기존-그래프-객체에-층을-더할-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#기존-그래프-객체에-층을-더할-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "기존 그래프 객체에 층을 더할 수 있다",
+    "text": "기존 그래프 객체에 층을 더할 수 있다\nlabeled_plot &lt;- qc_plot +\n  labs(\n    title = \"실험 조건별 세포 수\",\n    x = \"실험 조건\",\n    y = \"세포 수\"\n  ) +\n  theme_minimal()\n원본 qc_plot은 유지되고, 설명이 추가된 새 객체가 만들어집니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#patchwork-결과도-하나의-복합-객체다",
+    "href": "slides/11_packages_lists_and_objects.html#patchwork-결과도-하나의-복합-객체다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "patchwork 결과도 하나의 복합 객체다",
+    "text": "patchwork 결과도 하나의 복합 객체다\nlibrary(patchwork)\n\nrelationship_plot &lt;- ggplot(\n  sample_metadata,\n  aes(x = cell_count, y = median_genes)\n) +\n  geom_point()\n\ncombined_plot &lt;- labeled_plot | relationship_plot\nclass(combined_plot)\n완성된 그래프를 객체로 다루기 때문에 조합과 저장을 단계적으로 수행할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#seurat-시각화-함수도-그래프-객체를-반환한다",
+    "href": "slides/11_packages_lists_and_objects.html#seurat-시각화-함수도-그래프-객체를-반환한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "Seurat 시각화 함수도 그래프 객체를 반환한다",
+    "text": "Seurat 시각화 함수도 그래프 객체를 반환한다\n# 부록의 Seurat 실습에서 실행\numap_plot &lt;- DimPlot(pbmc, reduction = \"umap\")\n\nclass(umap_plot)\numap_plot + ggtitle(\"PBMC 세포 군집\")\nDimPlot(), FeaturePlot(), VlnPlot()의 결과도 이름에 저장해 제목을 더하거나 patchwork로 조합할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#그래프-객체는-ggsave로-명시해-저장한다",
+    "href": "slides/11_packages_lists_and_objects.html#그래프-객체는-ggsave로-명시해-저장한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "그래프 객체는 ggsave()로 명시해 저장한다",
+    "text": "그래프 객체는 ggsave()로 명시해 저장한다\nggsave(\n  filename = \"results/qc_plot.png\",\n  plot = labeled_plot,\n  width = 7,\n  height = 5,\n  dpi = 150\n)\nplot 인자에 저장할 객체를 명시하면 마지막으로 표시된 그래프에 의존하지 않습니다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#복잡한-분석-객체는-구조를-먼저-확인한다",

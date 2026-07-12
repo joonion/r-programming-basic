@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 3차시: 벡터와 인덱싱</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -218,9 +221,9 @@
 </section>
 <section id="차시-복습-변수-하나에-값-하나-저장하기" class="slide level2">
 <h2>2차시 복습: 변수 하나에 값 하나 저장하기</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>control_1_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>control_1_cells <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
 <span id="cb1-2"><a></a>control_2_cells <span class="ot">&lt;-</span> <span class="dv">1350</span></span>
-<span id="cb1-3"><a></a>treated_1_cells <span class="ot">&lt;-</span> <span class="dv">980</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a></a>treated_1_cells <span class="ot">&lt;-</span> <span class="dv">980</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>변수가 많아질수록 같은 코드를 반복해서 작성하게 됩니다.</li>
 <li>여러 값을 하나의 객체로 묶으면 함께 처리하기 쉽습니다.</li>
@@ -228,8 +231,8 @@
 </section>
 <section id="벡터는-여러-값을-순서대로-모은-객체다" class="slide level2">
 <h2>벡터는 여러 값을 순서대로 모은 객체다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
-<span id="cb2-2"><a></a>cell_counts</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
+<span id="cb2-2"><a></a>cell_counts</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>c()</code>는 여러 값을 하나로 결합합니다.</li>
 <li>벡터의 각 값을 <strong>원소</strong>라고 합니다.</li>
@@ -238,18 +241,18 @@
 </section>
 <section id="문자형과-논리형-벡터도-만들-수-있다" class="slide level2">
 <h2>문자형과 논리형 벡터도 만들 수 있다</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
 <span id="cb3-2"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
 <span id="cb3-3"><a></a></span>
 <span id="cb3-4"><a></a>sample_names</span>
-<span id="cb3-5"><a></a>passed_qc</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a></a>passed_qc</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>벡터는 숫자뿐 아니라 문자와 논리값도 담을 수 있습니다.</p>
 </section>
 <section id="벡터의-원소는-같은-자료형을-가진다" class="slide level2">
 <h2>벡터의 원소는 같은 자료형을 가진다</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>mixed_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="st">"control_1"</span>, <span class="cn">TRUE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>mixed_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="st">"control_1"</span>, <span class="cn">TRUE</span>)</span>
 <span id="cb4-2"><a></a>mixed_values</span>
-<span id="cb4-3"><a></a><span class="fu">class</span>(mixed_values)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a></a><span class="fu">class</span>(mixed_values)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>R은 하나의 벡터에서 원소의 자료형을 맞춥니다.</li>
 <li>위 예에서는 모든 값이 문자형으로 변환됩니다.</li>
@@ -258,12 +261,12 @@
 </section>
 <section id="벡터의-값과-구조를-확인한다" class="slide level2">
 <h2>벡터의 값과 구조를 확인한다</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
 <span id="cb5-2"><a></a></span>
 <span id="cb5-3"><a></a>cell_counts</span>
 <span id="cb5-4"><a></a><span class="fu">class</span>(cell_counts)</span>
 <span id="cb5-5"><a></a><span class="fu">typeof</span>(cell_counts)</span>
-<span id="cb5-6"><a></a><span class="fu">length</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a></a><span class="fu">length</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>class()</code>와 <code>typeof()</code>는 자료형을 확인합니다.</li>
 <li><code>length()</code>는 원소의 개수를 반환합니다.</li>
@@ -271,11 +274,11 @@
 </section>
 <section id="규칙적인-숫자-벡터를-만들-수-있다" class="slide level2">
 <h2>규칙적인 숫자 벡터를 만들 수 있다</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sample_numbers <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sample_numbers <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
 <span id="cb6-2"><a></a>sample_numbers</span>
 <span id="cb6-3"><a></a></span>
 <span id="cb6-4"><a></a>even_numbers <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">2</span>)</span>
-<span id="cb6-5"><a></a>even_numbers</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a></a>even_numbers</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>:</code>는 1씩 증가하거나 감소하는 연속된 숫자를 만듭니다.</li>
 <li><code>seq()</code>는 시작, 끝, 간격을 지정할 수 있습니다.</li>
@@ -283,17 +286,17 @@
 </section>
 <section id="같은-값을-반복할-수-있다" class="slide level2">
 <h2>같은 값을 반복할 수 있다</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>control_labels <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"control"</span>, <span class="at">times =</span> <span class="dv">3</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>control_labels <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"control"</span>, <span class="at">times =</span> <span class="dv">3</span>)</span>
 <span id="cb7-2"><a></a>control_labels</span>
 <span id="cb7-3"><a></a></span>
 <span id="cb7-4"><a></a>qc_flags <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">TRUE</span>, <span class="at">times =</span> <span class="dv">4</span>)</span>
-<span id="cb7-5"><a></a>qc_flags</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a></a>qc_flags</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>rep()</code>는 같은 값이나 벡터를 지정한 횟수만큼 반복합니다.</p>
 </section>
 <section id="인덱싱은-필요한-원소를-선택하는-방법이다" class="slide level2">
 <h2>인덱싱은 필요한 원소를 선택하는 방법이다</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
-<span id="cb8-2"><a></a>cell_counts[<span class="dv">1</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
+<span id="cb8-2"><a></a>cell_counts[<span class="dv">1</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>대괄호 <code>[]</code> 안에 선택 기준을 작성합니다.</li>
 <li>R의 위치 번호는 1부터 시작합니다.</li>
@@ -302,10 +305,10 @@
 </section>
 <section id="위치로-여러-원소를-선택한다" class="slide level2">
 <h2>위치로 여러 원소를 선택한다</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb9-2"><a></a></span>
 <span id="cb9-3"><a></a>cell_counts[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
-<span id="cb9-4"><a></a>cell_counts[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a></a>cell_counts[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>선택할 위치도 벡터로 전달할 수 있습니다.</li>
 <li>선택 결과 역시 벡터입니다.</li>
@@ -313,10 +316,10 @@
 </section>
 <section id="음수-위치는-해당-원소를-제외한다" class="slide level2">
 <h2>음수 위치는 해당 원소를 제외한다</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a>cell_counts[<span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb10-4"><a></a>cell_counts[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-4"><a></a>cell_counts[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>음수 위치는 그 위치를 빼고 나머지를 선택합니다.</li>
 <li>양수 위치와 음수 위치를 한 번에 섞어 사용할 수 없습니다.</li>
@@ -324,20 +327,20 @@
 </section>
 <section id="벡터의-원소에-이름을-붙일-수-있다" class="slide level2">
 <h2>벡터의 원소에 이름을 붙일 수 있다</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb11-2"><a></a>  <span class="at">control_1 =</span> <span class="dv">1200</span>,</span>
 <span id="cb11-3"><a></a>  <span class="at">control_2 =</span> <span class="dv">1350</span>,</span>
 <span id="cb11-4"><a></a>  <span class="at">treated_1 =</span> <span class="dv">980</span></span>
 <span id="cb11-5"><a></a>)</span>
 <span id="cb11-6"><a></a></span>
 <span id="cb11-7"><a></a>cell_counts</span>
-<span id="cb11-8"><a></a><span class="fu">names</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-8"><a></a><span class="fu">names</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이름을 붙이면 각 값이 어떤 샘플에 해당하는지 알기 쉽습니다.</p>
 </section>
 <section id="이름으로-원소를-선택한다" class="slide level2">
 <h2>이름으로 원소를 선택한다</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>cell_counts[<span class="st">"control_2"</span>]</span>
-<span id="cb12-2"><a></a>cell_counts[<span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"treated_1"</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>cell_counts[<span class="st">"control_2"</span>]</span>
+<span id="cb12-2"><a></a>cell_counts[<span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"treated_1"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>위치를 외우지 않고 의미 있는 이름으로 선택할 수 있습니다.</li>
 <li>이름은 따옴표로 감싼 문자형 값입니다.</li>
@@ -345,39 +348,39 @@
 </section>
 <section id="비교-연산은-논리형-벡터를-만든다" class="slide level2">
 <h2>비교 연산은 논리형 벡터를 만든다</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb13-2"><a></a></span>
-<span id="cb13-3"><a></a>cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a></a>cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 원소를 1200과 비교하여 <code>TRUE</code> 또는 <code>FALSE</code>를 반환합니다.</p>
 </section>
 <section id="논리형-벡터로-원소를-선택한다" class="slide level2">
 <h2>논리형 벡터로 원소를 선택한다</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>enough_cells <span class="ot">&lt;-</span> cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>enough_cells <span class="ot">&lt;-</span> cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span></span>
 <span id="cb14-2"><a></a>enough_cells</span>
 <span id="cb14-3"><a></a></span>
-<span id="cb14-4"><a></a>cell_counts[enough_cells]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-4"><a></a>cell_counts[enough_cells]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>TRUE</code>인 위치의 원소만 선택됩니다.</li>
 <li>비교와 선택을 한 줄로 작성할 수도 있습니다.</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>cell_counts[cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>cell_counts[cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="문자형-벡터도-조건으로-선택할-수-있다" class="slide level2">
 <h2>문자형 벡터도 조건으로 선택할 수 있다</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>conditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"control"</span>, <span class="st">"treated"</span>, <span class="st">"treated"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>conditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"control"</span>, <span class="st">"treated"</span>, <span class="st">"treated"</span>)</span>
 <span id="cb16-2"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb16-3"><a></a></span>
 <span id="cb16-4"><a></a>conditions <span class="sc">==</span> <span class="st">"treated"</span></span>
-<span id="cb16-5"><a></a>cell_counts[conditions <span class="sc">==</span> <span class="st">"treated"</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a></a>cell_counts[conditions <span class="sc">==</span> <span class="st">"treated"</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>두 벡터의 같은 위치가 같은 샘플을 나타내도록 순서를 맞춰야 합니다.</p>
 </section>
 <section id="벡터-연산은-모든-원소에-적용된다" class="slide level2">
 <h2>벡터 연산은 모든 원소에 적용된다</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a>cell_counts <span class="sc">+</span> <span class="dv">100</span></span>
 <span id="cb17-4"><a></a>cell_counts <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb17-5"><a></a>cell_counts <span class="sc">/</span> <span class="dv">1000</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a></a>cell_counts <span class="sc">/</span> <span class="dv">1000</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>반복문을 작성하지 않아도 각 원소에 계산이 적용됩니다.</li>
 <li>이를 <strong>벡터화 연산</strong>이라고 합니다.</li>
@@ -385,19 +388,19 @@
 </section>
 <section id="같은-길이의-벡터끼리-계산할-수-있다" class="slide level2">
 <h2>같은 길이의 벡터끼리 계산할 수 있다</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>raw_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>raw_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
 <span id="cb18-2"><a></a>filtered_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1100</span>, <span class="dv">1250</span>, <span class="dv">900</span>)</span>
 <span id="cb18-3"><a></a></span>
 <span id="cb18-4"><a></a>removed_counts <span class="ot">&lt;-</span> raw_counts <span class="sc">-</span> filtered_counts</span>
-<span id="cb18-5"><a></a>removed_counts</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-5"><a></a>removed_counts</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>같은 위치의 원소끼리 계산됩니다.</p>
 </section>
 <section id="벡터-길이가-다르면-주의한다" class="slide level2">
 <h2>벡터 길이가 다르면 주의한다</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb19-2"><a></a>offsets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)</span>
 <span id="cb19-3"><a></a></span>
-<span id="cb19-4"><a></a>cell_counts <span class="sc">+</span> offsets</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-4"><a></a>cell_counts <span class="sc">+</span> offsets</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>짧은 벡터가 반복되어 계산될 수 있습니다.</li>
 <li>이를 <strong>재활용 규칙</strong>이라고 합니다.</li>
@@ -406,31 +409,31 @@
 </section>
 <section id="기초-통계-함수로-벡터를-요약한다" class="slide level2">
 <h2>기초 통계 함수로 벡터를 요약한다</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>)</span>
 <span id="cb20-2"><a></a></span>
 <span id="cb20-3"><a></a><span class="fu">sum</span>(cell_counts)</span>
 <span id="cb20-4"><a></a><span class="fu">mean</span>(cell_counts)</span>
 <span id="cb20-5"><a></a><span class="fu">median</span>(cell_counts)</span>
 <span id="cb20-6"><a></a><span class="fu">min</span>(cell_counts)</span>
-<span id="cb20-7"><a></a><span class="fu">max</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-7"><a></a><span class="fu">max</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>여러 값을 하나의 대표값으로 요약할 수 있습니다.</p>
 </section>
 <section id="summary로-여러-요약값을-확인한다" class="slide level2">
 <h2><code>summary()</code>로 여러 요약값을 확인한다</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">summary</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">summary</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>summary()</code>는 최솟값, 사분위수, 중앙값, 평균, 최댓값을 함께 보여 줍니다.</p>
 </section>
 <section id="na가-있으면-요약-결과도-na가-된다" class="slide level2">
 <h2><code>NA</code>가 있으면 요약 결과도 <code>NA</code>가 된다</h2>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="cn">NA</span>, <span class="dv">1420</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="cn">NA</span>, <span class="dv">1420</span>)</span>
 <span id="cb22-2"><a></a></span>
-<span id="cb22-3"><a></a><span class="fu">mean</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-3"><a></a><span class="fu">mean</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>알 수 없는 값이 포함되어 있으므로 평균도 바로 계산할 수 없습니다.</p>
 </section>
 <section id="na.rm-true로-결측값을-제외할-수-있다" class="slide level2">
 <h2><code>na.rm = TRUE</code>로 결측값을 제외할 수 있다</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">mean</span>(cell_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-2"><a></a><span class="fu">sum</span>(cell_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">mean</span>(cell_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-2"><a></a><span class="fu">sum</span>(cell_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>na.rm</code>은 결측값 제거 여부를 정하는 인자입니다.</li>
 <li><code>TRUE</code>로 지정하면 <code>NA</code>를 제외하고 계산합니다.</li>
@@ -439,8 +442,8 @@
 </section>
 <section id="결측값의-위치와-개수를-확인한다" class="slide level2">
 <h2>결측값의 위치와 개수를 확인한다</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">is.na</span>(cell_counts)</span>
-<span id="cb24-2"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cell_counts))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">is.na</span>(cell_counts)</span>
+<span id="cb24-2"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cell_counts))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>is.na()</code>는 각 원소가 결측값인지 확인합니다.</li>
 <li>R에서 <code>TRUE</code>는 계산할 때 1처럼 사용할 수 있습니다.</li>
@@ -449,35 +452,35 @@
 </section>
 <section id="실습-1-벡터-만들고-확인하기" class="slide level2">
 <h2>실습 1: 벡터 만들고 확인하기</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
 <span id="cb25-2"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
-<span id="cb25-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 벡터의 값, 자료형, 길이를 확인합니다.</p>
 </section>
 <section id="실습-2-필요한-원소-선택하기" class="slide level2">
 <h2>실습 2: 필요한 원소 선택하기</h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>cell_counts[<span class="dv">2</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>cell_counts[<span class="dv">2</span>]</span>
 <span id="cb26-2"><a></a>cell_counts[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
-<span id="cb26-3"><a></a>cell_counts[cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-3"><a></a>cell_counts[cell_counts <span class="sc">&gt;=</span> <span class="dv">1200</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>위치 선택과 조건 선택의 결과를 비교합니다.</p>
 </section>
 <section id="실습-3-벡터-계산하고-요약하기" class="slide level2">
 <h2>실습 3: 벡터 계산하고 요약하기</h2>
-<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>filtered_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1100</span>, <span class="dv">1250</span>, <span class="dv">900</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>filtered_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1100</span>, <span class="dv">1250</span>, <span class="dv">900</span>)</span>
 <span id="cb27-2"><a></a>removed_counts <span class="ot">&lt;-</span> cell_counts <span class="sc">-</span> filtered_counts</span>
 <span id="cb27-3"><a></a></span>
 <span id="cb27-4"><a></a>removed_counts</span>
 <span id="cb27-5"><a></a><span class="fu">mean</span>(filtered_counts)</span>
-<span id="cb27-6"><a></a><span class="fu">max</span>(filtered_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-6"><a></a><span class="fu">max</span>(filtered_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>어떤 샘플의 제거된 세포 수가 가장 많습니까?</p>
 </section>
 <section id="실습-4-결측값-다루기" class="slide level2">
 <h2>실습 4: 결측값 다루기</h2>
-<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>gene_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">18000</span>, <span class="cn">NA</span>, <span class="dv">19500</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>gene_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">18000</span>, <span class="cn">NA</span>, <span class="dv">19500</span>)</span>
 <span id="cb28-2"><a></a></span>
 <span id="cb28-3"><a></a><span class="fu">is.na</span>(gene_counts)</span>
 <span id="cb28-4"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(gene_counts))</span>
-<span id="cb28-5"><a></a><span class="fu">mean</span>(gene_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-5"><a></a><span class="fu">mean</span>(gene_counts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>na.rm = TRUE</code>를 사용하기 전후의 평균 결과를 비교합니다.</p>
 </section>
 <section id="오늘-배운-내용" class="slide level2 summary">
@@ -691,7 +694,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -765,13 +768,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -786,7 +790,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

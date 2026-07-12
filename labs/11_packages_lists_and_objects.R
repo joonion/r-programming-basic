@@ -12,6 +12,12 @@ file.exists(input_path)
 sample_metadata <- read.csv(input_path)
 head(sample_metadata)
 
+# 설치되지 않았다면 다음 줄을 콘솔에서 한 번 실행하세요.
+# install.packages("ggplot2")
+# install.packages("patchwork")
+library(ggplot2)
+library(patchwork)
+
 dir.create("results", showWarnings = FALSE)
 
 
@@ -236,7 +242,54 @@ head(methods("summary"))
 # TODO: 결과가 어떻게 다른지 주석으로 설명하세요.
 
 
-# 실습 10: 복합 객체를 RDS로 저장하고 복원하기 ---------------------
+# 실습 10: 그래프를 R 객체로 다루기 --------------------------------
+
+qc_plot <- ggplot(
+  sample_metadata,
+  aes(x = condition, y = cell_count, fill = condition)
+) +
+  geom_boxplot() +
+  labs(
+    title = "실험 조건별 세포 수",
+    x = "실험 조건",
+    y = "세포 수"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none")
+
+relationship_plot <- ggplot(
+  sample_metadata,
+  aes(x = cell_count, y = median_genes, color = condition)
+) +
+  geom_point(size = 3) +
+  labs(
+    title = "세포 수와 검출 유전자 수의 관계",
+    x = "세포 수",
+    y = "검출 유전자 수 중앙값"
+  ) +
+  theme_minimal(base_size = 14)
+
+combined_plot <- qc_plot | relationship_plot
+
+class(qc_plot)
+class(combined_plot)
+combined_plot
+
+ggsave(
+  filename = "results/11_qc_plot_objects.png",
+  plot = combined_plot,
+  width = 10,
+  height = 5,
+  dpi = 150
+)
+
+file.exists("results/11_qc_plot_objects.png")
+
+# TODO: qc_plot에 부제목을 추가해 새 객체로 저장하세요.
+# TODO: 두 그래프를 위아래로 배치한 객체를 만드세요.
+
+
+# 실습 11: 복합 객체를 RDS로 저장하고 복원하기 ---------------------
 
 # 리스트 전체를 RDS 파일로 저장하세요.
 rds_path <- "results/analysis_result.rds"

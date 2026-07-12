@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 10차시: 데이터 요약과 시각화</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -203,8 +206,8 @@
 <h2>오늘의 학습 목표</h2>
 <ol type="1">
 <li>전체 데이터와 그룹별 데이터를 기초 통계량으로 요약할 수 있다.</li>
-<li>분석 질문과 자료형에 맞는 기본 그래프를 선택할 수 있다.</li>
-<li>제목, 축 이름, 색상이 포함된 그래프를 작성할 수 있다.</li>
+<li>분석 질문과 자료형에 맞는 <code>ggplot2</code> 그래프를 선택할 수 있다.</li>
+<li>그래프를 객체로 저장하고 <code>patchwork</code>로 조합할 수 있다.</li>
 <li>요약표와 그래프를 파일로 저장하고 확인할 수 있다.</li>
 </ol>
 </section>
@@ -218,7 +221,7 @@
 </section>
 <section id="이번-차시의-분석-흐름" class="slide level2">
 <h2>이번 차시의 분석 흐름</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>데이터 확인</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>데이터 확인</span>
 <span id="cb1-2"><a></a>  ↓</span>
 <span id="cb1-3"><a></a>전체 요약</span>
 <span id="cb1-4"><a></a>  ↓</span>
@@ -226,15 +229,15 @@
 <span id="cb1-6"><a></a>  ↓</span>
 <span id="cb1-7"><a></a>질문에 맞는 그래프 선택</span>
 <span id="cb1-8"><a></a>  ↓</span>
-<span id="cb1-9"><a></a>표와 그래프 저장</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a></a>표와 그래프 저장</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>숫자만 계산하는 데서 끝나지 않고 결과가 무엇을 의미하는지 해석합니다.</p>
 </section>
 <section id="샘플-메타데이터를-불러온다" class="slide level2">
 <h2>샘플 메타데이터를 불러온다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/sample_metadata.csv"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/sample_metadata.csv"</span>)</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="fu">head</span>(sample_metadata)</span>
-<span id="cb2-4"><a></a><span class="fu">str</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a></a><span class="fu">str</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>요약과 시각화 전에 행 수, 열 이름, 자료형을 먼저 확인합니다.</p>
 </section>
 <section id="분석-질문을-먼저-정한다" class="slide level2">
@@ -250,7 +253,7 @@
 </section>
 <section id="summary로-전체-모습을-확인한다" class="slide level2">
 <h2><code>summary()</code>로 전체 모습을 확인한다</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">summary</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">summary</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>숫자형 열의 최솟값, 사분위수, 중앙값, 평균, 최댓값</li>
 <li>논리형 열의 <code>TRUE</code>, <code>FALSE</code> 개수</li>
@@ -259,12 +262,12 @@
 </section>
 <section id="한-숫자형-열을-요약한다" class="slide level2">
 <h2>한 숫자형 열을 요약한다</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cell_counts <span class="ot">&lt;-</span> sample_metadata<span class="sc">$</span>cell_count</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cell_counts <span class="ot">&lt;-</span> sample_metadata<span class="sc">$</span>cell_count</span>
 <span id="cb4-2"><a></a></span>
 <span id="cb4-3"><a></a><span class="fu">min</span>(cell_counts)</span>
 <span id="cb4-4"><a></a><span class="fu">max</span>(cell_counts)</span>
 <span id="cb4-5"><a></a><span class="fu">mean</span>(cell_counts)</span>
-<span id="cb4-6"><a></a><span class="fu">median</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a></a><span class="fu">median</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 함수는 데이터의 서로 다른 특징을 보여 줍니다.</p>
 </section>
 <section id="평균과-중앙값을-구분한다" class="slide level2">
@@ -273,15 +276,15 @@
 <li><strong>평균</strong>: 모든 값을 더한 뒤 개수로 나눈 값</li>
 <li><strong>중앙값</strong>: 값을 정렬했을 때 가운데에 있는 값</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">mean</span>(cell_counts)</span>
-<span id="cb5-2"><a></a><span class="fu">median</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">mean</span>(cell_counts)</span>
+<span id="cb5-2"><a></a><span class="fu">median</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>극단적으로 크거나 작은 값이 있으면 평균과 중앙값이 달라질 수 있습니다.</p>
 </section>
 <section id="범위와-사분위-범위를-확인한다" class="slide level2">
 <h2>범위와 사분위 범위를 확인한다</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">range</span>(cell_counts)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">range</span>(cell_counts)</span>
 <span id="cb6-2"><a></a><span class="fu">quantile</span>(cell_counts)</span>
-<span id="cb6-3"><a></a><span class="fu">IQR</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a></a><span class="fu">IQR</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>range()</code>는 최솟값과 최댓값을 반환합니다.</li>
 <li><code>quantile()</code>은 사분위수를 보여 줍니다.</li>
@@ -290,7 +293,7 @@
 </section>
 <section id="표준편차는-값이-퍼진-정도를-나타낸다" class="slide level2">
 <h2>표준편차는 값이 퍼진 정도를 나타낸다</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">sd</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">sd</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>표준편차가 작으면 값들이 평균 주변에 모여 있습니다.</li>
 <li>표준편차가 크면 값들이 더 넓게 퍼져 있습니다.</li>
@@ -299,56 +302,56 @@
 </section>
 <section id="결측값이-있으면-먼저-확인한다" class="slide level2">
 <h2>결측값이 있으면 먼저 확인한다</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>doublet_rates <span class="ot">&lt;-</span> sample_metadata<span class="sc">$</span>doublet_rate</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>doublet_rates <span class="ot">&lt;-</span> sample_metadata<span class="sc">$</span>doublet_rate</span>
 <span id="cb8-2"><a></a></span>
 <span id="cb8-3"><a></a><span class="fu">is.na</span>(doublet_rates)</span>
 <span id="cb8-4"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(doublet_rates))</span>
-<span id="cb8-5"><a></a><span class="fu">mean</span>(doublet_rates)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a></a><span class="fu">mean</span>(doublet_rates)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>결측값이 포함되면 기본 평균 결과도 <code>NA</code>입니다.</p>
 </section>
 <section id="필요한-경우-결측값을-제외하고-요약한다" class="slide level2">
 <h2>필요한 경우 결측값을 제외하고 요약한다</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">mean</span>(doublet_rates, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-2"><a></a><span class="fu">median</span>(doublet_rates, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">mean</span>(doublet_rates, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-2"><a></a><span class="fu">median</span>(doublet_rates, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>na.rm = TRUE</code>를 사용하기 전에 결측 원인과 제외 가능 여부를 판단해야 합니다.</p>
 </section>
 <section id="범주별-개수를-table로-센다" class="slide level2">
 <h2>범주별 개수를 <code>table()</code>로 센다</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
-<span id="cb10-2"><a></a>condition_counts</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
+<span id="cb10-2"><a></a>condition_counts</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>table()</code>은 각 고유한 값이 몇 번 나타나는지 계산합니다.</p>
 </section>
 <section id="두-범주를-함께-교차-집계한다" class="slide level2">
 <h2>두 범주를 함께 교차 집계한다</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">table</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">table</span>(</span>
 <span id="cb11-2"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
 <span id="cb11-3"><a></a>  sample_metadata<span class="sc">$</span>passed_qc</span>
-<span id="cb11-4"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-4"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>행은 실험 조건, 열은 QC 통과 여부가 되어 조합별 개수를 보여 줍니다.</p>
 </section>
 <section id="비율로-바꾸어-볼-수-있다" class="slide level2">
 <h2>비율로 바꾸어 볼 수 있다</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>condition_counts <span class="sc">/</span> <span class="fu">sum</span>(condition_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">prop.table</span>(condition_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>condition_counts <span class="sc">/</span> <span class="fu">sum</span>(condition_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">prop.table</span>(condition_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>prop.table()</code>은 전체 합이 1이 되도록 개수를 비율로 변환합니다.</p>
 </section>
 <section id="그룹별-요약은-나누고-계산하는-과정이다" class="slide level2">
 <h2>그룹별 요약은 나누고 계산하는 과정이다</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb14-1"><a></a>control 값들 ─→ 평균 계산</span>
-<span id="cb14-2"><a></a>treated 값들 ─→ 평균 계산</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb14-1"><a></a>control 값들 ─→ 평균 계산</span>
+<span id="cb14-2"><a></a>treated 값들 ─→ 평균 계산</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>그룹 변수와 요약할 숫자형 변수가 필요합니다.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_metadata<span class="sc">$</span>condition</span>
-<span id="cb15-2"><a></a>sample_metadata<span class="sc">$</span>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_metadata<span class="sc">$</span>condition</span>
+<span id="cb15-2"><a></a>sample_metadata<span class="sc">$</span>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="tapply로-그룹별-한-값을-계산한다" class="slide level2">
 <h2><code>tapply()</code>로 그룹별 한 값을 계산한다</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>mean_cell_counts <span class="ot">&lt;-</span> <span class="fu">tapply</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>mean_cell_counts <span class="ot">&lt;-</span> <span class="fu">tapply</span>(</span>
 <span id="cb16-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
 <span id="cb16-3"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
 <span id="cb16-4"><a></a>  mean</span>
 <span id="cb16-5"><a></a>)</span>
 <span id="cb16-6"><a></a></span>
-<span id="cb16-7"><a></a>mean_cell_counts</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-7"><a></a>mean_cell_counts</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li>첫 번째 인자: 요약할 값</li>
 <li>두 번째 인자: 그룹</li>
@@ -357,7 +360,7 @@
 </section>
 <section id="다른-요약-함수도-적용할-수-있다" class="slide level2">
 <h2>다른 요약 함수도 적용할 수 있다</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">tapply</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">tapply</span>(</span>
 <span id="cb17-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
 <span id="cb17-3"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
 <span id="cb17-4"><a></a>  median</span>
@@ -367,28 +370,28 @@
 <span id="cb17-8"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
 <span id="cb17-9"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
 <span id="cb17-10"><a></a>  sd</span>
-<span id="cb17-11"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-11"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>같은 그룹 기준에 여러 요약 함수를 적용해 비교할 수 있습니다.</p>
 </section>
 <section id="결측값이-있는-열을-그룹별로-요약한다" class="slide level2">
 <h2>결측값이 있는 열을 그룹별로 요약한다</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">tapply</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">tapply</span>(</span>
 <span id="cb18-2"><a></a>  sample_metadata<span class="sc">$</span>doublet_rate,</span>
 <span id="cb18-3"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
 <span id="cb18-4"><a></a>  mean,</span>
 <span id="cb18-5"><a></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
-<span id="cb18-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>na.rm = TRUE</code>가 <code>mean()</code>으로 전달되어 그룹별 결측값을 제외합니다.</p>
 </section>
 <section id="aggregate는-결과를-데이터-프레임으로-만든다" class="slide level2">
 <h2><code>aggregate()</code>는 결과를 데이터 프레임으로 만든다</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
 <span id="cb19-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
 <span id="cb19-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
 <span id="cb19-4"><a></a>  <span class="at">FUN =</span> mean</span>
 <span id="cb19-5"><a></a>)</span>
 <span id="cb19-6"><a></a></span>
-<span id="cb19-7"><a></a>condition_summary</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-7"><a></a>condition_summary</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>cell_count ~ condition</code>은 조건별 세포 수를 뜻합니다.</li>
 <li>결과가 표 형태라 저장하거나 다른 열을 추가하기 쉽습니다.</li>
@@ -396,37 +399,135 @@
 </section>
 <section id="여러-숫자형-열을-함께-요약한다" class="slide level2">
 <h2>여러 숫자형 열을 함께 요약한다</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
 <span id="cb20-2"><a></a>  <span class="fu">cbind</span>(cell_count, median_genes, mito_percent) <span class="sc">~</span> condition,</span>
 <span id="cb20-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
 <span id="cb20-4"><a></a>  <span class="at">FUN =</span> mean</span>
 <span id="cb20-5"><a></a>)</span>
 <span id="cb20-6"><a></a></span>
-<span id="cb20-7"><a></a>condition_summary</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-7"><a></a>condition_summary</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>cbind()</code>로 함께 요약할 숫자형 열을 묶습니다.</p>
 </section>
 <section id="그룹별-샘플-수를-요약표에-추가한다" class="slide level2">
 <h2>그룹별 샘플 수를 요약표에 추가한다</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
 <span id="cb21-2"><a></a></span>
 <span id="cb21-3"><a></a>condition_summary<span class="sc">$</span>sample_count <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(</span>
 <span id="cb21-4"><a></a>  condition_counts[condition_summary<span class="sc">$</span>condition]</span>
 <span id="cb21-5"><a></a>)</span>
 <span id="cb21-6"><a></a></span>
-<span id="cb21-7"><a></a>condition_summary</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-7"><a></a>condition_summary</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>같은 조건 이름을 이용해 개수를 올바른 행에 연결합니다.</p>
 </section>
 <section id="표시할-자릿수를-정리한다" class="slide level2">
 <h2>표시할 자릿수를 정리한다</h2>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>condition_summary<span class="sc">$</span>cell_count <span class="ot">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>condition_summary<span class="sc">$</span>cell_count <span class="ot">&lt;-</span></span>
 <span id="cb22-2"><a></a>  <span class="fu">round</span>(condition_summary<span class="sc">$</span>cell_count, <span class="at">digits =</span> <span class="dv">1</span>)</span>
 <span id="cb22-3"><a></a></span>
 <span id="cb22-4"><a></a>condition_summary<span class="sc">$</span>mito_percent <span class="ot">&lt;-</span></span>
-<span id="cb22-5"><a></a>  <span class="fu">round</span>(condition_summary<span class="sc">$</span>mito_percent, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-5"><a></a>  <span class="fu">round</span>(condition_summary<span class="sc">$</span>mito_percent, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>round()</code>는 표시할 소수점 자릿수를 정리합니다.</li>
 <li>원본 측정값을 바꾸기보다 요약 결과의 표시를 정리합니다.</li>
 </ul>
+</section>
+<section id="dplyr로-그룹별-요약을-읽기-쉽게-표현한다" class="slide level2">
+<h2>dplyr로 그룹별 요약을 읽기 쉽게 표현한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb23-2"><a></a></span>
+<span id="cb23-3"><a></a>dplyr_summary <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a></a>  <span class="fu">group_by</span>(condition) <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a></a>  <span class="fu">summarise</span>(</span>
+<span id="cb23-6"><a></a>    <span class="at">mean_cells =</span> <span class="fu">mean</span>(cell_count),</span>
+<span id="cb23-7"><a></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb23-8"><a></a>  )</span>
+<span id="cb23-9"><a></a></span>
+<span id="cb23-10"><a></a>dplyr_summary</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>기본 R의 <code>tapply()</code>와 <code>aggregate()</code>를 다른 문법으로 표현한 것입니다.</p>
+</section>
+<section id="group_by는-뒤의-계산에-사용할-그룹을-지정한다" class="slide level2">
+<h2><code>group_by()</code>는 뒤의 계산에 사용할 그룹을 지정한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>grouped_metadata <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a></a>  <span class="fu">group_by</span>(condition)</span>
+<span id="cb24-3"><a></a></span>
+<span id="cb24-4"><a></a>grouped_metadata</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>데이터의 행이 즉시 분리되는 것은 아닙니다.</li>
+<li>객체에 그룹 정보가 추가됩니다.</li>
+<li>이후 <code>summarise()</code>와 <code>slice_head()</code> 등이 그룹별로 동작합니다.</li>
+</ul>
+</section>
+<section id="summarise는-그룹마다-요약-행을-만든다" class="slide level2">
+<h2><code>summarise()</code>는 그룹마다 요약 행을 만든다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>condition_summary_dplyr <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a></a>  <span class="fu">group_by</span>(condition) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a></a>  <span class="fu">summarise</span>(</span>
+<span id="cb25-4"><a></a>    <span class="at">sample_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb25-5"><a></a>    <span class="at">mean_cells =</span> <span class="fu">mean</span>(cell_count),</span>
+<span id="cb25-6"><a></a>    <span class="at">median_cells =</span> <span class="fu">median</span>(cell_count),</span>
+<span id="cb25-7"><a></a>    <span class="at">mean_mito =</span> <span class="fu">mean</span>(mito_percent),</span>
+<span id="cb25-8"><a></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb25-9"><a></a>  )</span>
+<span id="cb25-10"><a></a></span>
+<span id="cb25-11"><a></a>condition_summary_dplyr</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>n()</code>은 각 그룹의 행 개수를 반환합니다.</li>
+<li>각 요약식은 결과 데이터의 한 열이 됩니다.</li>
+</ul>
+</section>
+<section id="결측값-처리는-기존-함수와-같다" class="slide level2">
+<h2>결측값 처리는 기존 함수와 같다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>doublet_summary <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a></a>  <span class="fu">group_by</span>(condition) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a></a>  <span class="fu">summarise</span>(</span>
+<span id="cb26-4"><a></a>    <span class="at">mean_doublet =</span> <span class="fu">mean</span>(doublet_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-5"><a></a>    <span class="at">missing_count =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(doublet_rate)),</span>
+<span id="cb26-6"><a></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb26-7"><a></a>  )</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>데이터 마스킹으로 열 이름을 직접 쓰지만 <code>mean()</code>과 <code>is.na()</code>의 의미는 같습니다.</p>
+</section>
+<section id="ungroup은-그룹-상태를-제거한다" class="slide level2">
+<h2><code>ungroup()</code>은 그룹 상태를 제거한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>grouped_metadata <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a></a>  <span class="fu">group_by</span>(condition)</span>
+<span id="cb27-3"><a></a></span>
+<span id="cb27-4"><a></a>ungrouped_metadata <span class="ot">&lt;-</span> grouped_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>그룹 상태가 필요 없어진 시점에 제거할 수 있습니다.</li>
+<li><code>summarise(.groups = "drop")</code>도 요약 후 그룹을 제거합니다.</li>
+</ul>
+</section>
+<section id="arrange는-행의-순서를-정한다" class="slide level2">
+<h2><code>arrange()</code>는 행의 순서를 정한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cell_count))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>arrange(cell_count)</code>는 작은 값부터 정렬합니다.</li>
+<li><code>desc(cell_count)</code>는 큰 값부터 정렬합니다.</li>
+<li>원본 데이터의 값은 바뀌지 않고 행 순서만 달라집니다.</li>
+</ul>
+</section>
+<section id="slice_head는-그룹마다-처음-n개-행을-선택한다" class="slide level2">
+<h2><code>slice_head()</code>는 그룹마다 처음 n개 행을 선택한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>top_samples <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a></a>  <span class="fu">group_by</span>(condition) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cell_count)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb29-6"><a></a></span>
+<span id="cb29-7"><a></a>top_samples</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>먼저 정렬한 뒤 <code>slice_head()</code>를 사용해야 큰 값 순서의 상위 행을 선택할 수 있습니다.</p>
+</section>
+<section id="seurat-마커-결과도-같은-흐름으로-정리한다" class="slide level2">
+<h2>Seurat 마커 결과도 같은 흐름으로 정리한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>top_markers <span class="ot">&lt;-</span> pbmc_markers <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a></a>  <span class="fu">filter</span>(avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_log2FC)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-6"><a></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>공식 PBMC 튜토리얼의 그룹별 상위 마커 선택과 같은 구조입니다.</p>
 </section>
 <section id="그래프는-질문에-맞게-선택한다" class="slide level2">
 <h2>그래프는 질문에 맞게 선택한다</h2>
@@ -460,9 +561,9 @@
 </section>
 <section id="막대그래프로-범주별-개수를-비교한다" class="slide level2">
 <h2>막대그래프로 범주별 개수를 비교한다</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
-<span id="cb23-2"><a></a></span>
-<span id="cb23-3"><a></a><span class="fu">barplot</span>(condition_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>condition_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
+<span id="cb31-2"><a></a></span>
+<span id="cb31-3"><a></a><span class="fu">barplot</span>(condition_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>막대의 높이는 각 범주의 개수입니다.</li>
 <li>범주형 자료의 빈도를 비교할 때 사용합니다.</li>
@@ -470,13 +571,13 @@
 </section>
 <section id="막대그래프에-설명을-추가한다" class="slide level2">
 <h2>막대그래프에 설명을 추가한다</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">barplot</span>(</span>
-<span id="cb24-2"><a></a>  condition_counts,</span>
-<span id="cb24-3"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 샘플 수"</span>,</span>
-<span id="cb24-4"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
-<span id="cb24-5"><a></a>  <span class="at">ylab =</span> <span class="st">"샘플 수"</span>,</span>
-<span id="cb24-6"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
-<span id="cb24-7"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">barplot</span>(</span>
+<span id="cb32-2"><a></a>  condition_counts,</span>
+<span id="cb32-3"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 샘플 수"</span>,</span>
+<span id="cb32-4"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
+<span id="cb32-5"><a></a>  <span class="at">ylab =</span> <span class="st">"샘플 수"</span>,</span>
+<span id="cb32-6"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
+<span id="cb32-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>main</code>: 그래프 제목</li>
 <li><code>xlab</code>, <code>ylab</code>: 축 이름</li>
@@ -485,18 +586,18 @@
 </section>
 <section id="그룹별-평균도-막대그래프로-표현할-수-있다" class="slide level2">
 <h2>그룹별 평균도 막대그래프로 표현할 수 있다</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">barplot</span>(</span>
-<span id="cb25-2"><a></a>  mean_cell_counts,</span>
-<span id="cb25-3"><a></a>  <span class="at">main =</span> <span class="st">"조건별 평균 세포 수"</span>,</span>
-<span id="cb25-4"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
-<span id="cb25-5"><a></a>  <span class="at">ylab =</span> <span class="st">"평균 세포 수"</span>,</span>
-<span id="cb25-6"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
-<span id="cb25-7"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">barplot</span>(</span>
+<span id="cb33-2"><a></a>  mean_cell_counts,</span>
+<span id="cb33-3"><a></a>  <span class="at">main =</span> <span class="st">"조건별 평균 세포 수"</span>,</span>
+<span id="cb33-4"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
+<span id="cb33-5"><a></a>  <span class="at">ylab =</span> <span class="st">"평균 세포 수"</span>,</span>
+<span id="cb33-6"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
+<span id="cb33-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>평균 막대만으로는 각 값의 분포가 보이지 않는다는 한계가 있습니다.</p>
 </section>
 <section id="히스토그램은-숫자형-값의-분포를-보여-준다" class="slide level2">
 <h2>히스토그램은 숫자형 값의 분포를 보여 준다</h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">hist</span>(sample_metadata<span class="sc">$</span>cell_count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">hist</span>(sample_metadata<span class="sc">$</span>cell_count)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>x축은 값의 구간입니다.</li>
 <li>y축은 각 구간에 속한 관측값의 개수입니다.</li>
@@ -505,23 +606,23 @@
 </section>
 <section id="히스토그램에-설명을-추가한다" class="slide level2">
 <h2>히스토그램에 설명을 추가한다</h2>
-<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">hist</span>(</span>
-<span id="cb27-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb27-3"><a></a>  <span class="at">breaks =</span> <span class="dv">4</span>,</span>
-<span id="cb27-4"><a></a>  <span class="at">main =</span> <span class="st">"샘플별 세포 수 분포"</span>,</span>
-<span id="cb27-5"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb27-6"><a></a>  <span class="at">ylab =</span> <span class="st">"빈도"</span>,</span>
-<span id="cb27-7"><a></a>  <span class="at">col =</span> <span class="st">"#70AD47"</span>,</span>
-<span id="cb27-8"><a></a>  <span class="at">border =</span> <span class="st">"white"</span></span>
-<span id="cb27-9"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">hist</span>(</span>
+<span id="cb35-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb35-3"><a></a>  <span class="at">breaks =</span> <span class="dv">4</span>,</span>
+<span id="cb35-4"><a></a>  <span class="at">main =</span> <span class="st">"샘플별 세포 수 분포"</span>,</span>
+<span id="cb35-5"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb35-6"><a></a>  <span class="at">ylab =</span> <span class="st">"빈도"</span>,</span>
+<span id="cb35-7"><a></a>  <span class="at">col =</span> <span class="st">"#70AD47"</span>,</span>
+<span id="cb35-8"><a></a>  <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb35-9"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>breaks</code>는 값을 나눌 구간 수에 영향을 줍니다.</p>
 </section>
 <section id="상자그림은-그룹별-분포를-비교한다" class="slide level2">
 <h2>상자그림은 그룹별 분포를 비교한다</h2>
-<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">boxplot</span>(</span>
-<span id="cb28-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
-<span id="cb28-3"><a></a>  <span class="at">data =</span> sample_metadata</span>
-<span id="cb28-4"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">boxplot</span>(</span>
+<span id="cb36-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
+<span id="cb36-3"><a></a>  <span class="at">data =</span> sample_metadata</span>
+<span id="cb36-4"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>상자 안의 굵은 선은 중앙값입니다.</li>
 <li>상자는 가운데 50%의 값이 있는 범위를 나타냅니다.</li>
@@ -530,35 +631,35 @@
 </section>
 <section id="상자그림에-설명을-추가한다" class="slide level2">
 <h2>상자그림에 설명을 추가한다</h2>
-<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">boxplot</span>(</span>
-<span id="cb29-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
-<span id="cb29-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
-<span id="cb29-4"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 세포 수"</span>,</span>
-<span id="cb29-5"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
-<span id="cb29-6"><a></a>  <span class="at">ylab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb29-7"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
-<span id="cb29-8"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">boxplot</span>(</span>
+<span id="cb37-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
+<span id="cb37-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
+<span id="cb37-4"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 세포 수"</span>,</span>
+<span id="cb37-5"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
+<span id="cb37-6"><a></a>  <span class="at">ylab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb37-7"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
+<span id="cb37-8"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>표본 수가 매우 적을 때는 상자 모양만으로 차이를 단정하지 않습니다.</p>
 </section>
 <section id="산점도는-두-숫자형-변수의-관계를-보여-준다" class="slide level2">
 <h2>산점도는 두 숫자형 변수의 관계를 보여 준다</h2>
-<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">plot</span>(</span>
-<span id="cb30-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb30-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes</span>
-<span id="cb30-4"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">plot</span>(</span>
+<span id="cb38-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb38-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes</span>
+<span id="cb38-4"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 점은 샘플 하나를 나타냅니다.</p>
 </section>
 <section id="산점도에-설명과-점-모양을-추가한다" class="slide level2">
 <h2>산점도에 설명과 점 모양을 추가한다</h2>
-<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">plot</span>(</span>
-<span id="cb31-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb31-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb31-4"><a></a>  <span class="at">main =</span> <span class="st">"세포 수와 검출 유전자 수의 관계"</span>,</span>
-<span id="cb31-5"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb31-6"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span>,</span>
-<span id="cb31-7"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
-<span id="cb31-8"><a></a>  <span class="at">col =</span> <span class="st">"#4472C4"</span></span>
-<span id="cb31-9"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">plot</span>(</span>
+<span id="cb39-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb39-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb39-4"><a></a>  <span class="at">main =</span> <span class="st">"세포 수와 검출 유전자 수의 관계"</span>,</span>
+<span id="cb39-5"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb39-6"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span>,</span>
+<span id="cb39-7"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb39-8"><a></a>  <span class="at">col =</span> <span class="st">"#4472C4"</span></span>
+<span id="cb39-9"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>pch = 19</code>는 채워진 원을 사용합니다.</li>
 <li>산점도에서 x축과 y축에 어떤 변수를 놓았는지 명확히 표시합니다.</li>
@@ -566,48 +667,158 @@
 </section>
 <section id="조건에-따라-점-색상을-지정할-수-있다" class="slide level2">
 <h2>조건에 따라 점 색상을 지정할 수 있다</h2>
-<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>point_colors <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb32-2"><a></a>  sample_metadata<span class="sc">$</span>condition <span class="sc">==</span> <span class="st">"control"</span>,</span>
-<span id="cb32-3"><a></a>  <span class="st">"#4472C4"</span>,</span>
-<span id="cb32-4"><a></a>  <span class="st">"#ED7D31"</span></span>
-<span id="cb32-5"><a></a>)</span>
-<span id="cb32-6"><a></a></span>
-<span id="cb32-7"><a></a><span class="fu">plot</span>(</span>
-<span id="cb32-8"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb32-9"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb32-10"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
-<span id="cb32-11"><a></a>  <span class="at">col =</span> point_colors,</span>
-<span id="cb32-12"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb32-13"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span></span>
-<span id="cb32-14"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>point_colors <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb40-2"><a></a>  sample_metadata<span class="sc">$</span>condition <span class="sc">==</span> <span class="st">"control"</span>,</span>
+<span id="cb40-3"><a></a>  <span class="st">"#4472C4"</span>,</span>
+<span id="cb40-4"><a></a>  <span class="st">"#ED7D31"</span></span>
+<span id="cb40-5"><a></a>)</span>
+<span id="cb40-6"><a></a></span>
+<span id="cb40-7"><a></a><span class="fu">plot</span>(</span>
+<span id="cb40-8"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb40-9"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb40-10"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb40-11"><a></a>  <span class="at">col =</span> point_colors,</span>
+<span id="cb40-12"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb40-13"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span></span>
+<span id="cb40-14"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>색상은 데이터와 같은 길이의 벡터로 지정할 수 있습니다.</p>
 </section>
 <section id="범례로-색상의-의미를-설명한다" class="slide level2">
 <h2>범례로 색상의 의미를 설명한다</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">legend</span>(</span>
-<span id="cb33-2"><a></a>  <span class="st">"bottomright"</span>,</span>
-<span id="cb33-3"><a></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treated"</span>),</span>
-<span id="cb33-4"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>),</span>
-<span id="cb33-5"><a></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
-<span id="cb33-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">legend</span>(</span>
+<span id="cb41-2"><a></a>  <span class="st">"bottomright"</span>,</span>
+<span id="cb41-3"><a></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treated"</span>),</span>
+<span id="cb41-4"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>),</span>
+<span id="cb41-5"><a></a>  <span class="at">pch =</span> <span class="dv">19</span></span>
+<span id="cb41-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>색상이나 모양으로 그룹을 구분했다면 범례를 함께 제공합니다.</p>
 </section>
 <section id="그래프-제목은-내용을-구체적으로-적는다" class="slide level2">
 <h2>그래프 제목은 내용을 구체적으로 적는다</h2>
 <p>피해야 할 제목:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb34-1"><a></a>결과 그래프</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb42-1"><a></a>결과 그래프</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>권장 제목:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb35-1"><a></a>실험 조건별 세포 수</span>
-<span id="cb35-2"><a></a>세포 수와 검출 유전자 수의 관계</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb43-1"><a></a>실험 조건별 세포 수</span>
+<span id="cb43-2"><a></a>세포 수와 검출 유전자 수의 관계</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>제목만 읽어도 무엇을 보여 주는지 알 수 있게 작성합니다.</p>
 </section>
 <section id="축-이름에는-변수와-단위를-적는다" class="slide level2">
 <h2>축 이름에는 변수와 단위를 적는다</h2>
-<div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>xlab <span class="ot">=</span> <span class="st">"미토콘드리아 유전자 비율 (%)"</span></span>
-<span id="cb36-2"><a></a>ylab <span class="ot">=</span> <span class="st">"세포 수"</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>xlab <span class="ot">=</span> <span class="st">"미토콘드리아 유전자 비율 (%)"</span></span>
+<span id="cb44-2"><a></a>ylab <span class="ot">=</span> <span class="st">"세포 수"</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>열 이름을 그대로 복사하기보다 사람이 이해할 표현을 사용합니다.</li>
 <li>단위가 있으면 괄호 안에 표시합니다.</li>
+</ul>
+</section>
+<section id="ggplot2는-같은-문법으로-여러-그래프를-만든다" class="slide level2">
+<h2><code>ggplot2</code>는 같은 문법으로 여러 그래프를 만든다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="co"># 콘솔에서 한 번만 실행</span></span>
+<span id="cb45-2"><a></a><span class="co"># install.packages("ggplot2")</span></span>
+<span id="cb45-3"><a></a><span class="co"># install.packages("patchwork")</span></span>
+<span id="cb45-4"><a></a></span>
+<span id="cb45-5"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb45-6"><a></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>기본 R 그래프는 빠른 확인에 유용합니다.</li>
+<li><code>ggplot2</code>는 데이터, 표현 규칙, 그래프 종류를 층으로 조합합니다.</li>
+<li><code>patchwork</code>는 완성된 그래프 여러 개를 한 화면에 배치합니다.</li>
+</ul>
+</section>
+<section id="그래프는-데이터-aes-geom_에서-시작한다" class="slide level2">
+<h2>그래프는 데이터, <code>aes()</code>, <code>geom_*()</code>에서 시작한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">ggplot</span>(</span>
+<span id="cb46-2"><a></a>  <span class="at">data =</span> sample_metadata,</span>
+<span id="cb46-3"><a></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> cell_count, <span class="at">y =</span> median_genes)</span>
+<span id="cb46-4"><a></a>) <span class="sc">+</span></span>
+<span id="cb46-5"><a></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li><code>data</code>: 사용할 데이터 프레임</li>
+<li><code>aes()</code>: 열을 축, 색상 등에 연결하는 규칙</li>
+<li><code>geom_*()</code>: 점, 막대, 상자와 같은 표현 방법</li>
+</ol>
+</section>
+<section id="aes에서도-데이터-마스킹-문법을-사용한다" class="slide level2">
+<h2><code>aes()</code>에서도 데이터 마스킹 문법을 사용한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">ggplot</span>(sample_metadata,</span>
+<span id="cb47-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> cell_count, <span class="at">y =</span> median_genes,</span>
+<span id="cb47-3"><a></a>           <span class="at">color =</span> condition)) <span class="sc">+</span></span>
+<span id="cb47-4"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>aes()</code> 안에서는 <code>sample_metadata$cell_count</code> 대신 열 이름을 바로 씁니다. 7차시의 <code>filter()</code>와 같은 데이터 마스킹 문법입니다.</p>
+</section>
+<section id="연결할-값과-고정할-값은-위치가-다르다" class="slide level2">
+<h2>연결할 값과 고정할 값은 위치가 다르다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="co"># condition 값에 따라 색상이 달라진다.</span></span>
+<span id="cb48-2"><a></a><span class="fu">aes</span>(<span class="at">color =</span> condition)</span>
+<span id="cb48-3"><a></a></span>
+<span id="cb48-4"><a></a><span class="co"># 모든 점을 같은 색으로 그린다.</span></span>
+<span id="cb48-5"><a></a><span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#2563EB"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>데이터 열과 연결할 값은 <code>aes()</code> 안에, 고정할 값은 밖에 둡니다.</p>
+</section>
+<section id="질문에-맞는-geom_을-선택한다" class="slide level2">
+<h2>질문에 맞는 <code>geom_*()</code>을 선택한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">ggplot</span>(sample_metadata, <span class="fu">aes</span>(<span class="at">x =</span> condition)) <span class="sc">+</span></span>
+<span id="cb49-2"><a></a>  <span class="fu">geom_bar</span>()</span>
+<span id="cb49-3"><a></a></span>
+<span id="cb49-4"><a></a><span class="fu">ggplot</span>(sample_metadata, <span class="fu">aes</span>(<span class="at">x =</span> cell_count)) <span class="sc">+</span></span>
+<span id="cb49-5"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">150</span>)</span>
+<span id="cb49-6"><a></a></span>
+<span id="cb49-7"><a></a><span class="fu">ggplot</span>(sample_metadata,</span>
+<span id="cb49-8"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> condition, <span class="at">y =</span> cell_count)) <span class="sc">+</span></span>
+<span id="cb49-9"><a></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>막대는 개수, 히스토그램은 분포, 상자그림은 그룹별 분포를 보여 줍니다.</p>
+</section>
+<section id="labs와-테마로-설명을-정돈한다" class="slide level2">
+<h2><code>labs()</code>와 테마로 설명을 정돈한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>relationship_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb50-2"><a></a>  sample_metadata,</span>
+<span id="cb50-3"><a></a>  <span class="fu">aes</span>(<span class="at">x =</span> cell_count, <span class="at">y =</span> median_genes,</span>
+<span id="cb50-4"><a></a>      <span class="at">color =</span> condition)</span>
+<span id="cb50-5"><a></a>) <span class="sc">+</span></span>
+<span id="cb50-6"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-8"><a></a>    <span class="at">title =</span> <span class="st">"세포 수와 검출 유전자 수의 관계"</span>,</span>
+<span id="cb50-9"><a></a>    <span class="at">x =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb50-10"><a></a>    <span class="at">y =</span> <span class="st">"검출 유전자 수 중앙값"</span>,</span>
+<span id="cb50-11"><a></a>    <span class="at">color =</span> <span class="st">"실험 조건"</span></span>
+<span id="cb50-12"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb50-13"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="범주-색상은-분석-전체에서-일관되게-사용한다" class="slide level2">
+<h2>범주 색상은 분석 전체에서 일관되게 사용한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>condition_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb51-2"><a></a>  <span class="at">control =</span> <span class="st">"#2563EB"</span>,</span>
+<span id="cb51-3"><a></a>  <span class="at">treated =</span> <span class="st">"#B45309"</span></span>
+<span id="cb51-4"><a></a>)</span>
+<span id="cb51-5"><a></a></span>
+<span id="cb51-6"><a></a>relationship_plot <span class="ot">&lt;-</span> relationship_plot <span class="sc">+</span></span>
+<span id="cb51-7"><a></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> condition_colors)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>같은 범주는 여러 그래프에서 같은 색으로 표현합니다.</p>
+</section>
+<section id="그래프도-이름을-붙여-저장하는-r-객체다" class="slide level2">
+<h2>그래프도 이름을 붙여 저장하는 R 객체다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">class</span>(relationship_plot)</span>
+<span id="cb52-2"><a></a></span>
+<span id="cb52-3"><a></a>relationship_plot</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>그래프 객체는 다시 표시하거나, 제목과 층을 더하거나, 다른 그래프와 조합할 수 있습니다.</p>
+</section>
+<section id="patchwork로-그래프를-조합한다" class="slide level2">
+<h2><code>patchwork</code>로 그래프를 조합한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>cell_box_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb53-2"><a></a>  sample_metadata,</span>
+<span id="cb53-3"><a></a>  <span class="fu">aes</span>(<span class="at">x =</span> condition, <span class="at">y =</span> cell_count,</span>
+<span id="cb53-4"><a></a>      <span class="at">fill =</span> condition)</span>
+<span id="cb53-5"><a></a>) <span class="sc">+</span></span>
+<span id="cb53-6"><a></a>  <span class="fu">geom_boxplot</span>()</span>
+<span id="cb53-7"><a></a></span>
+<span id="cb53-8"><a></a>combined_plot <span class="ot">&lt;-</span> cell_box_plot <span class="sc">|</span> relationship_plot</span>
+<span id="cb53-9"><a></a></span>
+<span id="cb53-10"><a></a>combined_plot <span class="sc">+</span></span>
+<span id="cb53-11"><a></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"PBMC 샘플 QC 요약"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>|</code>: 좌우 배치</li>
+<li><code>/</code>: 위아래 배치</li>
+<li>Seurat의 여러 QC 그래프도 같은 방식으로 조합할 수 있습니다.</li>
 </ul>
 </section>
 <section id="그래프를-해석할-때-주의한다" class="slide level2">
@@ -621,23 +832,23 @@
 </section>
 <section id="요약표를-csv-파일로-저장한다" class="slide level2">
 <h2>요약표를 CSV 파일로 저장한다</h2>
-<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">dir.create</span>(<span class="st">"results"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb37-2"><a></a></span>
-<span id="cb37-3"><a></a><span class="fu">write.csv</span>(</span>
-<span id="cb37-4"><a></a>  condition_summary,</span>
-<span id="cb37-5"><a></a>  <span class="st">"results/condition_summary.csv"</span>,</span>
-<span id="cb37-6"><a></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb37-7"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">dir.create</span>(<span class="st">"results"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb54-2"><a></a></span>
+<span id="cb54-3"><a></a><span class="fu">write.csv</span>(</span>
+<span id="cb54-4"><a></a>  condition_summary,</span>
+<span id="cb54-5"><a></a>  <span class="st">"results/condition_summary.csv"</span>,</span>
+<span id="cb54-6"><a></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb54-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>저장한 파일을 다시 불러와 행, 열, 값을 확인합니다.</p>
 </section>
 <section id="png로-그래프-저장을-시작한다" class="slide level2">
 <h2><code>png()</code>로 그래프 저장을 시작한다</h2>
-<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">png</span>(</span>
-<span id="cb38-2"><a></a>  <span class="st">"results/cell_count_by_condition.png"</span>,</span>
-<span id="cb38-3"><a></a>  <span class="at">width =</span> <span class="dv">900</span>,</span>
-<span id="cb38-4"><a></a>  <span class="at">height =</span> <span class="dv">600</span>,</span>
-<span id="cb38-5"><a></a>  <span class="at">res =</span> <span class="dv">120</span></span>
-<span id="cb38-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">png</span>(</span>
+<span id="cb55-2"><a></a>  <span class="st">"results/cell_count_by_condition.png"</span>,</span>
+<span id="cb55-3"><a></a>  <span class="at">width =</span> <span class="dv">900</span>,</span>
+<span id="cb55-4"><a></a>  <span class="at">height =</span> <span class="dv">600</span>,</span>
+<span id="cb55-5"><a></a>  <span class="at">res =</span> <span class="dv">120</span></span>
+<span id="cb55-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>이후에 그리는 그래프가 PNG 파일로 전달됩니다.</li>
 <li>너비와 높이는 픽셀 단위입니다.</li>
@@ -646,22 +857,22 @@
 </section>
 <section id="그래프를-그리고-dev.off로-저장을-마친다" class="slide level2">
 <h2>그래프를 그리고 <code>dev.off()</code>로 저장을 마친다</h2>
-<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">boxplot</span>(</span>
-<span id="cb39-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
-<span id="cb39-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
-<span id="cb39-4"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 세포 수"</span>,</span>
-<span id="cb39-5"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
-<span id="cb39-6"><a></a>  <span class="at">ylab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb39-7"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
-<span id="cb39-8"><a></a>)</span>
-<span id="cb39-9"><a></a></span>
-<span id="cb39-10"><a></a><span class="fu">dev.off</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="fu">boxplot</span>(</span>
+<span id="cb56-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
+<span id="cb56-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
+<span id="cb56-4"><a></a>  <span class="at">main =</span> <span class="st">"실험 조건별 세포 수"</span>,</span>
+<span id="cb56-5"><a></a>  <span class="at">xlab =</span> <span class="st">"실험 조건"</span>,</span>
+<span id="cb56-6"><a></a>  <span class="at">ylab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb56-7"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4472C4"</span>, <span class="st">"#ED7D31"</span>)</span>
+<span id="cb56-8"><a></a>)</span>
+<span id="cb56-9"><a></a></span>
+<span id="cb56-10"><a></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>dev.off()</code>를 실행해야 그래프 파일 저장이 완료됩니다.</p>
 </section>
 <section id="저장된-결과-파일을-확인한다" class="slide level2">
 <h2>저장된 결과 파일을 확인한다</h2>
-<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">file.exists</span>(<span class="st">"results/condition_summary.csv"</span>)</span>
-<span id="cb40-2"><a></a><span class="fu">file.exists</span>(<span class="st">"results/cell_count_by_condition.png"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">file.exists</span>(<span class="st">"results/condition_summary.csv"</span>)</span>
+<span id="cb57-2"><a></a><span class="fu">file.exists</span>(<span class="st">"results/cell_count_by_condition.png"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>RStudio의 Files 창에서도 결과 파일을 열어 표와 그래프를 직접 확인합니다.</p>
 </section>
 <section id="흔한-오류-1-숫자형-변수를-막대그래프로만-표현한다" class="slide level2">
@@ -674,70 +885,94 @@
 </section>
 <section id="흔한-오류-2-축-이름이-없다" class="slide level2">
 <h2>흔한 오류 2: 축 이름이 없다</h2>
-<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">plot</span>(</span>
-<span id="cb41-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb41-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb41-4"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
-<span id="cb41-5"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span></span>
-<span id="cb41-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">plot</span>(</span>
+<span id="cb58-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb58-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb58-4"><a></a>  <span class="at">xlab =</span> <span class="st">"세포 수"</span>,</span>
+<span id="cb58-5"><a></a>  <span class="at">ylab =</span> <span class="st">"검출 유전자 수 중앙값"</span></span>
+<span id="cb58-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>그래프만 따로 보아도 변수의 의미를 알 수 있게 작성합니다.</p>
 </section>
 <section id="흔한-오류-3-dev.off를-실행하지-않는다" class="slide level2">
 <h2>흔한 오류 3: <code>dev.off()</code>를 실행하지 않는다</h2>
-<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">png</span>(<span class="st">"results/example.png"</span>)</span>
-<span id="cb42-2"><a></a><span class="fu">plot</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
-<span id="cb42-3"><a></a><span class="fu">dev.off</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">png</span>(<span class="st">"results/example.png"</span>)</span>
+<span id="cb59-2"><a></a><span class="fu">plot</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
+<span id="cb59-3"><a></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>파일 저장 코드는 <code>png()</code> → 그래프 함수 → <code>dev.off()</code> 순서로 작성합니다.</p>
 </section>
 <section id="실습-1-전체와-그룹별-요약하기" class="slide level2">
 <h2>실습 1: 전체와 그룹별 요약하기</h2>
-<div class="sourceCode" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">summary</span>(sample_metadata)</span>
-<span id="cb43-2"><a></a><span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
-<span id="cb43-3"><a></a></span>
-<span id="cb43-4"><a></a><span class="fu">tapply</span>(</span>
-<span id="cb43-5"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb43-6"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
-<span id="cb43-7"><a></a>  mean</span>
-<span id="cb43-8"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="fu">summary</span>(sample_metadata)</span>
+<span id="cb60-2"><a></a><span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition)</span>
+<span id="cb60-3"><a></a></span>
+<span id="cb60-4"><a></a><span class="fu">tapply</span>(</span>
+<span id="cb60-5"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb60-6"><a></a>  sample_metadata<span class="sc">$</span>condition,</span>
+<span id="cb60-7"><a></a>  mean</span>
+<span id="cb60-8"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>조건별 평균과 중앙값을 비교합니다.</p>
 </section>
 <section id="실습-2-그룹별-요약표-만들기" class="slide level2">
 <h2>실습 2: 그룹별 요약표 만들기</h2>
-<div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
-<span id="cb44-2"><a></a>  <span class="fu">cbind</span>(cell_count, median_genes, mito_percent) <span class="sc">~</span> condition,</span>
-<span id="cb44-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
-<span id="cb44-4"><a></a>  <span class="at">FUN =</span> mean</span>
-<span id="cb44-5"><a></a>)</span>
-<span id="cb44-6"><a></a></span>
-<span id="cb44-7"><a></a>condition_summary</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
+<span id="cb61-2"><a></a>  <span class="fu">cbind</span>(cell_count, median_genes, mito_percent) <span class="sc">~</span> condition,</span>
+<span id="cb61-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
+<span id="cb61-4"><a></a>  <span class="at">FUN =</span> mean</span>
+<span id="cb61-5"><a></a>)</span>
+<span id="cb61-6"><a></a></span>
+<span id="cb61-7"><a></a>condition_summary</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>샘플 수를 추가하고 소수점 자릿수를 정리합니다.</p>
 </section>
 <section id="실습-3-질문별-그래프-작성하기" class="slide level2">
 <h2>실습 3: 질문별 그래프 작성하기</h2>
-<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">barplot</span>(<span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition))</span>
-<span id="cb45-2"><a></a><span class="fu">hist</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
-<span id="cb45-3"><a></a><span class="fu">boxplot</span>(cell_count <span class="sc">~</span> condition, <span class="at">data =</span> sample_metadata)</span>
-<span id="cb45-4"><a></a><span class="fu">plot</span>(sample_metadata<span class="sc">$</span>cell_count, sample_metadata<span class="sc">$</span>median_genes)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="fu">barplot</span>(<span class="fu">table</span>(sample_metadata<span class="sc">$</span>condition))</span>
+<span id="cb62-2"><a></a><span class="fu">hist</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
+<span id="cb62-3"><a></a><span class="fu">boxplot</span>(cell_count <span class="sc">~</span> condition, <span class="at">data =</span> sample_metadata)</span>
+<span id="cb62-4"><a></a><span class="fu">plot</span>(sample_metadata<span class="sc">$</span>cell_count, sample_metadata<span class="sc">$</span>median_genes)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 그래프가 어떤 질문에 답하는지 설명합니다.</p>
 </section>
 <section id="실습-4-결과-저장하기" class="slide level2">
 <h2>실습 4: 결과 저장하기</h2>
-<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">write.csv</span>(</span>
-<span id="cb46-2"><a></a>  condition_summary,</span>
-<span id="cb46-3"><a></a>  <span class="st">"results/condition_summary.csv"</span>,</span>
-<span id="cb46-4"><a></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-5"><a></a>)</span>
-<span id="cb46-6"><a></a></span>
-<span id="cb46-7"><a></a><span class="fu">png</span>(<span class="st">"results/cell_count_by_condition.png"</span>)</span>
-<span id="cb46-8"><a></a><span class="fu">boxplot</span>(cell_count <span class="sc">~</span> condition, <span class="at">data =</span> sample_metadata)</span>
-<span id="cb46-9"><a></a><span class="fu">dev.off</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">write.csv</span>(</span>
+<span id="cb63-2"><a></a>  condition_summary,</span>
+<span id="cb63-3"><a></a>  <span class="st">"results/condition_summary.csv"</span>,</span>
+<span id="cb63-4"><a></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb63-5"><a></a>)</span>
+<span id="cb63-6"><a></a></span>
+<span id="cb63-7"><a></a><span class="fu">png</span>(<span class="st">"results/cell_count_by_condition.png"</span>)</span>
+<span id="cb63-8"><a></a><span class="fu">boxplot</span>(cell_count <span class="sc">~</span> condition, <span class="at">data =</span> sample_metadata)</span>
+<span id="cb63-9"><a></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>저장한 표와 그래프 파일을 직접 열어 확인합니다.</p>
+</section>
+<section id="실습-5-dplyr로-그룹별-요약하기" class="slide level2">
+<h2>실습 5: dplyr로 그룹별 요약하기</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>condition_summary_dplyr <span class="ot">&lt;-</span> sample_metadata <span class="sc">%&gt;%</span></span>
+<span id="cb64-2"><a></a>  <span class="fu">group_by</span>(condition) <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a></a>  <span class="fu">summarise</span>(</span>
+<span id="cb64-4"><a></a>    <span class="at">sample_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb64-5"><a></a>    <span class="at">mean_cells =</span> <span class="fu">mean</span>(cell_count),</span>
+<span id="cb64-6"><a></a>    <span class="at">mean_genes =</span> <span class="fu">mean</span>(median_genes),</span>
+<span id="cb64-7"><a></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb64-8"><a></a>  )</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>aggregate()</code> 결과와 행 수 및 평균값을 비교합니다.</p>
+</section>
+<section id="실습-6-그룹별-상위-마커-선택하기" class="slide level2">
+<h2>실습 6: 그룹별 상위 마커 선택하기</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>top_markers <span class="ot">&lt;-</span> pbmc_markers <span class="sc">%&gt;%</span></span>
+<span id="cb65-2"><a></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a></a>  <span class="fu">filter</span>(avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_log2FC)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-5"><a></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-6"><a></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>각 cluster에서 어떤 유전자가 선택됐는지 확인합니다.</p>
 </section>
 <section id="오늘-배운-내용" class="slide level2 summary">
 <h2>오늘 배운 내용</h2>
 <ul>
 <li>전체 요약과 그룹별 요약은 서로 다른 질문에 답합니다.</li>
 <li><code>table()</code>, <code>tapply()</code>, <code>aggregate()</code>로 그룹 정보를 요약할 수 있습니다.</li>
+<li>dplyr의 <code>group_by()</code>와 <code>summarise()</code>로 그룹별 요약표를 만들 수 있습니다.</li>
+<li><code>arrange()</code>와 <code>slice_head()</code>로 그룹별 상위 행을 선택할 수 있습니다.</li>
 <li>질문과 자료형에 맞춰 막대그래프, 히스토그램, 상자그림, 산점도를 선택합니다.</li>
 <li>제목, 축 이름, 범례로 그래프의 의미를 설명합니다.</li>
 <li>요약표는 <code>write.csv()</code>, 그래프는 <code>png()</code>와 <code>dev.off()</code>로 저장합니다.</li>
@@ -747,8 +982,9 @@
 <h2>종료 점검과 다음 차시</h2>
 <ol type="1">
 <li><code>tapply()</code>의 세 가지 주요 인자는 무엇입니까?</li>
+<li><code>group_by()</code>와 <code>summarise()</code>는 각각 어떤 역할을 합니까?</li>
+<li>그룹별 상위 행을 선택하기 전에 왜 정렬해야 합니까?</li>
 <li>그룹별 숫자형 분포를 비교하려면 어떤 그래프가 적합합니까?</li>
-<li>두 숫자형 변수의 관계는 어떤 그래프로 확인합니까?</li>
 <li>PNG 그래프 저장을 마칠 때 어떤 함수를 실행합니까?</li>
 </ol>
 <p><strong>다음 차시:</strong> 패키지를 사용하고 리스트와 복잡한 R 객체의 구조 살펴보기</p>
@@ -944,7 +1180,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1018,13 +1254,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -1039,7 +1276,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

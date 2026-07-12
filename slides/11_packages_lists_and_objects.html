@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 11차시: 패키지, 리스트와 R 객체</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -205,6 +208,7 @@
 <li>패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.</li>
 <li>서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.</li>
 <li><code>class()</code>, <code>str()</code>, <code>attributes()</code>로 객체 구조를 조사할 수 있다.</li>
+<li><code>ggplot2</code>와 Seurat의 시각화 결과가 R 객체임을 설명할 수 있다.</li>
 <li>복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다.</li>
 </ol>
 </section>
@@ -227,13 +231,13 @@
 </section>
 <section id="패키지-사용은-두-단계로-나뉜다" class="slide level2">
 <h2>패키지 사용은 두 단계로 나뉜다</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>1. 설치: 컴퓨터에 패키지를 내려받아 준비한다.</span>
-<span id="cb1-2"><a></a>2. 불러오기: 현재 R 세션에서 패키지를 사용하도록 연결한다.</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>1. 설치: 컴퓨터에 패키지를 내려받아 준비한다.</span>
+<span id="cb1-2"><a></a>2. 불러오기: 현재 R 세션에서 패키지를 사용하도록 연결한다.</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>설치는 보통 한 번, 불러오기는 R을 새로 시작할 때마다 수행합니다.</p>
 </section>
 <section id="install.packages로-외부-패키지를-설치한다" class="slide level2">
 <h2><code>install.packages()</code>로 외부 패키지를 설치한다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># install.packages("ggplot2")</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># install.packages("ggplot2")</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>따옴표 안에 패키지 이름을 작성합니다.</li>
 <li>인터넷 연결이 필요합니다.</li>
@@ -245,7 +249,7 @@
 </section>
 <section id="큰-패키지는-설치-전에-준비-사항을-확인한다" class="slide level2">
 <h2>큰 패키지는 설치 전에 준비 사항을 확인한다</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># install.packages("Seurat")</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># install.packages("Seurat")</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Seurat처럼 의존 패키지가 많은 패키지는 설치 시간이 오래 걸릴 수 있습니다.</li>
 <li>R 버전, 운영체제, 설치 오류 메시지를 함께 확인합니다.</li>
@@ -254,7 +258,7 @@
 </section>
 <section id="library로-패키지를-현재-세션에-불러온다" class="slide level2">
 <h2><code>library()</code>로 패키지를 현재 세션에 불러온다</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># library(ggplot2)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># library(ggplot2)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>패키지 이름에 따옴표를 쓰지 않는 형태를 주로 사용합니다.</li>
 <li>설치되지 않은 패키지는 <code>library()</code>로 불러올 수 없습니다.</li>
@@ -288,7 +292,7 @@
 </section>
 <section id="패키지가-설치됐는지-확인한다" class="slide level2">
 <h2>패키지가 설치됐는지 확인한다</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="st">"stats"</span> <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="st">"stats"</span> <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>installed.packages()</code>는 설치된 패키지 정보를 반환합니다.</li>
 <li>패키지 이름이 목록에 있는지 <code>%in%</code>으로 확인할 수 있습니다.</li>
@@ -296,8 +300,8 @@
 </section>
 <section id="requirenamespace로-조용히-확인할-수-있다" class="slide level2">
 <h2><code>requireNamespace()</code>로 조용히 확인할 수 있다</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">requireNamespace</span>(<span class="st">"stats"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-2"><a></a><span class="fu">requireNamespace</span>(<span class="st">"a_package_not_installed"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">requireNamespace</span>(<span class="st">"stats"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-2"><a></a><span class="fu">requireNamespace</span>(<span class="st">"a_package_not_installed"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>설치되어 있으면 <code>TRUE</code>, 없으면 <code>FALSE</code>입니다.</li>
 <li>패키지를 검색 경로에 연결하지 않고 설치 여부만 확인합니다.</li>
@@ -305,7 +309,7 @@
 </section>
 <section id="패키지-버전을-확인한다" class="slide level2">
 <h2>패키지 버전을 확인한다</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"stats"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"stats"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>같은 코드도 패키지 버전에 따라 동작이 달라질 수 있습니다.</li>
 <li>재현 가능한 분석 기록에는 R과 주요 패키지 버전이 중요합니다.</li>
@@ -313,8 +317,8 @@
 </section>
 <section id="패키지함수로-출처를-명시한다" class="slide level2">
 <h2><code>패키지::함수</code>로 출처를 명시한다</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>stats<span class="sc">::</span><span class="fu">median</span>(<span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>))</span>
-<span id="cb8-2"><a></a>utils<span class="sc">::</span><span class="fu">head</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>stats<span class="sc">::</span><span class="fu">median</span>(<span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>))</span>
+<span id="cb8-2"><a></a>utils<span class="sc">::</span><span class="fu">head</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>패키지를 <code>library()</code>로 불러오지 않고 특정 함수를 사용할 수 있습니다.</li>
 <li>함수가 어느 패키지에서 왔는지 코드에 분명히 표시됩니다.</li>
@@ -323,17 +327,17 @@
 <section id="같은-이름의-함수가-있을-수-있다" class="slide level2">
 <h2>같은 이름의 함수가 있을 수 있다</h2>
 <p>여러 패키지가 같은 이름의 함수를 제공하면 어떤 함수가 사용되는지 혼동할 수 있습니다.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>package_name<span class="sc">::</span><span class="fu">function_name</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>package_name<span class="sc">::</span><span class="fu">function_name</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>::</code> 표기를 사용하면 원하는 패키지의 함수를 명시적으로 선택할 수 있습니다.</p>
 </section>
 <section id="도움말에서-함수의-패키지를-확인한다" class="slide level2">
 <h2>도움말에서 함수의 패키지를 확인한다</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>?stats<span class="sc">::</span>median</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>?stats<span class="sc">::</span>median</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>도움말의 제목과 설명에서 함수가 속한 패키지, 인자, 반환값, 예제를 확인합니다.</p>
 </section>
 <section id="sessioninfo로-실행-환경을-기록한다" class="slide level2">
 <h2><code>sessionInfo()</code>로 실행 환경을 기록한다</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">sessionInfo</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>다음 정보를 확인할 수 있습니다.</p>
 <ul>
 <li>R 버전과 운영체제</li>
@@ -343,9 +347,9 @@
 </section>
 <section id="서로-다른-자료형을-하나로-묶고-싶다" class="slide level2">
 <h2>서로 다른 자료형을 하나로 묶고 싶다</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>sample_id <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>sample_id <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb12-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1240</span></span>
-<span id="cb12-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>벡터는 원소의 자료형을 하나로 맞춥니다.</li>
 <li>관련된 문자, 숫자, 논리값을 원래 자료형 그대로 묶으려면 리스트를 사용합니다.</li>
@@ -353,38 +357,38 @@
 </section>
 <section id="list로-리스트를-만든다" class="slide level2">
 <h2><code>list()</code>로 리스트를 만든다</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb13-2"><a></a>  <span class="st">"control_1"</span>,</span>
 <span id="cb13-3"><a></a>  <span class="dv">1240</span>,</span>
 <span id="cb13-4"><a></a>  <span class="cn">TRUE</span></span>
 <span id="cb13-5"><a></a>)</span>
 <span id="cb13-6"><a></a></span>
-<span id="cb13-7"><a></a>sample_result</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-7"><a></a>sample_result</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>리스트의 각 원소는 서로 다른 자료형과 크기를 가질 수 있습니다.</p>
 </section>
 <section id="리스트-원소에-이름을-붙인다" class="slide level2">
 <h2>리스트 원소에 이름을 붙인다</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb14-2"><a></a>  <span class="at">sample_id =</span> <span class="st">"control_1"</span>,</span>
 <span id="cb14-3"><a></a>  <span class="at">cell_count =</span> <span class="dv">1240</span>,</span>
 <span id="cb14-4"><a></a>  <span class="at">passed_qc =</span> <span class="cn">TRUE</span></span>
 <span id="cb14-5"><a></a>)</span>
 <span id="cb14-6"><a></a></span>
 <span id="cb14-7"><a></a>sample_result</span>
-<span id="cb14-8"><a></a><span class="fu">names</span>(sample_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-8"><a></a><span class="fu">names</span>(sample_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이름을 붙이면 각 원소의 의미와 접근 방법이 분명해집니다.</p>
 </section>
 <section id="로-이름이-있는-원소를-꺼낸다" class="slide level2">
 <h2><code>$</code>로 이름이 있는 원소를 꺼낸다</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_result<span class="sc">$</span>sample_id</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_result<span class="sc">$</span>sample_id</span>
 <span id="cb15-2"><a></a>sample_result<span class="sc">$</span>cell_count</span>
-<span id="cb15-3"><a></a>sample_result<span class="sc">$</span>passed_qc</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a></a>sample_result<span class="sc">$</span>passed_qc</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>$</code>는 원소의 내용을 원래 자료형으로 반환합니다.</p>
 </section>
 <section id="로-원소의-내용을-꺼낸다" class="slide level2">
 <h2><code>[[ ]]</code>로 원소의 내용을 꺼낸다</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_result[[<span class="dv">1</span>]]</span>
-<span id="cb16-2"><a></a>sample_result[[<span class="st">"cell_count"</span>]]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_result[[<span class="dv">1</span>]]</span>
+<span id="cb16-2"><a></a>sample_result[[<span class="st">"cell_count"</span>]]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>위치 또는 이름을 사용할 수 있습니다.</li>
 <li>선택한 원소의 내용 자체를 반환합니다.</li>
@@ -392,8 +396,8 @@
 </section>
 <section id="는-원소를-포함한-리스트를-반환한다" class="slide level2">
 <h2><code>[ ]</code>는 원소를 포함한 리스트를 반환한다</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>sample_result[<span class="dv">1</span>]</span>
-<span id="cb17-2"><a></a>sample_result[<span class="st">"cell_count"</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>sample_result[<span class="dv">1</span>]</span>
+<span id="cb17-2"><a></a>sample_result[<span class="st">"cell_count"</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>결과는 원소가 하나여도 리스트입니다.</li>
 <li>리스트의 일부를 다시 리스트로 유지할 때 사용합니다.</li>
@@ -401,8 +405,8 @@
 </section>
 <section id="와-의-결과를-비교한다" class="slide level2">
 <h2><code>[ ]</code>와 <code>[[ ]]</code>의 결과를 비교한다</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">class</span>(sample_result[<span class="st">"cell_count"</span>])</span>
-<span id="cb18-2"><a></a><span class="fu">class</span>(sample_result[[<span class="st">"cell_count"</span>]])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">class</span>(sample_result[<span class="st">"cell_count"</span>])</span>
+<span id="cb18-2"><a></a><span class="fu">class</span>(sample_result[[<span class="st">"cell_count"</span>]])</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -428,61 +432,61 @@
 </section>
 <section id="여러-원소를-리스트로-선택한다" class="slide level2">
 <h2>여러 원소를 리스트로 선택한다</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>sample_result[<span class="fu">c</span>(<span class="st">"sample_id"</span>, <span class="st">"passed_qc"</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>sample_result[<span class="fu">c</span>(<span class="st">"sample_id"</span>, <span class="st">"passed_qc"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>여러 원소를 선택할 때는 <code>[ ]</code> 안에 이름 벡터를 사용합니다.</p>
 </section>
 <section id="리스트에는-벡터와-데이터-프레임도-넣을-수-있다" class="slide level2">
 <h2>리스트에는 벡터와 데이터 프레임도 넣을 수 있다</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>analysis_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>analysis_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb20-2"><a></a>  <span class="at">cell_counts =</span> <span class="fu">c</span>(<span class="dv">1240</span>, <span class="dv">1385</span>, <span class="dv">1090</span>),</span>
 <span id="cb20-3"><a></a>  <span class="at">qc_labels =</span> <span class="fu">c</span>(<span class="st">"pass"</span>, <span class="st">"pass"</span>, <span class="st">"review"</span>),</span>
 <span id="cb20-4"><a></a>  <span class="at">metadata =</span> sample_metadata</span>
 <span id="cb20-5"><a></a>)</span>
 <span id="cb20-6"><a></a></span>
-<span id="cb20-7"><a></a><span class="fu">str</span>(analysis_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-7"><a></a><span class="fu">str</span>(analysis_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 원소는 길이가 다른 벡터나 전체 데이터 프레임일 수도 있습니다.</p>
 </section>
 <section id="리스트-안에-리스트를-넣을-수-있다" class="slide level2">
 <h2>리스트 안에 리스트를 넣을 수 있다</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>analysis_parameters <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>analysis_parameters <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb21-2"><a></a>  <span class="at">qc =</span> <span class="fu">list</span>(</span>
 <span id="cb21-3"><a></a>    <span class="at">min_cells =</span> <span class="dv">1200</span>,</span>
 <span id="cb21-4"><a></a>    <span class="at">min_genes =</span> <span class="dv">2000</span>,</span>
 <span id="cb21-5"><a></a>    <span class="at">max_mito =</span> <span class="dv">8</span></span>
 <span id="cb21-6"><a></a>  ),</span>
 <span id="cb21-7"><a></a>  <span class="at">project_name =</span> <span class="st">"training_project"</span></span>
-<span id="cb21-8"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-8"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이처럼 리스트가 여러 단계로 들어 있는 구조를 중첩 리스트라고 합니다.</p>
 </section>
 <section id="중첩-리스트의-값에-단계적으로-접근한다" class="slide level2">
 <h2>중첩 리스트의 값에 단계적으로 접근한다</h2>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>analysis_parameters<span class="sc">$</span>qc<span class="sc">$</span>min_cells</span>
-<span id="cb22-2"><a></a>analysis_parameters[[<span class="st">"qc"</span>]][[<span class="st">"max_mito"</span>]]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>analysis_parameters<span class="sc">$</span>qc<span class="sc">$</span>min_cells</span>
+<span id="cb22-2"><a></a>analysis_parameters[[<span class="st">"qc"</span>]][[<span class="st">"max_mito"</span>]]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>바깥 원소부터 안쪽 원소로 한 단계씩 이동합니다.</p>
 </section>
 <section id="중간-구조를-확인하면서-접근한다" class="slide level2">
 <h2>중간 구조를 확인하면서 접근한다</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">names</span>(analysis_parameters)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">names</span>(analysis_parameters)</span>
 <span id="cb23-2"><a></a><span class="fu">names</span>(analysis_parameters<span class="sc">$</span>qc)</span>
-<span id="cb23-3"><a></a><span class="fu">str</span>(analysis_parameters<span class="sc">$</span>qc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-3"><a></a><span class="fu">str</span>(analysis_parameters<span class="sc">$</span>qc)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>복잡한 객체에서는 이름을 추측하기보다 각 단계의 구조를 확인합니다.</p>
 </section>
 <section id="기존-리스트-원소를-수정한다" class="slide level2">
 <h2>기존 리스트 원소를 수정한다</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>sample_result<span class="sc">$</span>cell_count <span class="ot">&lt;-</span> <span class="dv">1300</span></span>
-<span id="cb24-2"><a></a>sample_result<span class="sc">$</span>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>sample_result<span class="sc">$</span>cell_count <span class="ot">&lt;-</span> <span class="dv">1300</span></span>
+<span id="cb24-2"><a></a>sample_result<span class="sc">$</span>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>기존 이름에 새 값을 저장하면 해당 원소가 수정됩니다.</p>
 </section>
 <section id="새-원소를-추가한다" class="slide level2">
 <h2>새 원소를 추가한다</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>sample_result<span class="sc">$</span>mito_percent <span class="ot">&lt;-</span> <span class="fl">4.2</span></span>
-<span id="cb25-2"><a></a>sample_result</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>sample_result<span class="sc">$</span>mito_percent <span class="ot">&lt;-</span> <span class="fl">4.2</span></span>
+<span id="cb25-2"><a></a>sample_result</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>존재하지 않는 이름에 값을 저장하면 새 원소가 추가됩니다.</p>
 </section>
 <section id="원소를-제거할-수-있다" class="slide level2">
 <h2>원소를 제거할 수 있다</h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>sample_result<span class="sc">$</span>mito_percent <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb26-2"><a></a>sample_result</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>sample_result<span class="sc">$</span>mito_percent <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb26-2"><a></a>sample_result</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>리스트 원소에 <code>NULL</code>을 저장하면 해당 원소가 제거됩니다.</p>
 </section>
 <section id="null과-na는-의미가-다르다" class="slide level2">
@@ -491,14 +495,14 @@
 <li><code>NA</code>: 값이 있어야 하지만 알 수 없는 결측값</li>
 <li><code>NULL</code>: 객체나 원소 자체가 없음을 나타냄</li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">list</span>(<span class="at">measured_value =</span> <span class="cn">NA</span>)</span>
-<span id="cb27-2"><a></a><span class="fu">list</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">list</span>(<span class="at">measured_value =</span> <span class="cn">NA</span>)</span>
+<span id="cb27-2"><a></a><span class="fu">list</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>분석에서 두 값을 같은 의미로 사용하지 않습니다.</p>
 </section>
 <section id="데이터-프레임도-리스트의-한-종류다" class="slide level2">
 <h2>데이터 프레임도 리스트의 한 종류다</h2>
-<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">is.list</span>(sample_metadata)</span>
-<span id="cb28-2"><a></a><span class="fu">class</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">is.list</span>(sample_metadata)</span>
+<span id="cb28-2"><a></a><span class="fu">class</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>데이터 프레임은 길이가 같은 열 벡터들을 묶은 특별한 리스트입니다.</li>
 <li>데이터 프레임의 <code>$</code>와 <code>[[ ]]</code>가 리스트와 비슷하게 동작하는 이유입니다.</li>
@@ -506,7 +510,7 @@
 </section>
 <section id="분석-결과를-하나의-리스트로-정리한다" class="slide level2">
 <h2>분석 결과를 하나의 리스트로 정리한다</h2>
-<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>condition_summary <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(</span>
 <span id="cb29-2"><a></a>  cell_count <span class="sc">~</span> condition,</span>
 <span id="cb29-3"><a></a>  <span class="at">data =</span> sample_metadata,</span>
 <span id="cb29-4"><a></a>  <span class="at">FUN =</span> mean</span>
@@ -516,25 +520,25 @@
 <span id="cb29-8"><a></a>  <span class="at">metadata =</span> sample_metadata,</span>
 <span id="cb29-9"><a></a>  <span class="at">summary =</span> condition_summary,</span>
 <span id="cb29-10"><a></a>  <span class="at">parameters =</span> analysis_parameters</span>
-<span id="cb29-11"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-11"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>관련된 입력 데이터, 결과, 설정값을 한 객체에 묶을 수 있습니다.</p>
 </section>
 <section id="class는-객체의-종류를-알려-준다" class="slide level2">
 <h2><code>class()</code>는 객체의 종류를 알려 준다</h2>
-<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">class</span>(sample_metadata)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">class</span>(sample_metadata)</span>
 <span id="cb30-2"><a></a><span class="fu">class</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
-<span id="cb30-3"><a></a><span class="fu">class</span>(analysis_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-3"><a></a><span class="fu">class</span>(analysis_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>객체의 종류에 따라 사용할 수 있는 함수와 접근 방법이 달라집니다.</p>
 </section>
 <section id="typeof는-내부-저장-방식을-보여-준다" class="slide level2">
 <h2><code>typeof()</code>는 내부 저장 방식을 보여 준다</h2>
-<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">typeof</span>(sample_metadata)</span>
-<span id="cb31-2"><a></a><span class="fu">typeof</span>(analysis_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">typeof</span>(sample_metadata)</span>
+<span id="cb31-2"><a></a><span class="fu">typeof</span>(analysis_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>데이터 프레임과 일반 리스트의 <code>class()</code>는 다르지만 내부적으로 둘 다 리스트 구조를 사용합니다.</p>
 </section>
 <section id="str는-복잡한-객체를-조사하는-출발점이다" class="slide level2">
 <h2><code>str()</code>는 복잡한 객체를 조사하는 출발점이다</h2>
-<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">str</span>(analysis_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">str</span>(analysis_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>str()</code>는 다음 정보를 한 번에 보여 줍니다.</p>
 <ul>
 <li>객체와 하위 원소의 종류</li>
@@ -544,19 +548,19 @@
 </section>
 <section id="큰-객체는-표시할-깊이를-제한한다" class="slide level2">
 <h2>큰 객체는 표시할 깊이를 제한한다</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>중첩 단계가 많은 객체는 필요한 깊이까지만 확인하면 출력이 지나치게 길어지는 것을 막을 수 있습니다.</p>
 </section>
 <section id="names로-현재-단계의-원소-이름을-확인한다" class="slide level2">
 <h2><code>names()</code>로 현재 단계의 원소 이름을 확인한다</h2>
-<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">names</span>(analysis_result)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">names</span>(analysis_result)</span>
 <span id="cb34-2"><a></a><span class="fu">names</span>(analysis_result<span class="sc">$</span>parameters)</span>
-<span id="cb34-3"><a></a><span class="fu">names</span>(analysis_result<span class="sc">$</span>parameters<span class="sc">$</span>qc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-3"><a></a><span class="fu">names</span>(analysis_result<span class="sc">$</span>parameters<span class="sc">$</span>qc)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>한 단계씩 이름을 확인한 뒤 필요한 원소에 접근합니다.</p>
 </section>
 <section id="attributes로-객체의-속성을-확인한다" class="slide level2">
 <h2><code>attributes()</code>로 객체의 속성을 확인한다</h2>
-<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">attributes</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">attributes</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>데이터 프레임에는 다음과 같은 속성이 있습니다.</p>
 <ul>
 <li>열 이름을 나타내는 <code>names</code></li>
@@ -566,38 +570,96 @@
 </section>
 <section id="행렬의-속성을-확인한다" class="slide level2">
 <h2>행렬의 속성을 확인한다</h2>
-<div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>example_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>example_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb36-2"><a></a></span>
 <span id="cb36-3"><a></a><span class="fu">class</span>(example_matrix)</span>
-<span id="cb36-4"><a></a><span class="fu">attributes</span>(example_matrix)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-4"><a></a><span class="fu">attributes</span>(example_matrix)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>행렬은 차원을 나타내는 <code>dim</code> 속성을 가집니다.</p>
 </section>
 <section id="object.size로-객체-크기를-확인한다" class="slide level2">
 <h2><code>object.size()</code>로 객체 크기를 확인한다</h2>
-<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">object.size</span>(analysis_result)</span>
-<span id="cb37-2"><a></a><span class="fu">format</span>(<span class="fu">object.size</span>(analysis_result), <span class="at">units =</span> <span class="st">"auto"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">object.size</span>(analysis_result)</span>
+<span id="cb37-2"><a></a><span class="fu">format</span>(<span class="fu">object.size</span>(analysis_result), <span class="at">units =</span> <span class="st">"auto"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>전사체 분석 객체는 클 수 있으므로 메모리에서 차지하는 크기를 확인하는 습관이 중요합니다.</p>
 </section>
 <section id="함수는-객체의-클래스에-따라-다르게-동작할-수-있다" class="slide level2">
 <h2>함수는 객체의 클래스에 따라 다르게 동작할 수 있다</h2>
-<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">summary</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
-<span id="cb38-2"><a></a><span class="fu">summary</span>(sample_metadata)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">summary</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
+<span id="cb38-2"><a></a><span class="fu">summary</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>같은 <code>summary()</code>라도 숫자형 벡터와 데이터 프레임에서 다른 형태의 결과를 만듭니다.</p>
 </section>
 <section id="사용-가능한-메서드를-확인할-수-있다" class="slide level2">
 <h2>사용 가능한 메서드를 확인할 수 있다</h2>
-<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">head</span>(<span class="fu">methods</span>(<span class="st">"summary"</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">head</span>(<span class="fu">methods</span>(<span class="st">"summary"</span>))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>R의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.</li>
 <li>입문 단계에서는 먼저 <code>class()</code>와 도움말로 올바른 사용법을 확인합니다.</li>
 </ul>
 </section>
+<section id="ggplot2-그래프도-조사할-수-있는-r-객체다" class="slide level2">
+<h2><code>ggplot2</code> 그래프도 조사할 수 있는 R 객체다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb40-2"><a></a></span>
+<span id="cb40-3"><a></a>qc_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb40-4"><a></a>  sample_metadata,</span>
+<span id="cb40-5"><a></a>  <span class="fu">aes</span>(<span class="at">x =</span> condition, <span class="at">y =</span> cell_count)</span>
+<span id="cb40-6"><a></a>) <span class="sc">+</span></span>
+<span id="cb40-7"><a></a>  <span class="fu">geom_boxplot</span>()</span>
+<span id="cb40-8"><a></a></span>
+<span id="cb40-9"><a></a><span class="fu">class</span>(qc_plot)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>그래프를 화면에 그리는 명령의 결과를 이름에 저장하면 다시 사용하고 수정할 수 있습니다.</p>
+</section>
+<section id="기존-그래프-객체에-층을-더할-수-있다" class="slide level2">
+<h2>기존 그래프 객체에 층을 더할 수 있다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>labeled_plot <span class="ot">&lt;-</span> qc_plot <span class="sc">+</span></span>
+<span id="cb41-2"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb41-3"><a></a>    <span class="at">title =</span> <span class="st">"실험 조건별 세포 수"</span>,</span>
+<span id="cb41-4"><a></a>    <span class="at">x =</span> <span class="st">"실험 조건"</span>,</span>
+<span id="cb41-5"><a></a>    <span class="at">y =</span> <span class="st">"세포 수"</span></span>
+<span id="cb41-6"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb41-7"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>원본 <code>qc_plot</code>은 유지되고, 설명이 추가된 새 객체가 만들어집니다.</p>
+</section>
+<section id="patchwork-결과도-하나의-복합-객체다" class="slide level2">
+<h2><code>patchwork</code> 결과도 하나의 복합 객체다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb42-2"><a></a></span>
+<span id="cb42-3"><a></a>relationship_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb42-4"><a></a>  sample_metadata,</span>
+<span id="cb42-5"><a></a>  <span class="fu">aes</span>(<span class="at">x =</span> cell_count, <span class="at">y =</span> median_genes)</span>
+<span id="cb42-6"><a></a>) <span class="sc">+</span></span>
+<span id="cb42-7"><a></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb42-8"><a></a></span>
+<span id="cb42-9"><a></a>combined_plot <span class="ot">&lt;-</span> labeled_plot <span class="sc">|</span> relationship_plot</span>
+<span id="cb42-10"><a></a><span class="fu">class</span>(combined_plot)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>완성된 그래프를 객체로 다루기 때문에 조합과 저장을 단계적으로 수행할 수 있습니다.</p>
+</section>
+<section id="seurat-시각화-함수도-그래프-객체를-반환한다" class="slide level2">
+<h2>Seurat 시각화 함수도 그래프 객체를 반환한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># 부록의 Seurat 실습에서 실행</span></span>
+<span id="cb43-2"><a></a>umap_plot <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb43-3"><a></a></span>
+<span id="cb43-4"><a></a><span class="fu">class</span>(umap_plot)</span>
+<span id="cb43-5"><a></a>umap_plot <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"PBMC 세포 군집"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>DimPlot()</code>, <code>FeaturePlot()</code>, <code>VlnPlot()</code>의 결과도 이름에 저장해 제목을 더하거나 <code>patchwork</code>로 조합할 수 있습니다.</p>
+</section>
+<section id="그래프-객체는-ggsave로-명시해-저장한다" class="slide level2">
+<h2>그래프 객체는 <code>ggsave()</code>로 명시해 저장한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">ggsave</span>(</span>
+<span id="cb44-2"><a></a>  <span class="at">filename =</span> <span class="st">"results/qc_plot.png"</span>,</span>
+<span id="cb44-3"><a></a>  <span class="at">plot =</span> labeled_plot,</span>
+<span id="cb44-4"><a></a>  <span class="at">width =</span> <span class="dv">7</span>,</span>
+<span id="cb44-5"><a></a>  <span class="at">height =</span> <span class="dv">5</span>,</span>
+<span id="cb44-6"><a></a>  <span class="at">dpi =</span> <span class="dv">150</span></span>
+<span id="cb44-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>plot</code> 인자에 저장할 객체를 명시하면 마지막으로 표시된 그래프에 의존하지 않습니다.</p>
+</section>
 <section id="복잡한-분석-객체는-구조를-먼저-확인한다" class="slide level2">
 <h2>복잡한 분석 객체는 구조를 먼저 확인한다</h2>
-<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb40-1"><a></a>1. class(object)</span>
-<span id="cb40-2"><a></a>2. str(object, max.level = 2)</span>
-<span id="cb40-3"><a></a>3. names(object)</span>
-<span id="cb40-4"><a></a>4. 필요한 하위 원소의 class()와 names()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb45-1"><a></a>1. class(object)</span>
+<span id="cb45-2"><a></a>2. str(object, max.level = 2)</span>
+<span id="cb45-3"><a></a>3. names(object)</span>
+<span id="cb45-4"><a></a>4. 필요한 하위 원소의 class()와 names()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>처음부터 깊은 위치를 추측하지 않고 바깥 구조부터 단계적으로 살펴봅니다.</p>
 </section>
 <section id="seurat-객체도-여러-정보를-담는-복합-객체다" class="slide level2">
@@ -630,26 +692,26 @@
 </section>
 <section id="saverds로-객체-하나를-저장한다" class="slide level2">
 <h2><code>saveRDS()</code>로 객체 하나를 저장한다</h2>
-<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">dir.create</span>(<span class="st">"results"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb41-2"><a></a></span>
-<span id="cb41-3"><a></a><span class="fu">saveRDS</span>(</span>
-<span id="cb41-4"><a></a>  analysis_result,</span>
-<span id="cb41-5"><a></a>  <span class="st">"results/analysis_result.rds"</span></span>
-<span id="cb41-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">dir.create</span>(<span class="st">"results"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb46-2"><a></a></span>
+<span id="cb46-3"><a></a><span class="fu">saveRDS</span>(</span>
+<span id="cb46-4"><a></a>  analysis_result,</span>
+<span id="cb46-5"><a></a>  <span class="st">"results/analysis_result.rds"</span></span>
+<span id="cb46-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>RDS 파일은 객체의 자료형과 중첩 구조를 함께 보존합니다.</p>
 </section>
 <section id="readrds로-객체를-다시-불러온다" class="slide level2">
 <h2><code>readRDS()</code>로 객체를 다시 불러온다</h2>
-<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>restored_result <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"results/analysis_result.rds"</span>)</span>
-<span id="cb42-2"><a></a></span>
-<span id="cb42-3"><a></a><span class="fu">class</span>(restored_result)</span>
-<span id="cb42-4"><a></a><span class="fu">names</span>(restored_result)</span>
-<span id="cb42-5"><a></a><span class="fu">str</span>(restored_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>restored_result <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"results/analysis_result.rds"</span>)</span>
+<span id="cb47-2"><a></a></span>
+<span id="cb47-3"><a></a><span class="fu">class</span>(restored_result)</span>
+<span id="cb47-4"><a></a><span class="fu">names</span>(restored_result)</span>
+<span id="cb47-5"><a></a><span class="fu">str</span>(restored_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>readRDS()</code>의 결과를 원하는 변수 이름에 저장합니다.</p>
 </section>
 <section id="저장-전후-객체가-같은지-확인한다" class="slide level2">
 <h2>저장 전후 객체가 같은지 확인한다</h2>
-<div class="sourceCode" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">identical</span>(analysis_result, restored_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">identical</span>(analysis_result, restored_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>TRUE</code>이면 자료형과 값, 구조가 모두 같습니다.</p>
 </section>
 <section id="csv와-rds를-목적에-맞게-선택한다" class="slide level2">
@@ -679,60 +741,60 @@
 </section>
 <section id="흔한-오류-1-설치와-불러오기를-혼동한다" class="slide level2">
 <h2>흔한 오류 1: 설치와 불러오기를 혼동한다</h2>
-<div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># 한 번 설치</span></span>
-<span id="cb44-2"><a></a><span class="co"># install.packages("package_name")</span></span>
-<span id="cb44-3"><a></a></span>
-<span id="cb44-4"><a></a><span class="co"># 새 R 세션에서 불러오기</span></span>
-<span id="cb44-5"><a></a><span class="co"># library(package_name)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="co"># 한 번 설치</span></span>
+<span id="cb49-2"><a></a><span class="co"># install.packages("package_name")</span></span>
+<span id="cb49-3"><a></a></span>
+<span id="cb49-4"><a></a><span class="co"># 새 R 세션에서 불러오기</span></span>
+<span id="cb49-5"><a></a><span class="co"># library(package_name)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>설치 명령을 분석 스크립트가 실행될 때마다 반복하지 않습니다.</p>
 </section>
 <section id="흔한-오류-2-와-를-혼동한다" class="slide level2">
 <h2>흔한 오류 2: <code>[ ]</code>와 <code>[[ ]]</code>를 혼동한다</h2>
-<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">class</span>(sample_result[<span class="st">"cell_count"</span>])</span>
-<span id="cb45-2"><a></a><span class="fu">class</span>(sample_result[[<span class="st">"cell_count"</span>]])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">class</span>(sample_result[<span class="st">"cell_count"</span>])</span>
+<span id="cb50-2"><a></a><span class="fu">class</span>(sample_result[[<span class="st">"cell_count"</span>]])</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>필요한 결과가 리스트인지 원소 내용인지 확인합니다.</p>
 </section>
 <section id="흔한-오류-3-내부-구조를-추측한다" class="slide level2">
 <h2>흔한 오류 3: 내부 구조를 추측한다</h2>
-<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">class</span>(analysis_result)</span>
-<span id="cb46-2"><a></a><span class="fu">names</span>(analysis_result)</span>
-<span id="cb46-3"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">class</span>(analysis_result)</span>
+<span id="cb51-2"><a></a><span class="fu">names</span>(analysis_result)</span>
+<span id="cb51-3"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>존재하지 않는 이름을 반복해서 시도하기보다 구조와 이름을 먼저 조사합니다.</p>
 </section>
 <section id="실습-1-패키지-상태-확인하기" class="slide level2">
 <h2>실습 1: 패키지 상태 확인하기</h2>
-<div class="sourceCode" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="st">"stats"</span> <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span>
-<span id="cb47-2"><a></a><span class="fu">requireNamespace</span>(<span class="st">"stats"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb47-3"><a></a><span class="fu">packageVersion</span>(<span class="st">"stats"</span>)</span>
-<span id="cb47-4"><a></a>stats<span class="sc">::</span><span class="fu">median</span>(<span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="st">"stats"</span> <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span>
+<span id="cb52-2"><a></a><span class="fu">requireNamespace</span>(<span class="st">"stats"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-3"><a></a><span class="fu">packageVersion</span>(<span class="st">"stats"</span>)</span>
+<span id="cb52-4"><a></a>stats<span class="sc">::</span><span class="fu">median</span>(<span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>설치, 불러오기, <code>::</code> 사용의 차이를 설명합니다.</p>
 </section>
 <section id="실습-2-이름이-있는-리스트-만들기" class="slide level2">
 <h2>실습 2: 이름이 있는 리스트 만들기</h2>
-<div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb48-2"><a></a>  <span class="at">sample_id =</span> <span class="st">"control_1"</span>,</span>
-<span id="cb48-3"><a></a>  <span class="at">cell_count =</span> <span class="dv">1240</span>,</span>
-<span id="cb48-4"><a></a>  <span class="at">passed_qc =</span> <span class="cn">TRUE</span></span>
-<span id="cb48-5"><a></a>)</span>
-<span id="cb48-6"><a></a></span>
-<span id="cb48-7"><a></a>sample_result<span class="sc">$</span>cell_count</span>
-<span id="cb48-8"><a></a>sample_result[[<span class="st">"cell_count"</span>]]</span>
-<span id="cb48-9"><a></a>sample_result[<span class="st">"cell_count"</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>sample_result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb53-2"><a></a>  <span class="at">sample_id =</span> <span class="st">"control_1"</span>,</span>
+<span id="cb53-3"><a></a>  <span class="at">cell_count =</span> <span class="dv">1240</span>,</span>
+<span id="cb53-4"><a></a>  <span class="at">passed_qc =</span> <span class="cn">TRUE</span></span>
+<span id="cb53-5"><a></a>)</span>
+<span id="cb53-6"><a></a></span>
+<span id="cb53-7"><a></a>sample_result<span class="sc">$</span>cell_count</span>
+<span id="cb53-8"><a></a>sample_result[[<span class="st">"cell_count"</span>]]</span>
+<span id="cb53-9"><a></a>sample_result[<span class="st">"cell_count"</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>세 선택 결과의 자료형을 비교합니다.</p>
 </section>
 <section id="실습-3-중첩된-분석-객체-탐색하기" class="slide level2">
 <h2>실습 3: 중첩된 분석 객체 탐색하기</h2>
-<div class="sourceCode" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">names</span>(analysis_result)</span>
-<span id="cb49-2"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span>
-<span id="cb49-3"><a></a>analysis_result<span class="sc">$</span>parameters<span class="sc">$</span>qc<span class="sc">$</span>min_cells</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">names</span>(analysis_result)</span>
+<span id="cb54-2"><a></a><span class="fu">str</span>(analysis_result, <span class="at">max.level =</span> <span class="dv">2</span>)</span>
+<span id="cb54-3"><a></a>analysis_result<span class="sc">$</span>parameters<span class="sc">$</span>qc<span class="sc">$</span>min_cells</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>바깥 단계부터 이름과 구조를 확인해 필요한 값에 접근합니다.</p>
 </section>
 <section id="실습-4-rds로-저장하고-복원하기" class="slide level2">
 <h2>실습 4: RDS로 저장하고 복원하기</h2>
-<div class="sourceCode" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">saveRDS</span>(analysis_result, <span class="st">"results/analysis_result.rds"</span>)</span>
-<span id="cb50-2"><a></a>restored_result <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"results/analysis_result.rds"</span>)</span>
-<span id="cb50-3"><a></a></span>
-<span id="cb50-4"><a></a><span class="fu">identical</span>(analysis_result, restored_result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">saveRDS</span>(analysis_result, <span class="st">"results/analysis_result.rds"</span>)</span>
+<span id="cb55-2"><a></a>restored_result <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"results/analysis_result.rds"</span>)</span>
+<span id="cb55-3"><a></a></span>
+<span id="cb55-4"><a></a><span class="fu">identical</span>(analysis_result, restored_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>복원한 객체의 클래스, 이름, 구조도 확인합니다.</p>
 </section>
 <section id="오늘-배운-내용" class="slide level2 summary">
@@ -946,7 +1008,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1020,13 +1082,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -1041,7 +1104,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

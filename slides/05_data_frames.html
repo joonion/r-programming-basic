@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 5차시: 데이터 프레임 다루기</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -218,9 +221,9 @@
 </section>
 <section id="여러-벡터로-샘플-정보를-관리할-때의-문제" class="slide level2">
 <h2>여러 벡터로 샘플 정보를 관리할 때의 문제</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
 <span id="cb1-2"><a></a>conditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"control"</span>, <span class="st">"treated"</span>)</span>
-<span id="cb1-3"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>세 벡터의 같은 위치가 같은 샘플을 나타냅니다.</li>
 <li>벡터가 많아지면 서로의 순서와 길이를 맞추기 어렵습니다.</li>
@@ -296,23 +299,23 @@
 </section>
 <section id="data.frame으로-데이터-프레임을-만든다" class="slide level2">
 <h2><code>data.frame()</code>으로 데이터 프레임을 만든다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb2-2"><a></a>  <span class="at">sample_name =</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>),</span>
 <span id="cb2-3"><a></a>  <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"control"</span>, <span class="st">"treated"</span>),</span>
 <span id="cb2-4"><a></a>  <span class="at">cell_count =</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>),</span>
 <span id="cb2-5"><a></a>  <span class="at">passed_qc =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
 <span id="cb2-6"><a></a>)</span>
 <span id="cb2-7"><a></a></span>
-<span id="cb2-8"><a></a>sample_info</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a></a>sample_info</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 인자는 데이터 프레임의 한 열이 됩니다.</p>
 </section>
 <section id="모든-열의-길이가-같아야-한다" class="slide level2">
 <h2>모든 열의 길이가 같아야 한다</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>)</span>
 <span id="cb3-2"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>)</span>
 <span id="cb3-3"><a></a></span>
 <span id="cb3-4"><a></a><span class="fu">length</span>(sample_names)</span>
-<span id="cb3-5"><a></a><span class="fu">length</span>(cell_counts)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a></a><span class="fu">length</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>한 행에 각 열의 값이 하나씩 필요합니다.</li>
 <li>길이가 맞지 않으면 데이터 프레임을 만들 때 오류가 발생할 수 있습니다.</li>
@@ -321,8 +324,8 @@
 </section>
 <section id="데이터-프레임을-출력해-전체-모습을-확인한다" class="slide level2">
 <h2>데이터 프레임을 출력해 전체 모습을 확인한다</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>sample_info</span>
-<span id="cb4-2"><a></a><span class="fu">print</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>sample_info</span>
+<span id="cb4-2"><a></a><span class="fu">print</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>작은 데이터 프레임은 전체를 출력해 확인할 수 있습니다.</li>
 <li>데이터가 크면 일부와 구조를 먼저 확인하는 편이 좋습니다.</li>
@@ -330,20 +333,20 @@
 </section>
 <section id="head와-tail로-일부-행을-확인한다" class="slide level2">
 <h2><code>head()</code>와 <code>tail()</code>로 일부 행을 확인한다</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">head</span>(sample_info)</span>
-<span id="cb5-2"><a></a><span class="fu">tail</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">head</span>(sample_info)</span>
+<span id="cb5-2"><a></a><span class="fu">tail</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>head()</code>는 처음 6개 행을 보여 줍니다.</li>
 <li><code>tail()</code>은 마지막 6개 행을 보여 줍니다.</li>
 <li>두 번째 인자로 확인할 행의 수를 지정할 수 있습니다.</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">head</span>(sample_info, <span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">head</span>(sample_info, <span class="dv">2</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="데이터-프레임의-크기를-확인한다" class="slide level2">
 <h2>데이터 프레임의 크기를 확인한다</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">dim</span>(sample_info)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">dim</span>(sample_info)</span>
 <span id="cb7-2"><a></a><span class="fu">nrow</span>(sample_info)</span>
-<span id="cb7-3"><a></a><span class="fu">ncol</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a></a><span class="fu">ncol</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>dim()</code>은 행 수와 열 수를 차례로 반환합니다.</li>
 <li><code>nrow()</code>는 행 수, <code>ncol()</code>은 열 수를 반환합니다.</li>
@@ -351,8 +354,8 @@
 </section>
 <section id="열-이름을-확인한다" class="slide level2">
 <h2>열 이름을 확인한다</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">names</span>(sample_info)</span>
-<span id="cb8-2"><a></a><span class="fu">colnames</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">names</span>(sample_info)</span>
+<span id="cb8-2"><a></a><span class="fu">colnames</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>두 함수 모두 데이터 프레임의 열 이름을 보여 줍니다.</li>
 <li>정확한 열 이름을 확인하면 철자 오류를 줄일 수 있습니다.</li>
@@ -360,7 +363,7 @@
 </section>
 <section id="str로-구조를-확인한다" class="slide level2">
 <h2><code>str()</code>로 구조를 확인한다</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">str</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">str</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>str()</code>는 다음 정보를 간결하게 보여 줍니다.</p>
 <ul>
 <li>데이터 프레임의 행과 열 개수</li>
@@ -370,7 +373,7 @@
 </section>
 <section id="summary로-열별-요약을-확인한다" class="slide level2">
 <h2><code>summary()</code>로 열별 요약을 확인한다</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">summary</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">summary</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>숫자형 열은 최솟값, 평균, 중앙값 등을 보여 줍니다.</li>
 <li>문자형과 논리형 열은 자료형에 맞는 정보를 보여 줍니다.</li>
@@ -379,8 +382,8 @@
 </section>
 <section id="로-한-열을-선택한다" class="slide level2">
 <h2><code>$</code>로 한 열을 선택한다</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
-<span id="cb11-2"><a></a>sample_info<span class="sc">$</span>condition</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
+<span id="cb11-2"><a></a>sample_info<span class="sc">$</span>condition</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>$</code> 뒤에 열 이름을 작성합니다.</li>
 <li>결과는 해당 열의 벡터입니다.</li>
@@ -389,10 +392,10 @@
 </section>
 <section id="로-한-열을-선택한다-1" class="slide level2">
 <h2><code>[[ ]]</code>로 한 열을 선택한다</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>sample_info[[<span class="st">"cell_count"</span>]]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>sample_info[[<span class="st">"cell_count"</span>]]</span>
 <span id="cb12-2"><a></a></span>
 <span id="cb12-3"><a></a>column_name <span class="ot">&lt;-</span> <span class="st">"cell_count"</span></span>
-<span id="cb12-4"><a></a>sample_info[[column_name]]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-4"><a></a>sample_info[[column_name]]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>[[ ]]</code>의 결과도 한 열의 벡터입니다.</li>
 <li>열 이름을 변수에 저장해 선택할 때 유용합니다.</li>
@@ -400,9 +403,9 @@
 </section>
 <section id="행-열로-위치를-지정한다" class="slide level2">
 <h2><code>[행, 열]</code>로 위치를 지정한다</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sample_info[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sample_info[<span class="dv">1</span>, <span class="dv">2</span>]</span>
 <span id="cb13-2"><a></a>sample_info[<span class="dv">1</span>, ]</span>
-<span id="cb13-3"><a></a>sample_info[, <span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a></a>sample_info[, <span class="dv">2</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>쉼표 앞은 행, 뒤는 열입니다.</li>
 <li>자리를 비워 두면 모든 행 또는 모든 열을 뜻합니다.</li>
@@ -411,20 +414,20 @@
 </section>
 <section id="여러-행을-선택한다" class="slide level2">
 <h2>여러 행을 선택한다</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_info[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), ]</span>
-<span id="cb14-2"><a></a>sample_info[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sample_info[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), ]</span>
+<span id="cb14-2"><a></a>sample_info[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>벡터 인덱싱과 마찬가지로 선택할 행 번호를 벡터로 전달할 수 있습니다.</p>
 </section>
 <section id="열-이름으로-여러-열을-선택한다" class="slide level2">
 <h2>열 이름으로 여러 열을 선택한다</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_info[, <span class="fu">c</span>(<span class="st">"sample_name"</span>, <span class="st">"cell_count"</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sample_info[, <span class="fu">c</span>(<span class="st">"sample_name"</span>, <span class="st">"cell_count"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>선택 결과가 여러 열이면 데이터 프레임 형태가 유지됩니다.</p>
 </section>
 <section id="한-열-선택-결과의-차이를-관찰한다" class="slide level2">
 <h2>한 열 선택 결과의 차이를 관찰한다</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
 <span id="cb16-2"><a></a>sample_info[, <span class="st">"cell_count"</span>]</span>
-<span id="cb16-3"><a></a>sample_info[, <span class="st">"cell_count"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-3"><a></a>sample_info[, <span class="st">"cell_count"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>앞의 두 결과는 보통 벡터입니다.</li>
 <li><code>drop = FALSE</code>를 사용하면 한 열이어도 데이터 프레임을 유지합니다.</li>
@@ -433,8 +436,8 @@
 </section>
 <section id="논리형-벡터로-행을-선택할-수-있다" class="slide level2">
 <h2>논리형 벡터로 행을 선택할 수 있다</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>sample_info<span class="sc">$</span>passed_qc</span>
-<span id="cb17-2"><a></a>sample_info[sample_info<span class="sc">$</span>passed_qc, ]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>sample_info<span class="sc">$</span>passed_qc</span>
+<span id="cb17-2"><a></a>sample_info[sample_info<span class="sc">$</span>passed_qc, ]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>passed_qc</code>가 <code>TRUE</code>인 행만 선택됩니다.</p>
 <blockquote>
 <p>여러 조건을 결합하는 자세한 방법은 7차시에서 학습합니다.</p>
@@ -442,10 +445,10 @@
 </section>
 <section id="비교-결과로-행을-선택할-수-있다" class="slide level2">
 <h2>비교 결과로 행을 선택할 수 있다</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>enough_cells <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">&gt;=</span> <span class="dv">1200</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>enough_cells <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">&gt;=</span> <span class="dv">1200</span></span>
 <span id="cb18-2"><a></a>enough_cells</span>
 <span id="cb18-3"><a></a></span>
-<span id="cb18-4"><a></a>sample_info[enough_cells, ]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-4"><a></a>sample_info[enough_cells, ]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li>열을 벡터로 선택합니다.</li>
 <li>각 원소를 기준과 비교합니다.</li>
@@ -454,8 +457,8 @@
 </section>
 <section id="로-새로운-열을-추가한다" class="slide level2">
 <h2><code>$</code>로 새로운 열을 추가한다</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>sample_info<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb19-2"><a></a>sample_info</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>sample_info<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb19-2"><a></a>sample_info</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>존재하지 않는 열 이름에 값을 저장하면 새 열이 만들어집니다.</li>
 <li>새 열의 값 개수는 데이터 프레임의 행 수와 맞아야 합니다.</li>
@@ -463,25 +466,25 @@
 </section>
 <section id="기존-열-전체를-수정한다" class="slide level2">
 <h2>기존 열 전체를 수정한다</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>sample_info<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(sample_info<span class="sc">$</span>condition)</span>
-<span id="cb20-2"><a></a><span class="fu">str</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>sample_info<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(sample_info<span class="sc">$</span>condition)</span>
+<span id="cb20-2"><a></a><span class="fu">str</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>같은 열 이름에 새 값을 저장하면 기존 열이 바뀝니다.</p>
 </section>
 <section id="특정-위치의-값을-수정한다" class="slide level2">
 <h2>특정 위치의 값을 수정한다</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>sample_info[<span class="dv">3</span>, <span class="st">"cell_count"</span>] <span class="ot">&lt;-</span> <span class="dv">1050</span></span>
-<span id="cb21-2"><a></a>sample_info</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>sample_info[<span class="dv">3</span>, <span class="st">"cell_count"</span>] <span class="ot">&lt;-</span> <span class="dv">1050</span></span>
+<span id="cb21-2"><a></a>sample_info</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>세 번째 행의 <code>cell_count</code> 값만 변경합니다.</li>
 <li>수정 전에는 선택한 행과 열이 맞는지 먼저 확인합니다.</li>
 </ul>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>sample_info[<span class="dv">3</span>, <span class="st">"cell_count"</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>sample_info[<span class="dv">3</span>, <span class="st">"cell_count"</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="조건에-맞는-값을-수정한다" class="slide level2">
 <h2>조건에 맞는 값을 수정한다</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>failed_rows <span class="ot">&lt;-</span> <span class="sc">!</span>sample_info<span class="sc">$</span>passed_qc</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>failed_rows <span class="ot">&lt;-</span> <span class="sc">!</span>sample_info<span class="sc">$</span>passed_qc</span>
 <span id="cb23-2"><a></a>sample_info[failed_rows, <span class="st">"cell_count"</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb23-3"><a></a>sample_info</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-3"><a></a>sample_info</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>!</code>는 논리값을 반대로 바꿉니다.</li>
 <li>QC를 통과하지 못한 행의 세포 수를 결측값으로 변경했습니다.</li>
@@ -489,12 +492,12 @@
 </section>
 <section id="is.na로-결측값을-확인한다" class="slide level2">
 <h2><code>is.na()</code>로 결측값을 확인한다</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">is.na</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">is.na</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 셀이 결측값인지 같은 크기의 논리형 결과로 보여 줍니다.</p>
 </section>
 <section id="열별-결측값-개수를-확인한다" class="slide level2">
 <h2>열별 결측값 개수를 확인한다</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(sample_info<span class="sc">$</span>cell_count))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(sample_info<span class="sc">$</span>cell_count))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>is.na()</code>는 결측값 위치에 <code>TRUE</code>를 반환합니다.</li>
 <li><code>sum()</code>은 <code>TRUE</code>의 개수를 세어 결측값 개수를 계산합니다.</li>
@@ -502,8 +505,8 @@
 </section>
 <section id="complete.cases로-완전한-행을-확인한다" class="slide level2">
 <h2><code>complete.cases()</code>로 완전한 행을 확인한다</h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">complete.cases</span>(sample_info)</span>
-<span id="cb26-2"><a></a>sample_info[<span class="fu">complete.cases</span>(sample_info), ]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">complete.cases</span>(sample_info)</span>
+<span id="cb26-2"><a></a>sample_info[<span class="fu">complete.cases</span>(sample_info), ]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>모든 열에 값이 있는 행은 <code>TRUE</code>입니다.</li>
 <li>결측값이 하나라도 있는 행은 <code>FALSE</code>입니다.</li>
@@ -512,14 +515,14 @@
 </section>
 <section id="흔한-오류-1-열-이름의-철자가-다르다" class="slide level2">
 <h2>흔한 오류 1: 열 이름의 철자가 다르다</h2>
-<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">names</span>(sample_info)</span>
-<span id="cb27-2"><a></a>sample_info<span class="sc">$</span>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># sample_info$cell_counts</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">names</span>(sample_info)</span>
+<span id="cb27-2"><a></a>sample_info<span class="sc">$</span>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># sample_info$cell_counts</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>원하는 결과가 나오지 않으면 <code>names()</code>로 실제 열 이름을 확인합니다.</p>
 </section>
 <section id="흔한-오류-2-행과-열의-순서를-바꾼다" class="slide level2">
 <h2>흔한 오류 2: 행과 열의 순서를 바꾼다</h2>
-<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>sample_info[<span class="dv">1</span>, <span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>sample_info[<span class="dv">1</span>, <span class="dv">2</span>]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>쉼표 앞은 행, 뒤는 열입니다.</li>
 <li>코드를 실행하기 전에 <code>[행, 열]</code>이라고 읽어 봅니다.</li>
@@ -527,7 +530,7 @@
 </section>
 <section id="흔한-오류-3-원본을-바로-덮어쓴다" class="slide level2">
 <h2>흔한 오류 3: 원본을 바로 덮어쓴다</h2>
-<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>sample_info_qc <span class="ot">&lt;-</span> sample_info[<span class="fu">complete.cases</span>(sample_info), ]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>sample_info_qc <span class="ot">&lt;-</span> sample_info[<span class="fu">complete.cases</span>(sample_info), ]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>학습 중에는 수정 결과를 새 이름에 저장하면 비교하기 쉽습니다.</li>
 <li>원본을 바꾸기 전에는 변경할 위치와 결과를 먼저 확인합니다.</li>
@@ -535,35 +538,35 @@
 </section>
 <section id="실습-1-샘플-표-만들기" class="slide level2">
 <h2>실습 1: 샘플 표 만들기</h2>
-<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>sample_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>sample_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb31-2"><a></a>  <span class="at">sample_name =</span> <span class="fu">c</span>(<span class="st">"control_1"</span>, <span class="st">"control_2"</span>, <span class="st">"treated_1"</span>, <span class="st">"treated_2"</span>),</span>
 <span id="cb31-3"><a></a>  <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"control"</span>, <span class="st">"treated"</span>, <span class="st">"treated"</span>),</span>
 <span id="cb31-4"><a></a>  <span class="at">cell_count =</span> <span class="fu">c</span>(<span class="dv">1200</span>, <span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1420</span>),</span>
 <span id="cb31-5"><a></a>  <span class="at">passed_qc =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
-<span id="cb31-6"><a></a>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-6"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>str()</code>, <code>dim()</code>, <code>names()</code>로 구조를 확인합니다.</p>
 </section>
 <section id="실습-2-행과-열-선택하기" class="slide level2">
 <h2>실습 2: 행과 열 선택하기</h2>
-<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>sample_info<span class="sc">$</span>cell_count</span>
 <span id="cb32-2"><a></a>sample_info[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ]</span>
-<span id="cb32-3"><a></a>sample_info[, <span class="fu">c</span>(<span class="st">"sample_name"</span>, <span class="st">"passed_qc"</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-3"><a></a>sample_info[, <span class="fu">c</span>(<span class="st">"sample_name"</span>, <span class="st">"passed_qc"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 결과가 벡터인지 데이터 프레임인지 확인합니다.</p>
 </section>
 <section id="실습-3-열-추가하고-값-수정하기" class="slide level2">
 <h2>실습 3: 열 추가하고 값 수정하기</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>sample_info<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>sample_info<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span> sample_info<span class="sc">$</span>cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
 <span id="cb33-2"><a></a>sample_info[<span class="dv">3</span>, <span class="st">"cell_count"</span>] <span class="ot">&lt;-</span> <span class="dv">1050</span></span>
-<span id="cb33-3"><a></a>sample_info</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-3"><a></a>sample_info</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>새 열과 수정된 값이 예상한 위치에 있는지 확인합니다.</p>
 </section>
 <section id="실습-4-결측값-점검하기" class="slide level2">
 <h2>실습 4: 결측값 점검하기</h2>
-<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>sample_info<span class="sc">$</span>doublet_rate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.2</span>, <span class="cn">NA</span>, <span class="fl">4.1</span>, <span class="fl">2.8</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>sample_info<span class="sc">$</span>doublet_rate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.2</span>, <span class="cn">NA</span>, <span class="fl">4.1</span>, <span class="fl">2.8</span>)</span>
 <span id="cb34-2"><a></a></span>
 <span id="cb34-3"><a></a><span class="fu">is.na</span>(sample_info<span class="sc">$</span>doublet_rate)</span>
 <span id="cb34-4"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(sample_info<span class="sc">$</span>doublet_rate))</span>
-<span id="cb34-5"><a></a><span class="fu">complete.cases</span>(sample_info)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-5"><a></a><span class="fu">complete.cases</span>(sample_info)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>어떤 샘플에 결측값이 있는지 선택해 봅니다.</p>
 </section>
 <section id="오늘-배운-내용" class="slide level2 summary">
@@ -777,7 +780,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -851,13 +854,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -872,7 +876,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

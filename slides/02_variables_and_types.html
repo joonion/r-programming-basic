@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bcbce66894bfa8e7e94e40e0186b9bb8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.29">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>R 기초 프로그래밍 – 2차시: 변수와 기본 자료형</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6cbc97ab72384ec8e2e934fee8e35196.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5ba9369d20f1f67837994b68389ef96c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -218,8 +221,8 @@
 </section>
 <section id="차시-복습-변수는-값에-붙이는-이름이다" class="slide level2">
 <h2>1차시 복습: 변수는 값에 붙이는 이름이다</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
-<span id="cb1-2"><a></a>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<span id="cb1-2"><a></a>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>&lt;-</code> 오른쪽의 값을 왼쪽 이름에 저장합니다.</li>
 <li>저장한 값은 변수 이름으로 다시 사용할 수 있습니다.</li>
@@ -228,9 +231,9 @@
 </section>
 <section id="의미가-분명한-변수-이름을-사용한다" class="slide level2">
 <h2>의미가 분명한 변수 이름을 사용한다</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb2-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
-<span id="cb2-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>이름만 보고 값의 의미를 짐작할 수 있게 작성합니다.</li>
 <li>여러 단어는 밑줄로 연결하는 <code>snake_case</code>를 사용합니다.</li>
@@ -240,11 +243,11 @@
 <section id="변수-이름을-작성할-때-주의한다" class="slide level2">
 <h2>변수 이름을 작성할 때 주의한다</h2>
 <p>좋은 이름:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
-<span id="cb3-2"><a></a>mito_percent <span class="ot">&lt;-</span> <span class="fl">4.2</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<span id="cb3-2"><a></a>mito_percent <span class="ot">&lt;-</span> <span class="fl">4.2</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>피해야 할 이름:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>x <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
-<span id="cb4-2"><a></a>my.sample.name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>x <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<span id="cb4-2"><a></a>my.sample.name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>숫자로 시작하거나 공백이 들어간 이름은 사용할 수 없습니다.</li>
 <li>이 과정에서는 일관되게 <code>snake_case</code>를 사용합니다.</li>
@@ -282,11 +285,11 @@
 </section>
 <section id="숫자형은-계산할-수-있는-값이다" class="slide level2">
 <h2>숫자형은 계산할 수 있는 값이다</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
 <span id="cb5-2"><a></a>mito_percent <span class="ot">&lt;-</span> <span class="fl">4.2</span></span>
 <span id="cb5-3"><a></a></span>
 <span id="cb5-4"><a></a>cell_count <span class="sc">+</span> <span class="dv">250</span></span>
-<span id="cb5-5"><a></a>mito_percent <span class="sc">/</span> <span class="dv">100</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a></a>mito_percent <span class="sc">/</span> <span class="dv">100</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>정수와 소수는 모두 숫자형으로 다룰 수 있습니다.</li>
 <li>숫자형 값에는 산술 연산을 적용할 수 있습니다.</li>
@@ -294,11 +297,11 @@
 </section>
 <section id="문자형은-따옴표로-감싼다" class="slide level2">
 <h2>문자형은 따옴표로 감싼다</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb6-2"><a></a>condition <span class="ot">&lt;-</span> <span class="st">"treated"</span></span>
 <span id="cb6-3"><a></a></span>
 <span id="cb6-4"><a></a>sample_name</span>
-<span id="cb6-5"><a></a>condition</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a></a>condition</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>샘플 이름이나 실험 조건처럼 글자로 된 값을 저장합니다.</li>
 <li>큰따옴표 또는 작은따옴표를 사용할 수 있습니다.</li>
@@ -307,21 +310,21 @@
 </section>
 <section id="따옴표가-없으면-변수-이름으로-해석한다" class="slide level2">
 <h2>따옴표가 없으면 변수 이름으로 해석한다</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>condition <span class="ot">&lt;-</span> <span class="st">"treated"</span></span>
-<span id="cb7-2"><a></a>condition</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>condition <span class="ot">&lt;-</span> <span class="st">"treated"</span></span>
+<span id="cb7-2"><a></a>condition</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>다음 코드는 <code>treated</code>라는 변수를 찾으므로 오류가 발생합니다.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># condition &lt;- treated</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># condition &lt;- treated</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote>
 <p>글자를 저장할 때 따옴표를 빠뜨리지 않았는지 확인합니다.</p>
 </blockquote>
 </section>
 <section id="논리형은-참과-거짓을-나타낸다" class="slide level2">
 <h2>논리형은 참과 거짓을 나타낸다</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb9-2"><a></a>is_treated <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb9-3"><a></a></span>
 <span id="cb9-4"><a></a>passed_qc</span>
-<span id="cb9-5"><a></a>is_treated</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a></a>is_treated</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>논리형 값은 <code>TRUE</code>와 <code>FALSE</code> 두 가지입니다.</li>
 <li>따옴표 없이 대문자로 작성합니다.</li>
@@ -330,10 +333,10 @@
 </section>
 <section id="비교-연산의-결과는-논리형이다" class="slide level2">
 <h2>비교 연산의 결과는 논리형이다</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
 <span id="cb10-2"><a></a>cell_count <span class="sc">&gt;</span> <span class="dv">1000</span></span>
 <span id="cb10-3"><a></a>cell_count <span class="sc">==</span> <span class="dv">1250</span></span>
-<span id="cb10-4"><a></a>cell_count <span class="sc">&lt;</span> <span class="dv">500</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-4"><a></a>cell_count <span class="sc">&lt;</span> <span class="dv">500</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -362,9 +365,9 @@
 </section>
 <section id="값을-출력해-현재-상태를-확인한다" class="slide level2">
 <h2>값을 출력해 현재 상태를 확인한다</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb11-2"><a></a>sample_name</span>
-<span id="cb11-3"><a></a><span class="fu">print</span>(sample_name)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-3"><a></a><span class="fu">print</span>(sample_name)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>변수 이름을 실행하면 저장된 값이 출력됩니다.</li>
 <li><code>print()</code>를 사용해도 값을 출력할 수 있습니다.</li>
@@ -373,20 +376,20 @@
 </section>
 <section id="class로-자료형을-확인한다" class="slide level2">
 <h2><code>class()</code>로 자료형을 확인한다</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
 <span id="cb12-2"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb12-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb12-4"><a></a></span>
 <span id="cb12-5"><a></a><span class="fu">class</span>(cell_count)</span>
 <span id="cb12-6"><a></a><span class="fu">class</span>(sample_name)</span>
-<span id="cb12-7"><a></a><span class="fu">class</span>(passed_qc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-7"><a></a><span class="fu">class</span>(passed_qc)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>class()</code>는 객체를 사용할 때 알아야 하는 자료형을 보여 줍니다.</p>
 </section>
 <section id="typeof는-내부-저장-방식을-보여-준다" class="slide level2">
 <h2><code>typeof()</code>는 내부 저장 방식을 보여 준다</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">typeof</span>(cell_count)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">typeof</span>(cell_count)</span>
 <span id="cb13-2"><a></a><span class="fu">typeof</span>(sample_name)</span>
-<span id="cb13-3"><a></a><span class="fu">typeof</span>(passed_qc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a></a><span class="fu">typeof</span>(passed_qc)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>typeof()</code>는 R이 값을 내부적으로 저장한 방식을 보여 줍니다.</li>
 <li><code>1250</code>은 보통 <code>double</code>로 표시됩니다.</li>
@@ -395,11 +398,11 @@
 </section>
 <section id="변수에는-새-값을-다시-저장할-수-있다" class="slide level2">
 <h2>변수에는 새 값을 다시 저장할 수 있다</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
 <span id="cb14-2"><a></a>cell_count</span>
 <span id="cb14-3"><a></a></span>
 <span id="cb14-4"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1400</span></span>
-<span id="cb14-5"><a></a>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a></a>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>같은 변수에 새 값을 저장하면 이전 값은 바뀝니다.</li>
 <li>코드를 실행한 순서에 따라 현재 값이 결정됩니다.</li>
@@ -407,20 +410,20 @@
 </section>
 <section id="변수를-사용하면-계산을-다시-수행하기-쉽다" class="slide level2">
 <h2>변수를 사용하면 계산을 다시 수행하기 쉽다</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
 <span id="cb15-2"><a></a>filtered_cell_count <span class="ot">&lt;-</span> <span class="dv">1100</span></span>
 <span id="cb15-3"><a></a></span>
 <span id="cb15-4"><a></a>removed_cell_count <span class="ot">&lt;-</span> cell_count <span class="sc">-</span> filtered_cell_count</span>
-<span id="cb15-5"><a></a>removed_cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-5"><a></a>removed_cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>원래 값이 바뀌면 같은 계산 코드를 다시 사용할 수 있습니다.</p>
 </section>
 <section id="na는-값이-없음을-나타낸다" class="slide level2">
 <h2><code>NA</code>는 값이 없음을 나타낸다</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb16-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb16-3"><a></a></span>
 <span id="cb16-4"><a></a>sample_name</span>
-<span id="cb16-5"><a></a>cell_count</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a></a>cell_count</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>NA</code>는 아직 측정되지 않았거나 알 수 없는 값을 나타냅니다.</li>
 <li>숫자 0이나 빈 문자열 <code>""</code>과 의미가 다릅니다.</li>
@@ -429,11 +432,11 @@
 </section>
 <section id="is.na로-결측값을-확인한다" class="slide level2">
 <h2><code>is.na()</code>로 결측값을 확인한다</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb17-2"><a></a><span class="fu">is.na</span>(cell_count)</span>
 <span id="cb17-3"><a></a></span>
 <span id="cb17-4"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
-<span id="cb17-5"><a></a><span class="fu">is.na</span>(sample_name)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a></a><span class="fu">is.na</span>(sample_name)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>결측값이면 <code>TRUE</code>, 아니면 <code>FALSE</code>를 반환합니다.</li>
 <li><code>cell_count == NA</code>로 결측값을 검사하지 않습니다.</li>
@@ -441,8 +444,8 @@
 </section>
 <section id="결측값이-포함된-계산을-살펴본다" class="slide level2">
 <h2>결측값이 포함된 계산을 살펴본다</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb18-2"><a></a>cell_count <span class="sc">+</span> <span class="dv">100</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>cell_count <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb18-2"><a></a>cell_count <span class="sc">+</span> <span class="dv">100</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>알 수 없는 값에 100을 더해도 결과는 알 수 없습니다.</li>
 <li>따라서 계산 결과도 <code>NA</code>가 됩니다.</li>
@@ -451,11 +454,11 @@
 </section>
 <section id="자료형을-변환할-수-있다" class="slide level2">
 <h2>자료형을 변환할 수 있다</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
 <span id="cb19-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cell_count_text)</span>
 <span id="cb19-3"><a></a></span>
 <span id="cb19-4"><a></a>cell_count</span>
-<span id="cb19-5"><a></a><span class="fu">class</span>(cell_count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-5"><a></a><span class="fu">class</span>(cell_count)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>as.numeric()</code>은 숫자형으로 변환합니다.</li>
 <li>숫자처럼 보이는 문자도 변환 전에는 문자형입니다.</li>
@@ -463,9 +466,9 @@
 </section>
 <section id="자주-사용하는-자료형-변환-함수" class="slide level2">
 <h2>자주 사용하는 자료형 변환 함수</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">as.character</span>(<span class="dv">1250</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">as.character</span>(<span class="dv">1250</span>)</span>
 <span id="cb20-2"><a></a><span class="fu">as.numeric</span>(<span class="st">"1250"</span>)</span>
-<span id="cb20-3"><a></a><span class="fu">as.logical</span>(<span class="st">"TRUE"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a></a><span class="fu">as.logical</span>(<span class="st">"TRUE"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -491,9 +494,9 @@
 </section>
 <section id="모든-문자를-숫자로-바꿀-수는-없다" class="slide level2">
 <h2>모든 문자를 숫자로 바꿀 수는 없다</h2>
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">as.numeric</span>(<span class="st">"1250"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">as.numeric</span>(<span class="st">"1250"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>다음 코드는 변환할 수 없는 문자 때문에 경고가 발생하고 <code>NA</code>를 만듭니다.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># as.numeric("one thousand")</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># as.numeric("one thousand")</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>경고는 코드가 중단되지는 않았지만 확인할 문제가 있다는 뜻입니다.</li>
 <li>변환 전에는 값이 기대한 형태인지 먼저 확인합니다.</li>
@@ -501,21 +504,21 @@
 </section>
 <section id="흔한-오류-1-대소문자가-다르다" class="slide level2">
 <h2>흔한 오류 1: 대소문자가 다르다</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
-<span id="cb23-2"><a></a>sample_name</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<span id="cb23-2"><a></a>sample_name</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>다음 코드는 서로 다른 이름을 사용하므로 오류가 발생합니다.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co"># Sample_name</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co"># Sample_name</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote>
 <p>객체를 찾을 수 없다는 오류가 나오면 철자와 대소문자를 확인합니다.</p>
 </blockquote>
 </section>
 <section id="흔한-오류-2-숫자처럼-보이는-문자로-계산한다" class="slide level2">
 <h2>흔한 오류 2: 숫자처럼 보이는 문자로 계산한다</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
 <span id="cb25-2"><a></a><span class="fu">class</span>(cell_count_text)</span>
 <span id="cb25-3"><a></a></span>
 <span id="cb25-4"><a></a>cell_count <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cell_count_text)</span>
-<span id="cb25-5"><a></a>cell_count <span class="sc">+</span> <span class="dv">100</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-5"><a></a>cell_count <span class="sc">+</span> <span class="dv">100</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>따옴표로 감싼 값은 문자형입니다.</li>
 <li>계산이 필요하면 적절한 자료형으로 변환합니다.</li>
@@ -524,17 +527,17 @@
 <section id="실습-1-세-가지-자료형-만들기" class="slide level2">
 <h2>실습 1: 세 가지 자료형 만들기</h2>
 <p>다음 정보를 각각 알맞은 변수에 저장합니다.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>sample_name <span class="ot">&lt;-</span> <span class="st">"control_1"</span></span>
 <span id="cb26-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="dv">1250</span></span>
-<span id="cb26-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-3"><a></a>passed_qc <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 변수의 값과 <code>class()</code> 결과를 확인합니다.</p>
 </section>
 <section id="실습-2-결측값-확인하기" class="slide level2">
 <h2>실습 2: 결측값 확인하기</h2>
-<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>doublet_rate <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>doublet_rate <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb27-2"><a></a></span>
 <span id="cb27-3"><a></a>doublet_rate</span>
-<span id="cb27-4"><a></a><span class="fu">is.na</span>(doublet_rate)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-4"><a></a><span class="fu">is.na</span>(doublet_rate)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li><code>doublet_rate</code>의 값은 무엇입니까?</li>
 <li><code>is.na(doublet_rate)</code>는 왜 <code>TRUE</code>를 반환합니까?</li>
@@ -542,18 +545,18 @@
 </section>
 <section id="실습-3-자료형-변환하기" class="slide level2">
 <h2>실습 3: 자료형 변환하기</h2>
-<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>cell_count_text <span class="ot">&lt;-</span> <span class="st">"1250"</span></span>
 <span id="cb28-2"><a></a>cell_count <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cell_count_text)</span>
 <span id="cb28-3"><a></a></span>
 <span id="cb28-4"><a></a><span class="fu">class</span>(cell_count_text)</span>
-<span id="cb28-5"><a></a><span class="fu">class</span>(cell_count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-5"><a></a><span class="fu">class</span>(cell_count)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>변환 전후의 값과 자료형을 비교합니다.</p>
 </section>
 <section id="실습-4-오류를-찾아-수정하기" class="slide level2">
 <h2>실습 4: 오류를 찾아 수정하기</h2>
 <p>다음 코드에서 잘못된 부분을 찾습니다.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># sample_name &lt;- control_1</span></span>
-<span id="cb29-2"><a></a><span class="co"># Cell_count + 100</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># sample_name &lt;- control_1</span></span>
+<span id="cb29-2"><a></a><span class="co"># Cell_count + 100</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="1">
 <li>문자형 값에 필요한 기호는 무엇입니까?</li>
 <li>변수 이름의 철자와 대소문자는 일치합니까?</li>
@@ -771,7 +774,7 @@
         margin: 6.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -845,13 +848,14 @@
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -866,7 +870,7 @@
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/joonion\.github\.io\/r-programming-basic\/");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }
