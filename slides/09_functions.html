@@ -302,13 +302,39 @@
 <li>반환값을 다음 계산의 입력으로 사용할 수도 있습니다.</li>
 </ul>
 </section>
+<section id="반환된-객체를-다시-저장해야-할-수-있다" class="slide level2">
+<h2>반환된 객체를 다시 저장해야 할 수 있다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1350</span>, <span class="dv">980</span>, <span class="dv">1240</span>)</span>
+<span id="cb9-2"><a></a></span>
+<span id="cb9-3"><a></a><span class="fu">sort</span>(cell_counts)</span>
+<span id="cb9-4"><a></a>cell_counts</span>
+<span id="cb9-5"><a></a></span>
+<span id="cb9-6"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">sort</span>(cell_counts)</span>
+<span id="cb9-7"><a></a>cell_counts</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>많은 R 함수는 입력 객체를 직접 바꾸지 않고 처리한 결과를 반환합니다.</li>
+<li>결과를 계속 사용하려면 반환값을 변수에 저장합니다.</li>
+<li>같은 이름에 저장하면 이후 코드에서는 변경된 결과를 사용합니다.</li>
+</ul>
+</section>
+<section id="분석-패키지에서도-같은-패턴을-사용한다" class="slide level2">
+<h2>분석 패키지에서도 같은 패턴을 사용한다</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># 패키지 사용 예시: 이 차시에서는 실행하지 않습니다.</span></span>
+<span id="cb10-2"><a></a>pbmc <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(pbmc)</span>
+<span id="cb10-3"><a></a>pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(pbmc)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>두 코드 모두 다음 순서로 읽습니다.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb11-1"><a></a>현재 객체를 함수에 전달한다</span>
+<span id="cb11-2"><a></a>→ 함수가 처리한 객체를 반환한다</span>
+<span id="cb11-3"><a></a>→ 반환된 객체를 같은 이름에 다시 저장한다</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>함수가 원본을 직접 바꾸는지, 새 객체를 반환하는지는 도움말의 반환값 설명을 확인합니다.</p>
+</section>
 <section id="마지막-표현식도-자동으로-반환된다" class="slide level2">
 <h2>마지막 표현식도 자동으로 반환된다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb9-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb9-3"><a></a>}</span>
-<span id="cb9-4"><a></a></span>
-<span id="cb9-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb12-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb12-3"><a></a>}</span>
+<span id="cb12-4"><a></a></span>
+<span id="cb12-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>R은 함수에서 마지막으로 계산된 값을 자동 반환합니다.</li>
 <li>입문 단계에서는 반환 위치를 분명히 보여 주고 싶을 때 <code>return()</code>을 사용합니다.</li>
@@ -316,14 +342,14 @@
 </section>
 <section id="print와-return은-역할이-다르다" class="slide level2">
 <h2><code>print()</code>와 <code>return()</code>은 역할이 다르다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>show_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb10-2"><a></a>  <span class="fu">print</span>(cell_count)</span>
-<span id="cb10-3"><a></a>}</span>
-<span id="cb10-4"><a></a></span>
-<span id="cb10-5"><a></a>double_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb10-6"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb10-7"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb10-8"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>show_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb13-2"><a></a>  <span class="fu">print</span>(cell_count)</span>
+<span id="cb13-3"><a></a>}</span>
+<span id="cb13-4"><a></a></span>
+<span id="cb13-5"><a></a>double_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb13-6"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb13-7"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb13-8"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>print()</code>는 값을 화면에 보여 줍니다.</li>
 <li><code>return()</code>은 함수의 결과를 호출한 곳으로 돌려줍니다.</li>
@@ -331,17 +357,17 @@
 </section>
 <section id="여러-입력을-받을-수-있다" class="slide level2">
 <h2>여러 입력을 받을 수 있다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb11-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb11-3"><a></a>  <span class="fu">return</span>(retention)</span>
-<span id="cb11-4"><a></a>}</span>
-<span id="cb11-5"><a></a></span>
-<span id="cb11-6"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb14-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb14-3"><a></a>  <span class="fu">return</span>(retention)</span>
+<span id="cb14-4"><a></a>}</span>
+<span id="cb14-5"><a></a></span>
+<span id="cb14-6"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>쉼표로 여러 인자를 구분합니다.</p>
 </section>
 <section id="위치에-따라-인자를-전달한다" class="slide level2">
 <h2>위치에 따라 인자를 전달한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>첫 번째 값은 <code>raw_count</code>에 들어갑니다.</li>
 <li>두 번째 값은 <code>filtered_count</code>에 들어갑니다.</li>
@@ -350,31 +376,31 @@
 </section>
 <section id="이름을-적어-인자를-전달한다" class="slide level2">
 <h2>이름을 적어 인자를 전달한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">calculate_retention</span>(</span>
-<span id="cb13-2"><a></a>  <span class="at">raw_count =</span> <span class="dv">1500</span>,</span>
-<span id="cb13-3"><a></a>  <span class="at">filtered_count =</span> <span class="dv">1200</span></span>
-<span id="cb13-4"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">calculate_retention</span>(</span>
+<span id="cb16-2"><a></a>  <span class="at">raw_count =</span> <span class="dv">1500</span>,</span>
+<span id="cb16-3"><a></a>  <span class="at">filtered_count =</span> <span class="dv">1200</span></span>
+<span id="cb16-4"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>각 값의 의미가 분명해집니다.</li>
 <li>이름을 모두 적으면 순서를 바꾸어도 됩니다.</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">calculate_retention</span>(<span class="at">filtered_count =</span> <span class="dv">1200</span>, <span class="at">raw_count =</span> <span class="dv">1500</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">calculate_retention</span>(<span class="at">filtered_count =</span> <span class="dv">1200</span>, <span class="at">raw_count =</span> <span class="dv">1500</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="인자에-기본값을-지정할-수-있다" class="slide level2">
 <h2>인자에 기본값을 지정할 수 있다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
-<span id="cb15-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">&gt;=</span> min_cells</span>
-<span id="cb15-3"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb15-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
+<span id="cb18-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">&gt;=</span> min_cells</span>
+<span id="cb18-3"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb18-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>min_cells</code>를 생략하면 기본값 1200을 사용합니다.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1240</span>)</span>
-<span id="cb16-2"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1240</span>, <span class="at">min_cells =</span> <span class="dv">1300</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1240</span>)</span>
+<span id="cb19-2"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1240</span>, <span class="at">min_cells =</span> <span class="dv">1300</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="필수-인자와-기본-인자를-구분한다" class="slide level2">
 <h2>필수 인자와 기본 인자를 구분한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
-<span id="cb17-2"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
-<span id="cb17-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
+<span id="cb20-2"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
+<span id="cb20-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>cell_count</code>는 호출할 때 반드시 전달해야 합니다.</li>
 <li><code>min_cells</code>는 필요할 때만 다른 값으로 바꿉니다.</li>
@@ -383,9 +409,9 @@
 </section>
 <section id="하나의-함수는-한-가지-역할에-집중한다" class="slide level2">
 <h2>하나의 함수는 한 가지 역할에 집중한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb18-2"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb18-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb21-2"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb21-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>좋은 함수는 다음 질문에 답하기 쉽습니다.</p>
 <ul>
 <li>이 함수는 무엇을 계산하는가?</li>
@@ -395,9 +421,9 @@
 </section>
 <section id="함수-이름은-동작을-나타내게-작성한다" class="slide level2">
 <h2>함수 이름은 동작을 나타내게 작성한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">calculate_retention</span>()</span>
-<span id="cb19-2"><a></a><span class="fu">passes_cell_count</span>()</span>
-<span id="cb19-3"><a></a><span class="fu">label_qc</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">calculate_retention</span>()</span>
+<span id="cb22-2"><a></a><span class="fu">passes_cell_count</span>()</span>
+<span id="cb22-3"><a></a><span class="fu">label_qc</span>()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>함수 이름에도 <code>snake_case</code>를 사용합니다.</li>
 <li><code>calculate</code>, <code>check</code>, <code>convert</code>, <code>label</code>처럼 동작을 나타내는 단어가 유용합니다.</li>
@@ -406,47 +432,47 @@
 </section>
 <section id="벡터화-연산을-사용한-함수는-벡터도-처리한다" class="slide level2">
 <h2>벡터화 연산을 사용한 함수는 벡터도 처리한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1240</span>, <span class="dv">1385</span>, <span class="dv">1090</span>, <span class="dv">1520</span>)</span>
-<span id="cb20-2"><a></a></span>
-<span id="cb20-3"><a></a><span class="fu">to_thousands</span>(cell_counts)</span>
-<span id="cb20-4"><a></a><span class="fu">passes_cell_count</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>cell_counts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1240</span>, <span class="dv">1385</span>, <span class="dv">1090</span>, <span class="dv">1520</span>)</span>
+<span id="cb23-2"><a></a></span>
+<span id="cb23-3"><a></a><span class="fu">to_thousands</span>(cell_counts)</span>
+<span id="cb23-4"><a></a><span class="fu">passes_cell_count</span>(cell_counts)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수 안의 <code>/</code>와 <code>&gt;=</code>가 벡터의 모든 원소에 적용됩니다.</p>
 </section>
 <section id="데이터-프레임-열을-함수에-전달한다" class="slide level2">
 <h2>데이터 프레임 열을 함수에 전달한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>sample_metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/sample_metadata.csv"</span>)</span>
-<span id="cb21-2"><a></a></span>
-<span id="cb21-3"><a></a>sample_metadata<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span></span>
-<span id="cb21-4"><a></a>  <span class="fu">to_thousands</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
-<span id="cb21-5"><a></a></span>
-<span id="cb21-6"><a></a><span class="fu">head</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>sample_metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/sample_metadata.csv"</span>)</span>
+<span id="cb24-2"><a></a></span>
+<span id="cb24-3"><a></a>sample_metadata<span class="sc">$</span>cell_count_k <span class="ot">&lt;-</span></span>
+<span id="cb24-4"><a></a>  <span class="fu">to_thousands</span>(sample_metadata<span class="sc">$</span>cell_count)</span>
+<span id="cb24-5"><a></a></span>
+<span id="cb24-6"><a></a><span class="fu">head</span>(sample_metadata)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수를 한 번 정의한 뒤 여러 데이터에 같은 계산을 적용할 수 있습니다.</p>
 </section>
 <section id="여러-qc-기준을-함수로-묶는다" class="slide level2">
 <h2>여러 QC 기준을 함수로 묶는다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>passes_qc <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
-<span id="cb22-2"><a></a>  cell_count,</span>
-<span id="cb22-3"><a></a>  median_genes,</span>
-<span id="cb22-4"><a></a>  mito_percent,</span>
-<span id="cb22-5"><a></a>  <span class="at">min_cells =</span> <span class="dv">1200</span>,</span>
-<span id="cb22-6"><a></a>  <span class="at">min_genes =</span> <span class="dv">2000</span>,</span>
-<span id="cb22-7"><a></a>  <span class="at">max_mito =</span> <span class="dv">8</span></span>
-<span id="cb22-8"><a></a>) {</span>
-<span id="cb22-9"><a></a>  result <span class="ot">&lt;-</span></span>
-<span id="cb22-10"><a></a>    cell_count <span class="sc">&gt;=</span> min_cells <span class="sc">&amp;</span></span>
-<span id="cb22-11"><a></a>    median_genes <span class="sc">&gt;=</span> min_genes <span class="sc">&amp;</span></span>
-<span id="cb22-12"><a></a>    mito_percent <span class="sc">&lt;</span> max_mito</span>
-<span id="cb22-13"><a></a></span>
-<span id="cb22-14"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb22-15"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>passes_qc <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb25-2"><a></a>  cell_count,</span>
+<span id="cb25-3"><a></a>  median_genes,</span>
+<span id="cb25-4"><a></a>  mito_percent,</span>
+<span id="cb25-5"><a></a>  <span class="at">min_cells =</span> <span class="dv">1200</span>,</span>
+<span id="cb25-6"><a></a>  <span class="at">min_genes =</span> <span class="dv">2000</span>,</span>
+<span id="cb25-7"><a></a>  <span class="at">max_mito =</span> <span class="dv">8</span></span>
+<span id="cb25-8"><a></a>) {</span>
+<span id="cb25-9"><a></a>  result <span class="ot">&lt;-</span></span>
+<span id="cb25-10"><a></a>    cell_count <span class="sc">&gt;=</span> min_cells <span class="sc">&amp;</span></span>
+<span id="cb25-11"><a></a>    median_genes <span class="sc">&gt;=</span> min_genes <span class="sc">&amp;</span></span>
+<span id="cb25-12"><a></a>    mito_percent <span class="sc">&lt;</span> max_mito</span>
+<span id="cb25-13"><a></a></span>
+<span id="cb25-14"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb25-15"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="qc-함수를-단일-샘플에-사용한다" class="slide level2">
 <h2>QC 함수를 단일 샘플에 사용한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">passes_qc</span>(</span>
-<span id="cb23-2"><a></a>  <span class="at">cell_count =</span> <span class="dv">1240</span>,</span>
-<span id="cb23-3"><a></a>  <span class="at">median_genes =</span> <span class="dv">2180</span>,</span>
-<span id="cb23-4"><a></a>  <span class="at">mito_percent =</span> <span class="fl">4.2</span></span>
-<span id="cb23-5"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">passes_qc</span>(</span>
+<span id="cb26-2"><a></a>  <span class="at">cell_count =</span> <span class="dv">1240</span>,</span>
+<span id="cb26-3"><a></a>  <span class="at">median_genes =</span> <span class="dv">2180</span>,</span>
+<span id="cb26-4"><a></a>  <span class="at">mito_percent =</span> <span class="fl">4.2</span></span>
+<span id="cb26-5"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 인자 이름을 적으면 어떤 측정값을 전달하는지 분명합니다.</p>
 <blockquote>
 <p>QC 수치는 함수 학습을 위한 예시이며 실제 분석 기준은 데이터와 실험 맥락에 따라 정해야 합니다.</p>
@@ -454,135 +480,135 @@
 </section>
 <section id="qc-함수를-벡터에-사용한다" class="slide level2">
 <h2>QC 함수를 벡터에 사용한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
-<span id="cb24-2"><a></a>  <span class="at">cell_count =</span> sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb24-3"><a></a>  <span class="at">median_genes =</span> sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb24-4"><a></a>  <span class="at">mito_percent =</span> sample_metadata<span class="sc">$</span>mito_percent</span>
-<span id="cb24-5"><a></a>)</span>
-<span id="cb24-6"><a></a></span>
-<span id="cb24-7"><a></a>qc_result</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
+<span id="cb27-2"><a></a>  <span class="at">cell_count =</span> sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb27-3"><a></a>  <span class="at">median_genes =</span> sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb27-4"><a></a>  <span class="at">mito_percent =</span> sample_metadata<span class="sc">$</span>mito_percent</span>
+<span id="cb27-5"><a></a>)</span>
+<span id="cb27-6"><a></a></span>
+<span id="cb27-7"><a></a>qc_result</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>각 행의 같은 위치에 있는 값들이 함께 계산됩니다.</p>
 </section>
 <section id="기본-기준을-바꾸어-재사용한다" class="slide level2">
 <h2>기본 기준을 바꾸어 재사용한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>strict_qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
-<span id="cb25-2"><a></a>  <span class="at">cell_count =</span> sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb25-3"><a></a>  <span class="at">median_genes =</span> sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb25-4"><a></a>  <span class="at">mito_percent =</span> sample_metadata<span class="sc">$</span>mito_percent,</span>
-<span id="cb25-5"><a></a>  <span class="at">min_cells =</span> <span class="dv">1300</span>,</span>
-<span id="cb25-6"><a></a>  <span class="at">max_mito =</span> <span class="dv">6</span></span>
-<span id="cb25-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>strict_qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
+<span id="cb28-2"><a></a>  <span class="at">cell_count =</span> sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb28-3"><a></a>  <span class="at">median_genes =</span> sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb28-4"><a></a>  <span class="at">mito_percent =</span> sample_metadata<span class="sc">$</span>mito_percent,</span>
+<span id="cb28-5"><a></a>  <span class="at">min_cells =</span> <span class="dv">1300</span>,</span>
+<span id="cb28-6"><a></a>  <span class="at">max_mito =</span> <span class="dv">6</span></span>
+<span id="cb28-7"><a></a>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수 본문을 수정하지 않고 호출할 때 기준을 바꿀 수 있습니다.</p>
 </section>
 <section id="결과-레이블-함수는-별도로-작성한다" class="slide level2">
 <h2>결과 레이블 함수는 별도로 작성한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>label_qc <span class="ot">&lt;-</span> <span class="cf">function</span>(passed_qc) {</span>
-<span id="cb26-2"><a></a>  label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(passed_qc, <span class="st">"pass"</span>, <span class="st">"review"</span>)</span>
-<span id="cb26-3"><a></a>  <span class="fu">return</span>(label)</span>
-<span id="cb26-4"><a></a>}</span>
-<span id="cb26-5"><a></a></span>
-<span id="cb26-6"><a></a><span class="fu">label_qc</span>(qc_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>label_qc <span class="ot">&lt;-</span> <span class="cf">function</span>(passed_qc) {</span>
+<span id="cb29-2"><a></a>  label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(passed_qc, <span class="st">"pass"</span>, <span class="st">"review"</span>)</span>
+<span id="cb29-3"><a></a>  <span class="fu">return</span>(label)</span>
+<span id="cb29-4"><a></a>}</span>
+<span id="cb29-5"><a></a></span>
+<span id="cb29-6"><a></a><span class="fu">label_qc</span>(qc_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>조건 계산과 문자 레이블 생성을 서로 다른 함수로 나누었습니다.</p>
 </section>
 <section id="함수를-연결해-결과-열을-만든다" class="slide level2">
 <h2>함수를 연결해 결과 열을 만든다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>sample_metadata<span class="sc">$</span>qc_result <span class="ot">&lt;-</span> qc_result</span>
-<span id="cb27-2"><a></a>sample_metadata<span class="sc">$</span>qc_label <span class="ot">&lt;-</span> <span class="fu">label_qc</span>(qc_result)</span>
-<span id="cb27-3"><a></a></span>
-<span id="cb27-4"><a></a>sample_metadata[, <span class="fu">c</span>(<span class="st">"sample_id"</span>, <span class="st">"qc_result"</span>, <span class="st">"qc_label"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>sample_metadata<span class="sc">$</span>qc_result <span class="ot">&lt;-</span> qc_result</span>
+<span id="cb30-2"><a></a>sample_metadata<span class="sc">$</span>qc_label <span class="ot">&lt;-</span> <span class="fu">label_qc</span>(qc_result)</span>
+<span id="cb30-3"><a></a></span>
+<span id="cb30-4"><a></a>sample_metadata[, <span class="fu">c</span>(<span class="st">"sample_id"</span>, <span class="st">"qc_result"</span>, <span class="st">"qc_label"</span>)]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>작은 함수의 결과를 다음 함수의 입력으로 사용할 수 있습니다.</p>
 </section>
 <section id="결측값을-처리하는-함수를-작성한다" class="slide level2">
 <h2>결측값을 처리하는 함수를 작성한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>label_doublet_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(doublet_rate, <span class="at">max_rate =</span> <span class="dv">4</span>) {</span>
-<span id="cb28-2"><a></a>  label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb28-3"><a></a>    <span class="fu">is.na</span>(doublet_rate),</span>
-<span id="cb28-4"><a></a>    <span class="st">"missing"</span>,</span>
-<span id="cb28-5"><a></a>    <span class="fu">ifelse</span>(doublet_rate <span class="sc">&lt;=</span> max_rate, <span class="st">"pass"</span>, <span class="st">"review"</span>)</span>
-<span id="cb28-6"><a></a>  )</span>
-<span id="cb28-7"><a></a></span>
-<span id="cb28-8"><a></a>  <span class="fu">return</span>(label)</span>
-<span id="cb28-9"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>label_doublet_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(doublet_rate, <span class="at">max_rate =</span> <span class="dv">4</span>) {</span>
+<span id="cb31-2"><a></a>  label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb31-3"><a></a>    <span class="fu">is.na</span>(doublet_rate),</span>
+<span id="cb31-4"><a></a>    <span class="st">"missing"</span>,</span>
+<span id="cb31-5"><a></a>    <span class="fu">ifelse</span>(doublet_rate <span class="sc">&lt;=</span> max_rate, <span class="st">"pass"</span>, <span class="st">"review"</span>)</span>
+<span id="cb31-6"><a></a>  )</span>
+<span id="cb31-7"><a></a></span>
+<span id="cb31-8"><a></a>  <span class="fu">return</span>(label)</span>
+<span id="cb31-9"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>먼저 결측값인지 확인한 뒤 측정값을 기준과 비교합니다.</p>
 </section>
 <section id="함수-안의-변수는-지역-변수다" class="slide level2">
 <h2>함수 안의 변수는 지역 변수다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb29-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb29-3"><a></a>  <span class="fu">return</span>(retention)</span>
-<span id="cb29-4"><a></a>}</span>
-<span id="cb29-5"><a></a></span>
-<span id="cb29-6"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb32-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb32-3"><a></a>  <span class="fu">return</span>(retention)</span>
+<span id="cb32-4"><a></a>}</span>
+<span id="cb32-5"><a></a></span>
+<span id="cb32-6"><a></a><span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>retention</code>은 함수가 실행되는 동안 함수 안에서 만들어집니다.</li>
 <li>함수 밖의 작업에 필요하면 반환값을 변수에 저장합니다.</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>sample_retention <span class="ot">&lt;-</span> <span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>sample_retention <span class="ot">&lt;-</span> <span class="fu">calculate_retention</span>(<span class="dv">1500</span>, <span class="dv">1200</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="함수-밖의-값을-몰래-사용하지-않는다" class="slide level2">
 <h2>함수 밖의 값을 몰래 사용하지 않는다</h2>
 <p>피해야 할 예:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="co"># min_cells가 함수 밖에 있어야만 실행된다.</span></span>
-<span id="cb31-2"><a></a><span class="co"># passes_cell_count &lt;- function(cell_count) {</span></span>
-<span id="cb31-3"><a></a><span class="co">#   cell_count &gt;= min_cells</span></span>
-<span id="cb31-4"><a></a><span class="co"># }</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="co"># min_cells가 함수 밖에 있어야만 실행된다.</span></span>
+<span id="cb34-2"><a></a><span class="co"># passes_cell_count &lt;- function(cell_count) {</span></span>
+<span id="cb34-3"><a></a><span class="co">#   cell_count &gt;= min_cells</span></span>
+<span id="cb34-4"><a></a><span class="co"># }</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>권장 예:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
-<span id="cb32-2"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
-<span id="cb32-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
+<span id="cb35-2"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
+<span id="cb35-3"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>필요한 값은 인자로 명시합니다.</p>
 </section>
 <section id="is.numeric으로-입력-자료형을-확인한다" class="slide level2">
 <h2><code>is.numeric()</code>으로 입력 자료형을 확인한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">is.numeric</span>(<span class="dv">1240</span>)</span>
-<span id="cb33-2"><a></a><span class="fu">is.numeric</span>(<span class="st">"1240"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">is.numeric</span>(<span class="dv">1240</span>)</span>
+<span id="cb36-2"><a></a><span class="fu">is.numeric</span>(<span class="st">"1240"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수의 입력이 예상한 자료형인지 확인할 때 사용할 수 있습니다.</p>
 </section>
 <section id="잘못된-입력에는-오류를-발생시킬-수-있다" class="slide level2">
 <h2>잘못된 입력에는 오류를 발생시킬 수 있다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>to_thousands_checked <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb34-2"><a></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(cell_count)) {</span>
-<span id="cb34-3"><a></a>    <span class="fu">stop</span>(<span class="st">"cell_count는 숫자형이어야 합니다."</span>)</span>
-<span id="cb34-4"><a></a>  }</span>
-<span id="cb34-5"><a></a></span>
-<span id="cb34-6"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb34-7"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb34-8"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>to_thousands_checked <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb37-2"><a></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(cell_count)) {</span>
+<span id="cb37-3"><a></a>    <span class="fu">stop</span>(<span class="st">"cell_count는 숫자형이어야 합니다."</span>)</span>
+<span id="cb37-4"><a></a>  }</span>
+<span id="cb37-5"><a></a></span>
+<span id="cb37-6"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb37-7"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb37-8"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>stop()</code>은 설명이 포함된 오류를 발생시키고 함수 실행을 중단합니다.</p>
 </section>
 <section id="올바른-입력과-잘못된-입력을-시험한다" class="slide level2">
 <h2>올바른 입력과 잘못된 입력을 시험한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">to_thousands_checked</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">to_thousands_checked</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>다음 코드는 입력 확인을 시험할 때 한 줄씩 실행합니다.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># to_thousands_checked("1240")</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># to_thousands_checked("1240")</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>전체 실습 파일 실행을 막지 않도록 의도적 오류는 주석 처리합니다.</p>
 </section>
 <section id="함수는-정의한-뒤에-호출한다" class="slide level2">
 <h2>함수는 정의한 뒤에 호출한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb37-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb37-3"><a></a>}</span>
-<span id="cb37-4"><a></a></span>
-<span id="cb37-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb40-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb40-3"><a></a>}</span>
+<span id="cb40-4"><a></a></span>
+<span id="cb40-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>R 스크립트는 위에서 아래로 실행되므로 함수 정의가 호출보다 먼저 실행되어야 합니다.</p>
 </section>
 <section id="함수를-작은-입력으로-확인한다" class="slide level2">
 <h2>함수를 작은 입력으로 확인한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">to_thousands</span>(<span class="dv">1000</span>)</span>
-<span id="cb38-2"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1200</span>)</span>
-<span id="cb38-3"><a></a><span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">to_thousands</span>(<span class="dv">1000</span>)</span>
+<span id="cb41-2"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1200</span>)</span>
+<span id="cb41-3"><a></a><span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>결과를 쉽게 예상할 수 있는 값을 사용합니다.</li>
 <li>경계값과 결측값도 확인합니다.</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1199</span>)</span>
-<span id="cb39-2"><a></a><span class="fu">passes_cell_count</span>(<span class="cn">NA</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">passes_cell_count</span>(<span class="dv">1199</span>)</span>
+<span id="cb42-2"><a></a><span class="fu">passes_cell_count</span>(<span class="cn">NA</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="stopifnot으로-예상-결과를-확인한다" class="slide level2">
 <h2><code>stopifnot()</code>으로 예상 결과를 확인한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">stopifnot</span>(<span class="fu">to_thousands</span>(<span class="dv">1000</span>) <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb40-2"><a></a><span class="fu">stopifnot</span>(<span class="fu">passes_cell_count</span>(<span class="dv">1200</span>) <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
-<span id="cb40-3"><a></a><span class="fu">stopifnot</span>(<span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>) <span class="sc">==</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">stopifnot</span>(<span class="fu">to_thousands</span>(<span class="dv">1000</span>) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb43-2"><a></a><span class="fu">stopifnot</span>(<span class="fu">passes_cell_count</span>(<span class="dv">1200</span>) <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-3"><a></a><span class="fu">stopifnot</span>(<span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>) <span class="sc">==</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>조건이 모두 <code>TRUE</code>이면 아무것도 출력하지 않습니다.</li>
 <li>하나라도 <code>FALSE</code>이면 실행을 멈추므로 예상 결과 검증에 사용할 수 있습니다.</li>
@@ -590,28 +616,28 @@
 </section>
 <section id="함수-위에-목적과-입력을-기록한다" class="slide level2">
 <h2>함수 위에 목적과 입력을 기록한다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="co"># 필터링 후 남은 세포 비율을 계산한다.</span></span>
-<span id="cb41-2"><a></a><span class="co"># raw_count와 filtered_count는 같은 길이의 숫자형 값이다.</span></span>
-<span id="cb41-3"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb41-4"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb41-5"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># 필터링 후 남은 세포 비율을 계산한다.</span></span>
+<span id="cb44-2"><a></a><span class="co"># raw_count와 filtered_count는 같은 길이의 숫자형 값이다.</span></span>
+<span id="cb44-3"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb44-4"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb44-5"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>코드만으로 알기 어려운 입력 조건과 단위를 주석으로 설명합니다.</p>
 </section>
 <section id="흔한-오류-1-함수를-정의만-하고-호출하지-않는다" class="slide level2">
 <h2>흔한 오류 1: 함수를 정의만 하고 호출하지 않는다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb42-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb42-3"><a></a>}</span>
-<span id="cb42-4"><a></a></span>
-<span id="cb42-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb45-2"><a></a>  cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb45-3"><a></a>}</span>
+<span id="cb45-4"><a></a></span>
+<span id="cb45-5"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수 정의와 함수 호출은 서로 다른 단계입니다.</p>
 </section>
 <section id="흔한-오류-2-괄호나-중괄호를-닫지-않는다" class="slide level2">
 <h2>흔한 오류 2: 괄호나 중괄호를 닫지 않는다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
-<span id="cb43-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">&gt;=</span> min_cells</span>
-<span id="cb43-3"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb43-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
+<span id="cb46-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">&gt;=</span> min_cells</span>
+<span id="cb46-3"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb46-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>함수 이름 뒤의 <code>()</code>와 본문을 감싸는 <code>{}</code>를 짝지어 작성합니다.</li>
 <li>코드를 들여쓰면 구조를 확인하기 쉽습니다.</li>
@@ -619,56 +645,57 @@
 </section>
 <section id="흔한-오류-3-반환할-값을-만들지-않는다" class="slide level2">
 <h2>흔한 오류 3: 반환할 값을 만들지 않는다</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb44-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb44-3"><a></a>  <span class="fu">return</span>(retention)</span>
-<span id="cb44-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb47-2"><a></a>  retention <span class="ot">&lt;-</span> filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb47-3"><a></a>  <span class="fu">return</span>(retention)</span>
+<span id="cb47-4"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>계산한 변수 이름과 <code>return()</code>에 적은 이름의 철자를 확인합니다.</p>
 </section>
 <section id="실습-1-단위-변환-함수-만들기" class="slide level2">
 <h2>실습 1: 단위 변환 함수 만들기</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
-<span id="cb45-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
-<span id="cb45-3"><a></a>  <span class="fu">return</span>(result)</span>
-<span id="cb45-4"><a></a>}</span>
-<span id="cb45-5"><a></a></span>
-<span id="cb45-6"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span>
-<span id="cb45-7"><a></a><span class="fu">to_thousands</span>(<span class="fu">c</span>(<span class="dv">1240</span>, <span class="dv">1385</span>, <span class="dv">1090</span>))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>to_thousands <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count) {</span>
+<span id="cb48-2"><a></a>  result <span class="ot">&lt;-</span> cell_count <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb48-3"><a></a>  <span class="fu">return</span>(result)</span>
+<span id="cb48-4"><a></a>}</span>
+<span id="cb48-5"><a></a></span>
+<span id="cb48-6"><a></a><span class="fu">to_thousands</span>(<span class="dv">1240</span>)</span>
+<span id="cb48-7"><a></a><span class="fu">to_thousands</span>(<span class="fu">c</span>(<span class="dv">1240</span>, <span class="dv">1385</span>, <span class="dv">1090</span>))</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>단일 값과 벡터에서 모두 예상한 결과가 나오는지 확인합니다.</p>
 </section>
 <section id="실습-2-여러-입력과-기본값-사용하기" class="slide level2">
 <h2>실습 2: 여러 입력과 기본값 사용하기</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
-<span id="cb46-2"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
-<span id="cb46-3"><a></a>}</span>
-<span id="cb46-4"><a></a></span>
-<span id="cb46-5"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
-<span id="cb46-6"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
-<span id="cb46-7"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>calculate_retention <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_count, filtered_count) {</span>
+<span id="cb49-2"><a></a>  filtered_count <span class="sc">/</span> raw_count</span>
+<span id="cb49-3"><a></a>}</span>
+<span id="cb49-4"><a></a></span>
+<span id="cb49-5"><a></a>passes_cell_count <span class="ot">&lt;-</span> <span class="cf">function</span>(cell_count, <span class="at">min_cells =</span> <span class="dv">1200</span>) {</span>
+<span id="cb49-6"><a></a>  cell_count <span class="sc">&gt;=</span> min_cells</span>
+<span id="cb49-7"><a></a>}</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>위치 인자, 이름이 있는 인자, 변경한 기본값으로 각각 호출합니다.</p>
 </section>
 <section id="실습-3-qc-함수-재사용하기" class="slide level2">
 <h2>실습 3: QC 함수 재사용하기</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
-<span id="cb47-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
-<span id="cb47-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
-<span id="cb47-4"><a></a>  sample_metadata<span class="sc">$</span>mito_percent</span>
-<span id="cb47-5"><a></a>)</span>
-<span id="cb47-6"><a></a></span>
-<span id="cb47-7"><a></a>sample_metadata<span class="sc">$</span>qc_label <span class="ot">&lt;-</span> <span class="fu">label_qc</span>(qc_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>qc_result <span class="ot">&lt;-</span> <span class="fu">passes_qc</span>(</span>
+<span id="cb50-2"><a></a>  sample_metadata<span class="sc">$</span>cell_count,</span>
+<span id="cb50-3"><a></a>  sample_metadata<span class="sc">$</span>median_genes,</span>
+<span id="cb50-4"><a></a>  sample_metadata<span class="sc">$</span>mito_percent</span>
+<span id="cb50-5"><a></a>)</span>
+<span id="cb50-6"><a></a></span>
+<span id="cb50-7"><a></a>sample_metadata<span class="sc">$</span>qc_label <span class="ot">&lt;-</span> <span class="fu">label_qc</span>(qc_result)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>함수 결과를 데이터 프레임에 추가하고 선택된 행을 확인합니다.</p>
 </section>
 <section id="실습-4-함수-결과-검증하기" class="slide level2">
 <h2>실습 4: 함수 결과 검증하기</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">stopifnot</span>(<span class="fu">to_thousands</span>(<span class="dv">1000</span>) <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb48-2"><a></a><span class="fu">stopifnot</span>(<span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>) <span class="sc">==</span> <span class="fl">0.8</span>)</span>
-<span id="cb48-3"><a></a><span class="fu">stopifnot</span>(<span class="fu">passes_cell_count</span>(<span class="dv">1200</span>) <span class="sc">==</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">stopifnot</span>(<span class="fu">to_thousands</span>(<span class="dv">1000</span>) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb51-2"><a></a><span class="fu">stopifnot</span>(<span class="fu">calculate_retention</span>(<span class="dv">100</span>, <span class="dv">80</span>) <span class="sc">==</span> <span class="fl">0.8</span>)</span>
+<span id="cb51-3"><a></a><span class="fu">stopifnot</span>(<span class="fu">passes_cell_count</span>(<span class="dv">1200</span>) <span class="sc">==</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>직접 만든 함수마다 쉽게 예상할 수 있는 확인 예제를 작성합니다.</p>
 </section>
 <section id="오늘-배운-내용" class="slide level2 summary">
 <h2>오늘 배운 내용</h2>
 <ul>
 <li>함수는 입력을 받아 한 가지 작업을 수행하고 결과를 반환합니다.</li>
+<li>반환된 결과를 계속 사용하려면 변수에 다시 저장합니다.</li>
 <li>인자는 위치 또는 이름으로 전달하고 기본값을 지정할 수 있습니다.</li>
 <li>벡터화된 계산을 사용한 함수는 벡터와 데이터 프레임 열에도 재사용할 수 있습니다.</li>
 <li>필요한 값은 함수 밖에서 가져오지 않고 인자로 명시합니다.</li>
@@ -680,6 +707,7 @@
 <ol type="1">
 <li>함수의 입력, 처리, 반환값은 각각 무엇입니까?</li>
 <li><code>print()</code>와 <code>return()</code>은 어떻게 다릅니까?</li>
+<li>함수 호출 결과를 변수에 저장하지 않으면 어떤 차이가 생깁니까?</li>
 <li>기본 인자는 어떤 상황에서 유용합니까?</li>
 <li>함수를 작성한 뒤 어떤 값으로 시험해야 합니까?</li>
 </ol>

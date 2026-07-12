@@ -1950,14 +1950,14 @@
     "href": "index.html#강의-구성",
     "title": "R 기초 프로그래밍",
     "section": "강의 구성",
-    "text": "강의 구성\n\n\n\n차시\n주제\n강의자료\n실습 파일\n\n\n\n\n1\nR과 RStudio 시작하기\n슬라이드\nR 실습\n\n\n2\n변수와 기본 자료형\n슬라이드\nR 실습\n\n\n3\n벡터와 인덱싱\n슬라이드\nR 실습\n\n\n4\n행렬과 팩터\n슬라이드\nR 실습\n\n\n5\n데이터 프레임 다루기\n슬라이드\nR 실습\n\n\n6\n데이터 불러오기와 저장하기\n슬라이드\nR 실습\n\n\n7\n조건식과 데이터 필터링\n슬라이드\nR 실습\n\n\n8\n반복 처리와 벡터화 연산\n슬라이드\nR 실습\n\n\n9\n함수 작성하기\n슬라이드\nR 실습\n\n\n10\n데이터 요약과 시각화\n슬라이드\nR 실습\n\n\n11\n패키지, 리스트와 R 객체\n슬라이드\nR 실습\n\n\n12\n미니 프로젝트 — 전사체 형태의 데이터 분석\n슬라이드\nR 실습"
+    "text": "강의 구성\n\n\n\n차시\n주제\n강의자료\n실습 파일\n\n\n\n\n0\nR이 전사체 분석에 사용되는 모습 살펴보기\nSeurat Guided Clustering Tutorial\n없음\n\n\n1\nR과 RStudio 시작하기\n슬라이드\nR 실습\n\n\n2\n변수와 기본 자료형\n슬라이드\nR 실습\n\n\n3\n벡터와 인덱싱\n슬라이드\nR 실습\n\n\n4\n행렬과 팩터\n슬라이드\nR 실습\n\n\n5\n데이터 프레임 다루기\n슬라이드\nR 실습\n\n\n6\n데이터 불러오기와 저장하기\n슬라이드\nR 실습\n\n\n7\n조건식과 데이터 필터링\n슬라이드\nR 실습\n\n\n8\n반복 처리와 벡터화 연산\n슬라이드\nR 실습\n\n\n9\n함수 작성하기\n슬라이드\nR 실습\n\n\n10\n데이터 요약과 시각화\n슬라이드\nR 실습\n\n\n11\n패키지, 리스트와 R 객체\n슬라이드\nR 실습\n\n\n12\n미니 프로젝트 — 전사체 형태의 데이터 분석\n슬라이드\nR 실습"
   },
   {
     "objectID": "index.html#수업-운영",
     "href": "index.html#수업-운영",
     "title": "R 기초 프로그래밍",
     "section": "수업 운영",
-    "text": "수업 운영\n\n총 12회, 회당 1시간으로 진행합니다.\n각 차시는 짧은 개념 설명, 강사 시범, 학생 실습 순서로 구성합니다.\n기본 R 문법을 우선 익힌 뒤 전사체 데이터 분석에 필요한 자료구조로 연결합니다."
+    "text": "수업 운영\n\n0차시에서는 공식 튜토리얼을 함께 살펴보며 R이 실제 연구 분석에 사용되는 모습을 확인합니다.\n0차시는 별도의 슬라이드와 실습 파일 없이 강사의 안내로 진행합니다.\n총 12회, 회당 1시간으로 진행합니다.\n각 차시는 짧은 개념 설명, 강사 시범, 학생 실습 순서로 구성합니다.\n기본 R 문법을 우선 익힌 뒤 전사체 데이터 분석에 필요한 자료구조로 연결합니다."
   },
   {
     "objectID": "slides/01_getting_started.html#오늘의-학습-목표",
@@ -3031,6 +3031,20 @@
     "text": "반환값을 변수에 저장한다\ncontrol_count_k &lt;- to_thousands(1240)\ncontrol_count_k\n\n함수의 결과는 다른 값처럼 변수에 저장할 수 있습니다.\n반환값을 다음 계산의 입력으로 사용할 수도 있습니다."
   },
   {
+    "objectID": "slides/09_functions.html#반환된-객체를-다시-저장해야-할-수-있다",
+    "href": "slides/09_functions.html#반환된-객체를-다시-저장해야-할-수-있다",
+    "title": "9차시: 함수 작성하기",
+    "section": "반환된 객체를 다시 저장해야 할 수 있다",
+    "text": "반환된 객체를 다시 저장해야 할 수 있다\ncell_counts &lt;- c(1350, 980, 1240)\n\nsort(cell_counts)\ncell_counts\n\ncell_counts &lt;- sort(cell_counts)\ncell_counts\n\n많은 R 함수는 입력 객체를 직접 바꾸지 않고 처리한 결과를 반환합니다.\n결과를 계속 사용하려면 반환값을 변수에 저장합니다.\n같은 이름에 저장하면 이후 코드에서는 변경된 결과를 사용합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#분석-패키지에서도-같은-패턴을-사용한다",
+    "href": "slides/09_functions.html#분석-패키지에서도-같은-패턴을-사용한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "분석 패키지에서도 같은 패턴을 사용한다",
+    "text": "분석 패키지에서도 같은 패턴을 사용한다\n# 패키지 사용 예시: 이 차시에서는 실행하지 않습니다.\npbmc &lt;- NormalizeData(pbmc)\npbmc &lt;- ScaleData(pbmc)\n두 코드 모두 다음 순서로 읽습니다.\n현재 객체를 함수에 전달한다\n→ 함수가 처리한 객체를 반환한다\n→ 반환된 객체를 같은 이름에 다시 저장한다\n함수가 원본을 직접 바꾸는지, 새 객체를 반환하는지는 도움말의 반환값 설명을 확인합니다."
+  },
+  {
     "objectID": "slides/09_functions.html#마지막-표현식도-자동으로-반환된다",
     "href": "slides/09_functions.html#마지막-표현식도-자동으로-반환된다",
     "title": "9차시: 함수 작성하기",
@@ -3273,14 +3287,14 @@
     "href": "slides/09_functions.html#오늘-배운-내용",
     "title": "9차시: 함수 작성하기",
     "section": "오늘 배운 내용",
-    "text": "오늘 배운 내용\n\n함수는 입력을 받아 한 가지 작업을 수행하고 결과를 반환합니다.\n인자는 위치 또는 이름으로 전달하고 기본값을 지정할 수 있습니다.\n벡터화된 계산을 사용한 함수는 벡터와 데이터 프레임 열에도 재사용할 수 있습니다.\n필요한 값은 함수 밖에서 가져오지 않고 인자로 명시합니다.\n작은 입력과 stopifnot()으로 함수 결과를 확인할 수 있습니다."
+    "text": "오늘 배운 내용\n\n함수는 입력을 받아 한 가지 작업을 수행하고 결과를 반환합니다.\n반환된 결과를 계속 사용하려면 변수에 다시 저장합니다.\n인자는 위치 또는 이름으로 전달하고 기본값을 지정할 수 있습니다.\n벡터화된 계산을 사용한 함수는 벡터와 데이터 프레임 열에도 재사용할 수 있습니다.\n필요한 값은 함수 밖에서 가져오지 않고 인자로 명시합니다.\n작은 입력과 stopifnot()으로 함수 결과를 확인할 수 있습니다."
   },
   {
     "objectID": "slides/09_functions.html#종료-점검과-다음-차시",
     "href": "slides/09_functions.html#종료-점검과-다음-차시",
     "title": "9차시: 함수 작성하기",
     "section": "종료 점검과 다음 차시",
-    "text": "종료 점검과 다음 차시\n\n함수의 입력, 처리, 반환값은 각각 무엇입니까?\nprint()와 return()은 어떻게 다릅니까?\n기본 인자는 어떤 상황에서 유용합니까?\n함수를 작성한 뒤 어떤 값으로 시험해야 합니까?\n\n다음 차시: 그룹별로 데이터를 요약하고 목적에 맞는 그래프로 표현하기"
+    "text": "종료 점검과 다음 차시\n\n함수의 입력, 처리, 반환값은 각각 무엇입니까?\nprint()와 return()은 어떻게 다릅니까?\n함수 호출 결과를 변수에 저장하지 않으면 어떤 차이가 생깁니까?\n기본 인자는 어떤 상황에서 유용합니까?\n함수를 작성한 뒤 어떤 값으로 시험해야 합니까?\n\n다음 차시: 그룹별로 데이터를 요약하고 목적에 맞는 그래프로 표현하기"
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#오늘의-학습-목표",
@@ -3379,6 +3393,13 @@
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "도움말에서 함수의 패키지를 확인한다",
     "text": "도움말에서 함수의 패키지를 확인한다\n?stats::median\n도움말의 제목과 설명에서 함수가 속한 패키지, 인자, 반환값, 예제를 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#처음-보는-함수는-네-가지를-먼저-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#처음-보는-함수는-네-가지를-먼저-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "처음 보는 함수는 네 가지를 먼저 확인한다",
+    "text": "처음 보는 함수는 네 가지를 먼저 확인한다\n?stats::median\nargs(stats::median)\n\n어떤 객체를 입력으로 받는가?\n필수 인자와 선택 인자는 무엇인가?\n인자의 기본값은 무엇인가?\n어떤 값을 반환하는가?\n\n도움말의 Usage, Arguments, Value, Examples 항목에서 차례로 찾습니다.\nexample(\"median\", package = \"stats\")\nstats::median(c(3, 1, 2))\n\n도움말만으로 이해하기 어려우면 작고 결과를 예상할 수 있는 값으로 실행합니다.\n큰 분석 객체에 적용하기 전에 입력과 반환값의 클래스를 확인합니다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#sessioninfo로-실행-환경을-기록한다",
@@ -3584,6 +3605,13 @@
     "text": "사용 가능한 메서드를 확인할 수 있다\nhead(methods(\"summary\"))\n\nR의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.\n입문 단계에서는 먼저 class()와 도움말로 올바른 사용법을 확인합니다."
   },
   {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지는-s4-객체를-제공할-수도-있다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지는-s4-객체를-제공할-수도-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지는 S4 객체를 제공할 수도 있다",
+    "text": "패키지는 S4 객체를 제공할 수도 있다\n일반 리스트 외에도 패키지는 정해진 구성 요소를 가진 S4 객체를 제공할 수 있습니다.\n# 패키지 사용 예시: 이 차시에서는 실행하지 않습니다.\npbmc@meta.data\n\n@는 S4 객체의 슬롯(slot)을 읽는 연산자입니다.\npbmc@meta.data는 pbmc 객체의 meta.data 슬롯을 읽는 코드입니다.\n$, [[ ]], @는 서로 다른 객체 구조에서 사용되므로 임의로 바꾸지 않습니다.\n\n# 패키지 사용 예시: 이 차시에서는 실행하지 않습니다.\nclass(pbmc)\nIdents(pbmc)\n\n@ 문법은 기존 코드를 읽을 수 있을 정도로 익힙니다.\n내부 슬롯을 직접 수정하면 객체의 일관성이 깨질 수 있습니다.\n값을 확인하거나 변경할 때는 패키지가 제공하는 함수와 공식 도움말을 우선합니다."
+  },
+  {
     "objectID": "slides/11_packages_lists_and_objects.html#ggplot2-그래프도-조사할-수-있는-r-객체다",
     "href": "slides/11_packages_lists_and_objects.html#ggplot2-그래프도-조사할-수-있는-r-객체다",
     "title": "11차시: 패키지, 리스트와 R 객체",
@@ -3631,6 +3659,20 @@
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "Seurat 객체도 여러 정보를 담는 복합 객체다",
     "text": "Seurat 객체도 여러 정보를 담는 복합 객체다\nSeurat 객체에는 일반적으로 다음과 같은 종류의 정보가 함께 들어 있습니다.\n\n발현 데이터\n세포 메타데이터\n차원 축소 결과\n분석 과정에서 생성된 결과와 설정\n\n실제 접근 방법은 Seurat 버전과 객체 클래스의 공식 사용법을 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#문자열-패턴으로-이름을-찾을-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#문자열-패턴으로-이름을-찾을-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "문자열 패턴으로 이름을 찾을 수 있다",
+    "text": "문자열 패턴으로 이름을 찾을 수 있다\ngene_names &lt;- c(\"MT-CO1\", \"ACTB\", \"MT-ND1\", \"GAPDH\")\n\ngrepl(\"^MT-\", gene_names)\ngrep(\"^MT-\", gene_names, value = TRUE)\n\ngrepl()은 각 문자열이 규칙에 맞는지 논리값으로 반환합니다.\ngrep(..., value = TRUE)는 규칙에 맞는 문자열을 반환합니다.\n이런 문자열 검색 규칙을 정규표현식이라고 합니다.\n\ngrepl(\"^MT-\", \"MT-CO1\")\ngrepl(\"^MT-\", \"GENE-MT-1\")\n\"^MT-\"는 MT-가 문자열의 시작에 있는지 확인합니다. 처음 보는 패턴은 작은 문자 벡터에 적용해 결과를 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지-함수의-pattern-인자를-읽는다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지-함수의-pattern-인자를-읽는다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지 함수의 pattern 인자를 읽는다",
+    "text": "패키지 함수의 pattern 인자를 읽는다\n# 패키지 사용 예시: 이 차시에서는 실행하지 않습니다.\npbmc[[\"percent.mt\"]] &lt;- PercentageFeatureSet(\n  pbmc,\n  pattern = \"^MT-\"\n)\n이 코드는 다음처럼 읽습니다.\n\npbmc 객체를 함수에 입력합니다.\npattern 인자에 문자열 검색 규칙을 전달합니다.\n함수가 반환한 값을 percent.mt라는 이름으로 저장합니다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#복잡한-객체는-제공된-접근-함수를-우선-사용한다",
@@ -3703,38 +3745,52 @@
     "text": "실습 1: 패키지 상태 확인하기\n\"stats\" %in% rownames(installed.packages())\nrequireNamespace(\"stats\", quietly = TRUE)\npackageVersion(\"stats\")\nstats::median(c(1200, 1350, 980))\n설치, 불러오기, :: 사용의 차이를 설명합니다."
   },
   {
-    "objectID": "slides/11_packages_lists_and_objects.html#실습-2-이름이-있는-리스트-만들기",
-    "href": "slides/11_packages_lists_and_objects.html#실습-2-이름이-있는-리스트-만들기",
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-2-처음-보는-함수의-도움말-읽기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-2-처음-보는-함수의-도움말-읽기",
     "title": "11차시: 패키지, 리스트와 R 객체",
-    "section": "실습 2: 이름이 있는 리스트 만들기",
-    "text": "실습 2: 이름이 있는 리스트 만들기\nsample_result &lt;- list(\n  sample_id = \"control_1\",\n  cell_count = 1240,\n  passed_qc = TRUE\n)\n\nsample_result$cell_count\nsample_result[[\"cell_count\"]]\nsample_result[\"cell_count\"]\n세 선택 결과의 자료형을 비교합니다."
+    "section": "실습 2: 처음 보는 함수의 도움말 읽기",
+    "text": "실습 2: 처음 보는 함수의 도움말 읽기\n?stats::median\nargs(stats::median)\nstats::median(c(3, 1, 2))\n입력, 주요 인자, 기본값, 반환값을 도움말에서 찾아 설명합니다."
   },
   {
-    "objectID": "slides/11_packages_lists_and_objects.html#실습-3-중첩된-분석-객체-탐색하기",
-    "href": "slides/11_packages_lists_and_objects.html#실습-3-중첩된-분석-객체-탐색하기",
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-3-이름이-있는-리스트-만들기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-3-이름이-있는-리스트-만들기",
     "title": "11차시: 패키지, 리스트와 R 객체",
-    "section": "실습 3: 중첩된 분석 객체 탐색하기",
-    "text": "실습 3: 중첩된 분석 객체 탐색하기\nnames(analysis_result)\nstr(analysis_result, max.level = 2)\nanalysis_result$parameters$qc$min_cells\n바깥 단계부터 이름과 구조를 확인해 필요한 값에 접근합니다."
+    "section": "실습 3: 이름이 있는 리스트 만들기",
+    "text": "실습 3: 이름이 있는 리스트 만들기\nsample_result &lt;- list(\n  sample_id = \"control_1\",\n  cell_count = 1240,\n  passed_qc = TRUE\n)\n\nsample_result$cell_count\nsample_result[[\"cell_count\"]]\nsample_result[\"cell_count\"]\n세 선택 결과의 자료형을 비교합니다."
   },
   {
-    "objectID": "slides/11_packages_lists_and_objects.html#실습-4-rds로-저장하고-복원하기",
-    "href": "slides/11_packages_lists_and_objects.html#실습-4-rds로-저장하고-복원하기",
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-4-중첩된-분석-객체-탐색하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-4-중첩된-분석-객체-탐색하기",
     "title": "11차시: 패키지, 리스트와 R 객체",
-    "section": "실습 4: RDS로 저장하고 복원하기",
-    "text": "실습 4: RDS로 저장하고 복원하기\nsaveRDS(analysis_result, \"results/analysis_result.rds\")\nrestored_result &lt;- readRDS(\"results/analysis_result.rds\")\n\nidentical(analysis_result, restored_result)\n복원한 객체의 클래스, 이름, 구조도 확인합니다."
+    "section": "실습 4: 중첩된 분석 객체 탐색하기",
+    "text": "실습 4: 중첩된 분석 객체 탐색하기\nnames(analysis_result)\nstr(analysis_result, max.level = 2)\nanalysis_result$parameters$qc$min_cells\n바깥 단계부터 이름과 구조를 확인해 필요한 값에 접근합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-5-문자열-패턴-확인하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-5-문자열-패턴-확인하기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 5: 문자열 패턴 확인하기",
+    "text": "실습 5: 문자열 패턴 확인하기\ngene_names &lt;- c(\"MT-CO1\", \"ACTB\", \"MT-ND1\", \"GAPDH\")\n\ngrepl(\"^MT-\", gene_names)\ngrep(\"^MT-\", gene_names, value = TRUE)\n^가 있을 때와 없을 때의 결과를 작은 문자 벡터로 비교합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-6-rds로-저장하고-복원하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-6-rds로-저장하고-복원하기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 6: RDS로 저장하고 복원하기",
+    "text": "실습 6: RDS로 저장하고 복원하기\nsaveRDS(analysis_result, \"results/analysis_result.rds\")\nrestored_result &lt;- readRDS(\"results/analysis_result.rds\")\n\nidentical(analysis_result, restored_result)\n복원한 객체의 클래스, 이름, 구조도 확인합니다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#오늘-배운-내용",
     "href": "slides/11_packages_lists_and_objects.html#오늘-배운-내용",
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "오늘 배운 내용",
-    "text": "오늘 배운 내용\n\n패키지 설치와 현재 세션에 불러오기는 서로 다른 과정입니다.\n리스트는 자료형과 크기가 다른 여러 객체를 함께 저장합니다.\n[ ]는 리스트를, [[ ]]와 $는 원소 내용을 반환합니다.\n복잡한 객체는 class(), str(), names(), attributes()로 조사합니다.\nRDS는 복합 R 객체의 구조를 보존하여 저장합니다."
+    "text": "오늘 배운 내용\n\n패키지 설치와 현재 세션에 불러오기는 서로 다른 과정입니다.\n리스트는 자료형과 크기가 다른 여러 객체를 함께 저장합니다.\n[ ]는 리스트를, [[ ]]와 $는 원소 내용을 반환합니다.\n복잡한 객체는 class(), str(), names(), attributes()로 조사합니다.\nS4 객체의 @는 슬롯을 읽는 문법이며, 실제 작업에서는 제공된 함수를 우선합니다.\n도움말에서는 입력, 인자와 기본값, 반환값을 먼저 확인합니다.\ngrep()과 grepl()로 정규표현식에 맞는 문자열을 찾을 수 있습니다.\nRDS는 복합 R 객체의 구조를 보존하여 저장합니다."
   },
   {
     "objectID": "slides/11_packages_lists_and_objects.html#종료-점검과-다음-차시",
     "href": "slides/11_packages_lists_and_objects.html#종료-점검과-다음-차시",
     "title": "11차시: 패키지, 리스트와 R 객체",
     "section": "종료 점검과 다음 차시",
-    "text": "종료 점검과 다음 차시\n\ninstall.packages()와 library()는 어떻게 다릅니까?\n리스트의 [ ]와 [[ ]]는 어떤 결과를 반환합니까?\n처음 보는 복잡한 객체는 어떤 순서로 조사합니까?\nCSV 대신 RDS를 사용하는 것이 적합한 상황은 언제입니까?\n\n다음 차시: 지금까지 배운 내용을 연결해 전사체 형태의 데이터를 분석하는 미니 프로젝트"
+    "text": "종료 점검과 다음 차시\n\ninstall.packages()와 library()는 어떻게 다릅니까?\n리스트의 [ ]와 [[ ]]는 어떤 결과를 반환합니까?\n처음 보는 복잡한 객체는 어떤 순서로 조사합니까?\nS4 객체에서 @는 무엇을 의미합니까?\n\"^MT-\"에서 ^는 무엇을 의미합니까?\n처음 보는 함수의 도움말에서 무엇을 먼저 확인해야 합니까?\nCSV 대신 RDS를 사용하는 것이 적합한 상황은 언제입니까?\n\n다음 차시: 지금까지 배운 내용을 연결해 전사체 형태의 데이터를 분석하는 미니 프로젝트"
   }
 ]

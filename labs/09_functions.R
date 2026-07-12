@@ -29,6 +29,18 @@ to_thousands(1520)
 control_count_k <- to_thousands(1240)
 control_count_k
 
+# 함수 호출만 했을 때와 반환값을 다시 저장했을 때를 비교하세요.
+example_counts <- c(1350, 980, 1240)
+sort(example_counts)
+example_counts
+
+example_counts <- sort(example_counts)
+example_counts
+
+# TODO: round()로 아래 값의 소수 첫째 자리까지 계산한 뒤
+# TODO: 같은 변수 이름에 다시 저장하고 결과를 확인하세요.
+example_ratio <- 83.746
+
 # 벡터를 입력하여 결과를 확인하세요.
 to_thousands(c(1240, 1385, 1090))
 
