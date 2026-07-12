@@ -10,6 +10,7 @@ toc: false
 
 | 차시 | 주제 | 강의자료 | 실습 파일 |
 |---:|---|---|---|
+| 0 | R이 전사체 분석에 사용되는 모습 살펴보기 | [Seurat Guided Clustering Tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial) | 없음 |
 | 1 | R과 RStudio 시작하기 | [슬라이드](slides/01_getting_started.qmd) | [R 실습](labs/01_getting_started.R) |
 | 2 | 변수와 기본 자료형 | [슬라이드](slides/02_variables_and_types.qmd) | [R 실습](labs/02_variables_and_types.R) |
 | 3 | 벡터와 인덱싱 | [슬라이드](slides/03_vectors_and_indexing.qmd) | [R 실습](labs/03_vectors_and_indexing.R) |
@@ -25,6 +26,8 @@ toc: false
 
 ## 수업 운영
 
+- 0차시에서는 공식 튜토리얼을 함께 살펴보며 R이 실제 연구 분석에 사용되는 모습을 확인합니다.
+- 0차시는 별도의 슬라이드와 실습 파일 없이 강사의 안내로 진행합니다.
 - 총 12회, 회당 1시간으로 진행합니다.
 - 각 차시는 짧은 개념 설명, 강사 시범, 학생 실습 순서로 구성합니다.
 - 기본 R 문법을 우선 익힌 뒤 전사체 데이터 분석에 필요한 자료구조로 연결합니다.
