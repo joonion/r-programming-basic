@@ -1,0 +1,485 @@
+---
+title: "7차시: 조건식과 데이터 필터링"
+subtitle: "R 기초 프로그래밍"
+---
+
+## 오늘의 학습 목표 {.learning-objectives}
+
+1. 비교 연산자로 조건을 만들 수 있다.
+2. 논리 연산자로 여러 조건을 결합할 수 있다.
+3. 조건을 이용해 데이터 프레임의 행을 선택할 수 있다.
+4. `if`, `if ... else`, `ifelse()`를 상황에 맞게 사용할 수 있다.
+
+## 선수 지식 {.prerequisites}
+
+- 논리형 값 `TRUE`, `FALSE`를 구분할 수 있습니다.
+- 벡터를 조건으로 인덱싱할 수 있습니다.
+- 데이터 프레임에서 `$`와 `[행, 열]`을 사용할 수 있습니다.
+- `read.csv()`로 CSV 파일을 불러올 수 있습니다.
+
+## 6차시의 샘플 메타데이터를 사용한다
+
+```r
+sample_metadata <- read.csv("data/sample_metadata.csv")
+head(sample_metadata)
+```
+
+이번 차시에서는 불러온 표에서 원하는 샘플을 조건에 따라 선택합니다.
+
+## 조건식의 결과는 논리값이다
+
+```r
+cell_count <- 1240
+
+cell_count >= 1200
+cell_count < 1000
+```
+
+- 조건이 맞으면 `TRUE`, 맞지 않으면 `FALSE`입니다.
+- 이 논리값을 선택과 실행 흐름에 사용할 수 있습니다.
+
+## 크기를 비교하는 연산자
+
+| 연산자 | 의미 | 예 |
+|---|---|---|
+| `>` | 크다 | `x > 10` |
+| `>=` | 크거나 같다 | `x >= 10` |
+| `<` | 작다 | `x < 10` |
+| `<=` | 작거나 같다 | `x <= 10` |
+
+경계값을 포함할지 생각한 뒤 `>`와 `>=`를 구분합니다.
+
+## 같은지 또는 다른지 비교한다
+
+| 연산자 | 의미 | 예 |
+|---|---|---|
+| `==` | 같다 | `condition == "treated"` |
+| `!=` | 다르다 | `condition != "treated"` |
+
+```r
+condition <- "control"
+
+condition == "control"
+condition != "treated"
+```
+
+## 대입과 비교를 구분한다
+
+```r
+condition <- "control"
+condition == "control"
+```
+
+- `<-`는 값을 변수에 저장합니다.
+- `==`는 두 값이 같은지 비교합니다.
+- 조건식에서 `=` 하나를 잘못 사용하지 않도록 주의합니다.
+
+## 벡터를 비교하면 원소마다 결과가 나온다
+
+```r
+cell_counts <- c(1240, 1385, 1090, 1520)
+cell_counts >= 1200
+```
+
+비교 결과는 원래 벡터와 길이가 같은 논리형 벡터입니다.
+
+## 데이터 프레임의 열로 조건을 만든다
+
+```r
+enough_cells <- sample_metadata$cell_count >= 1200
+enough_cells
+```
+
+각 값은 같은 행에 있는 샘플이 조건을 만족하는지 나타냅니다.
+
+## 조건으로 행을 선택한다
+
+```r
+sample_metadata[enough_cells, ]
+```
+
+- 대괄호의 쉼표 앞에 논리형 벡터를 넣습니다.
+- `TRUE`인 행만 선택됩니다.
+- 쉼표 뒤를 비워 모든 열을 유지합니다.
+
+## 조건을 직접 작성할 수도 있다
+
+```r
+sample_metadata[
+  sample_metadata$cell_count >= 1200,
+]
+```
+
+조건을 변수에 먼저 저장하면 중간 결과를 확인하기 쉽고, 직접 작성하면 코드가 짧아집니다.
+
+## 문자형 열도 비교할 수 있다
+
+```r
+is_treated <- sample_metadata$condition == "treated"
+is_treated
+
+sample_metadata[is_treated, ]
+```
+
+문자형 값을 비교할 때는 따옴표와 철자를 확인합니다.
+
+## `%in%`으로 여러 값 중 하나인지 확인한다
+
+```r
+selected_batches <- c("batch_1", "batch_3")
+
+sample_metadata$batch %in% selected_batches
+```
+
+- 왼쪽 값이 오른쪽 벡터에 포함되어 있으면 `TRUE`입니다.
+- 여러 범주 중 하나에 해당하는 행을 찾을 때 편리합니다.
+
+## `&`는 두 조건이 모두 참인지 확인한다
+
+```r
+enough_cells <- sample_metadata$cell_count >= 1200
+low_mito <- sample_metadata$mito_percent < 8
+
+enough_cells & low_mito
+```
+
+| 조건 1 | 조건 2 | `&` 결과 |
+|---|---|---|
+| `TRUE` | `TRUE` | `TRUE` |
+| `TRUE` | `FALSE` | `FALSE` |
+| `FALSE` | `TRUE` | `FALSE` |
+| `FALSE` | `FALSE` | `FALSE` |
+
+## `|`는 하나 이상의 조건이 참인지 확인한다
+
+```r
+few_cells <- sample_metadata$cell_count < 1200
+high_mito <- sample_metadata$mito_percent >= 8
+
+few_cells | high_mito
+```
+
+두 조건 중 하나라도 `TRUE`이면 결과는 `TRUE`입니다.
+
+## `!`는 논리값을 반대로 바꾼다
+
+```r
+sample_metadata$passed_qc
+!sample_metadata$passed_qc
+```
+
+- `TRUE`는 `FALSE`로 바뀝니다.
+- `FALSE`는 `TRUE`로 바뀝니다.
+- 조건을 만족하지 않는 행을 찾을 때 사용합니다.
+
+## 여러 조건을 결합해 행을 선택한다
+
+```r
+qc_condition <-
+  sample_metadata$cell_count >= 1200 &
+  sample_metadata$mito_percent < 8
+
+sample_metadata[qc_condition, ]
+```
+
+각 비교식을 줄로 나누면 긴 조건도 읽기 쉽습니다.
+
+## 괄호로 조건의 의미를 분명히 한다
+
+```r
+selected_condition <-
+  sample_metadata$condition == "treated" &
+  (sample_metadata$batch == "batch_1" |
+    sample_metadata$batch == "batch_2")
+```
+
+- 괄호 안의 조건을 먼저 계산합니다.
+- `&`와 `|`를 함께 쓸 때는 괄호로 의도를 표시합니다.
+
+## 조건식에는 교육용 기준을 사용한다
+
+```r
+qc_condition <-
+  sample_metadata$cell_count >= 1200 &
+  sample_metadata$median_genes >= 2000 &
+  sample_metadata$mito_percent < 8
+```
+
+> 이 수치는 R 조건식 연습을 위한 예시입니다. 실제 QC 기준은 조직, 실험법, 샘플 상태와 분포를 검토하여 정해야 합니다.
+
+## 조건을 만족하는 행의 개수를 센다
+
+```r
+sum(qc_condition)
+```
+
+- 계산에서 `TRUE`는 1, `FALSE`는 0처럼 사용됩니다.
+- 따라서 `sum()`으로 조건을 만족하는 개수를 셀 수 있습니다.
+
+## `any()`는 하나라도 참인지 확인한다
+
+```r
+any(sample_metadata$mito_percent >= 8)
+```
+
+하나 이상의 샘플이 조건을 만족하면 `TRUE`를 반환합니다.
+
+## `all()`은 모두 참인지 확인한다
+
+```r
+all(sample_metadata$cell_count >= 900)
+```
+
+모든 샘플이 조건을 만족해야 `TRUE`를 반환합니다.
+
+## `which()`는 참인 위치를 반환한다
+
+```r
+which(sample_metadata$passed_qc)
+```
+
+- 논리형 결과 대신 행 번호가 필요할 때 사용합니다.
+- 행 선택에는 논리형 벡터를 직접 사용하는 편이 더 읽기 쉬운 경우가 많습니다.
+
+## `NA`와 비교하면 결과도 `NA`다
+
+```r
+sample_metadata$doublet_rate <= 4
+```
+
+- 알 수 없는 값이 기준 이하인지도 알 수 없습니다.
+- 따라서 해당 위치의 비교 결과는 `NA`입니다.
+
+## 결측값을 제외하는 조건을 함께 작성한다
+
+```r
+known_doublet_rate <- !is.na(sample_metadata$doublet_rate)
+low_doublet_rate <- sample_metadata$doublet_rate <= 4
+
+doublet_condition <- known_doublet_rate & low_doublet_rate
+sample_metadata[doublet_condition, ]
+```
+
+결측값을 임의로 통과 또는 탈락시키지 말고 처리 원칙을 먼저 정합니다.
+
+## `if`는 조건에 따라 코드를 실행한다
+
+```r
+cell_count <- 1240
+
+if (cell_count >= 1200) {
+  print("세포 수 기준을 만족합니다.")
+}
+```
+
+- 괄호 안의 조건이 `TRUE`일 때만 중괄호 안을 실행합니다.
+- 들여쓰기는 공백 2칸을 사용합니다.
+
+## `if ... else`는 두 실행 경로를 만든다
+
+```r
+cell_count <- 980
+
+if (cell_count >= 1200) {
+  qc_message <- "세포 수 기준 통과"
+} else {
+  qc_message <- "세포 수 기준 미달"
+}
+
+qc_message
+```
+
+조건이 `TRUE`이면 첫 블록, `FALSE`이면 `else` 블록을 실행합니다.
+
+## `if`에는 길이 1인 조건이 필요하다
+
+```r
+all_passed <- all(sample_metadata$passed_qc)
+
+if (all_passed) {
+  print("모든 샘플이 QC를 통과했습니다.")
+} else {
+  print("QC를 통과하지 못한 샘플이 있습니다.")
+}
+```
+
+열 전체처럼 여러 논리값을 `if`에 직접 넣지 않습니다.
+
+```r
+# if (sample_metadata$passed_qc) { ... }
+```
+
+## `&&`와 `||`는 `if`의 단일 조건을 결합한다
+
+```r
+cell_count <- 1240
+mito_percent <- 4.2
+
+if (cell_count >= 1200 && mito_percent < 8) {
+  print("두 기준을 모두 만족합니다.")
+}
+```
+
+- `&&`는 단일 조건 두 개가 모두 참인지 확인합니다.
+- `||`는 단일 조건 중 하나 이상이 참인지 확인합니다.
+- 벡터의 원소별 비교에는 `&`와 `|`를 사용합니다.
+
+## `ifelse()`는 원소마다 값을 선택한다
+
+```r
+qc_labels <- ifelse(
+  sample_metadata$passed_qc,
+  "pass",
+  "fail"
+)
+
+qc_labels
+```
+
+- 첫 번째 인자의 각 논리값을 확인합니다.
+- `TRUE`이면 두 번째 값, `FALSE`이면 세 번째 값을 반환합니다.
+
+## `if`와 `ifelse()`를 구분한다
+
+| 목적 | 사용 |
+|---|---|
+| 조건에 따라 코드 블록 하나를 실행 | `if`, `if ... else` |
+| 벡터의 각 원소에 결과값 부여 | `ifelse()` |
+
+```r
+sample_metadata$qc_label <- ifelse(
+  sample_metadata$passed_qc,
+  "pass",
+  "fail"
+)
+```
+
+## 필터링 결과는 새 변수에 저장한다
+
+```r
+qc_passed_metadata <- sample_metadata[qc_condition, ]
+
+qc_passed_metadata
+nrow(qc_passed_metadata)
+```
+
+- 원본을 보존하면 기준과 결과를 비교하기 쉽습니다.
+- 조건을 확인한 뒤 결과를 새 이름에 저장합니다.
+
+## 필터링 결과를 저장할 수 있다
+
+```r
+dir.create("results", showWarnings = FALSE)
+
+write.csv(
+  qc_passed_metadata,
+  "results/qc_passed_metadata.csv",
+  row.names = FALSE
+)
+```
+
+저장한 기준과 파일 이름이 무엇을 의미하는지 기록합니다.
+
+## 흔한 오류 1: `&` 대신 `&&`를 사용한다
+
+```r
+condition_1 <- sample_metadata$cell_count >= 1200
+condition_2 <- sample_metadata$mito_percent < 8
+
+condition_1 & condition_2
+```
+
+- 데이터 프레임의 각 행을 비교할 때는 `&`를 사용합니다.
+- `&&`는 첫 번째 값만 확인하므로 행별 필터링에 적합하지 않습니다.
+
+## 흔한 오류 2: 문자에 따옴표가 없다
+
+```r
+sample_metadata$condition == "treated"
+```
+
+```r
+# sample_metadata$condition == treated
+```
+
+문자형 값은 따옴표로 감쌉니다.
+
+## 흔한 오류 3: 결측값을 `== NA`로 확인한다
+
+```r
+is.na(sample_metadata$doublet_rate)
+```
+
+```r
+# sample_metadata$doublet_rate == NA
+```
+
+결측값은 `is.na()`로 확인합니다.
+
+## 실습 1: 단일 조건으로 필터링하기
+
+```r
+enough_cells <- sample_metadata$cell_count >= 1200
+sample_metadata[enough_cells, ]
+
+treated_samples <- sample_metadata$condition == "treated"
+sample_metadata[treated_samples, ]
+```
+
+각 조건을 만족하는 샘플 수를 `sum()`으로 계산합니다.
+
+## 실습 2: 여러 조건 결합하기
+
+```r
+qc_condition <-
+  sample_metadata$cell_count >= 1200 &
+  sample_metadata$median_genes >= 2000 &
+  sample_metadata$mito_percent < 8
+
+sample_metadata[qc_condition, ]
+```
+
+각 조건을 따로 실행한 뒤 결합 결과와 비교합니다.
+
+## 실습 3: 결측값이 있는 조건 다루기
+
+```r
+doublet_condition <-
+  !is.na(sample_metadata$doublet_rate) &
+  sample_metadata$doublet_rate <= 4
+
+sample_metadata[doublet_condition, ]
+```
+
+결측값을 제외하는 조건이 없을 때와 결과를 비교합니다.
+
+## 실습 4: 조건에 따라 결과 만들기
+
+```r
+sample_metadata$qc_label <- ifelse(
+  qc_condition,
+  "pass",
+  "review"
+)
+
+sample_metadata[, c("sample_id", "qc_label")]
+```
+
+`if ... else`로 전체 데이터의 QC 상태 메시지도 만듭니다.
+
+## 오늘 배운 내용 {.summary}
+
+- 비교 연산자는 조건별 `TRUE`, `FALSE`를 만듭니다.
+- `&`, `|`, `!`로 여러 조건을 결합하거나 반대로 바꿉니다.
+- 논리형 벡터를 `[행, 열]`의 행 위치에 사용해 필터링합니다.
+- 결측값이 있는 조건에는 `is.na()` 처리를 함께 고려합니다.
+- 단일 실행 흐름에는 `if`, 원소별 결과에는 `ifelse()`를 사용합니다.
+
+## 종료 점검과 다음 차시 {.checkpoint}
+
+1. `=`와 `==`는 어떻게 다릅니까?
+2. 두 조건을 모두 만족하는 행은 어떤 연산자로 찾습니까?
+3. 결측값 여부는 어떤 함수로 확인합니까?
+4. `if`와 `ifelse()`는 언제 각각 사용합니까?
+
+**다음 차시:** 여러 값에 같은 작업을 반복하고 벡터화 연산과 비교하기

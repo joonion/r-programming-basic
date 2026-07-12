@@ -1,0 +1,313 @@
+/*-- scss:defaults --*/
+
+$body-bg: #f8fafc;
+$body-color: #172033;
+$link-color: #2563eb;
+$selection-bg: #dbeafe;
+$selection-color: #172033;
+
+$font-family-sans-serif: "Pretendard Variable", "Pretendard", "Inter", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+$font-family-monospace: "JetBrains Mono", "Cascadia Code", "Consolas", monospace;
+
+$presentation-font-size-root: 34px;
+$presentation-line-height: 1.42;
+$presentation-heading-font: "Pretendard Variable", "Pretendard", "Inter", "Noto Sans KR", "Malgun Gothic", sans-serif;
+$presentation-heading-color: #172033;
+$presentation-heading-font-weight: 700;
+$presentation-heading-line-height: 1.18;
+$presentation-h1-font-size: 2.35em;
+$presentation-h2-font-size: 1.58em;
+$presentation-h3-font-size: 1.05em;
+
+$code-block-font-size: 0.68em;
+$code-color: #172033;
+$code-bg: #f1f5f9;
+$border-color: #cbd5e1;
+
+/*-- scss:rules --*/
+
+:root {
+  --lecture-bg: #f8fafc;
+  --lecture-text: #172033;
+  --lecture-primary: #2563eb;
+  --lecture-secondary: #0f766e;
+  --lecture-warning: #b45309;
+  --lecture-code-bg: #f1f5f9;
+  --lecture-border: #cbd5e1;
+  --lecture-muted: #526077;
+}
+
+.reveal {
+  color: var(--lecture-text);
+  font-kerning: normal;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
+  padding: 0.1em 0.35em 0.45em;
+}
+
+.reveal .slides section > :last-child {
+  margin-bottom: 0;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+.reveal h2 {
+  margin: 0 0 0.58em;
+  padding: 0 0 0.28em;
+  border-bottom: 2px solid var(--lecture-border);
+}
+
+.reveal h3 {
+  margin: 0.72em 0 0.28em;
+  color: var(--lecture-secondary);
+}
+
+.reveal p {
+  margin: 0.42em 0;
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0.35em 0 0.35em 1.1em;
+}
+
+.reveal li {
+  margin: 0.22em 0;
+  padding-left: 0.12em;
+}
+
+.reveal li::marker {
+  color: var(--lecture-primary);
+  font-weight: 700;
+}
+
+.reveal strong {
+  font-weight: 750;
+  color: #0f3f9e;
+}
+
+.reveal a {
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.12em;
+}
+
+.reveal .title-slide {
+  border-top: 10px solid var(--lecture-primary);
+  padding-top: 1.5em;
+}
+
+.reveal .title-slide h1 {
+  max-width: 12em;
+  margin: 0 0 0.28em;
+  color: var(--lecture-text);
+}
+
+.reveal .title-slide .subtitle {
+  margin-top: 0.35em;
+  color: var(--lecture-secondary);
+  font-size: 1.18em;
+  font-weight: 600;
+}
+
+.reveal .title-slide .quarto-title-authors,
+.reveal .title-slide .institute,
+.reveal .title-slide .date {
+  color: var(--lecture-muted);
+  font-size: 0.72em;
+}
+
+.reveal section.section-divider {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 12px solid var(--lecture-primary);
+  padding-left: 1.2em;
+}
+
+.reveal section.section-divider h2 {
+  max-width: 12em;
+  border-bottom: 0;
+  font-size: 2em;
+}
+
+.reveal section.learning-objectives,
+.reveal section.exercise,
+.reveal section.summary,
+.reveal section.checkpoint,
+.reveal section.prerequisites {
+  border-top: 8px solid var(--lecture-primary);
+}
+
+.reveal section.exercise {
+  border-top-color: var(--lecture-secondary);
+}
+
+.reveal section[id^="실습-"] {
+  border-top: 8px solid var(--lecture-secondary);
+}
+
+.reveal section[id^="실습-"] h2 {
+  color: var(--lecture-secondary);
+}
+
+.reveal section.exercise h2 {
+  color: var(--lecture-secondary);
+}
+
+.reveal section.summary {
+  border-top-color: var(--lecture-primary);
+  background: #f5f9ff;
+}
+
+.reveal section.checkpoint {
+  border-top-color: var(--lecture-warning);
+}
+
+.reveal section.checkpoint h2 {
+  color: #8a3f06;
+}
+
+.reveal section.prerequisites {
+  border-top-color: var(--lecture-border);
+}
+
+.reveal section.prerequisites h2 {
+  color: var(--lecture-muted);
+}
+
+.reveal pre {
+  width: 100%;
+  margin: 0.48em 0;
+  border: 1px solid var(--lecture-border);
+  border-left: 5px solid var(--lecture-primary);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--lecture-code-bg);
+  max-height: 58vh;
+  overflow: auto;
+}
+
+.reveal pre code {
+  padding: 0.78em 0.9em;
+  line-height: 1.38;
+  tab-size: 2;
+}
+
+.reveal code:not(pre code) {
+  padding: 0.05em 0.22em;
+  border: 1px solid #dbe3ee;
+  border-radius: 0;
+  background: var(--lecture-code-bg);
+  color: #173b73;
+}
+
+.reveal .sourceCode {
+  margin-top: 0.35em;
+}
+
+.reveal table {
+  width: auto;
+  max-width: 100%;
+  margin: 0.55em auto;
+  border-collapse: collapse;
+  font-size: 0.74em;
+  line-height: 1.32;
+}
+
+.reveal table th {
+  border-top: 2px solid var(--lecture-primary);
+  border-bottom: 2px solid var(--lecture-border);
+  background: #eef4ff;
+  color: var(--lecture-text);
+  font-weight: 700;
+}
+
+.reveal table td,
+.reveal table th {
+  padding: 0.4em 0.65em;
+  border-left: 0;
+  border-right: 0;
+}
+
+.reveal table tbody tr:last-child td {
+  border-bottom: 1px solid var(--lecture-border);
+}
+
+.reveal blockquote {
+  width: auto;
+  margin: 0.65em 0;
+  padding: 0.45em 0.8em;
+  border-left: 6px solid var(--lecture-warning);
+  background: #fff8eb;
+  color: #63310a;
+  box-shadow: none;
+  font-size: 0.92em;
+  font-style: normal;
+}
+
+.reveal .callout {
+  margin: 0.55em 0;
+  border: 1px solid var(--lecture-border);
+  border-left-width: 6px;
+  border-radius: 0;
+  box-shadow: none;
+  background: #ffffff;
+}
+
+.reveal .columns {
+  gap: 1.35em;
+  align-items: flex-start;
+}
+
+.reveal .column > :first-child {
+  margin-top: 0;
+}
+
+.reveal .footer {
+  left: 3.3%;
+  bottom: 1.8%;
+  color: #6b778c;
+  font-size: 0.38em;
+  letter-spacing: 0.02em;
+}
+
+.reveal .slide-number {
+  right: 2.4%;
+  bottom: 1.65%;
+  padding: 0;
+  background: transparent;
+  color: #667085;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  font-size: 0.42em;
+}
+
+.reveal .controls {
+  color: var(--lecture-primary);
+}
+
+.reveal .small,
+.reveal small {
+  color: var(--lecture-muted);
+  font-size: 0.72em;
+}
+
+@media (max-width: 900px) {
+  .reveal pre {
+    max-height: 52vh;
+  }
+
+  .reveal table {
+    font-size: 0.68em;
+  }
+}

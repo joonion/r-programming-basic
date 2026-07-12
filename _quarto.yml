@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+    - slides/*.qmd
+  resources:
+    - labs/*.R
+    - data/*.csv
+    - data/README.md
+    - assets/*.pptx
+
+lang: ko
+
+website:
+  title: "R 기초 프로그래밍"
+  navbar:
+    left:
+      - href: index.qmd
+        text: 강의 홈
+  page-footer:
+    center: "R 기초 프로그래밍"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    smooth-scroll: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto

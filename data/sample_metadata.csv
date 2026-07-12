@@ -1,0 +1,7 @@
+sample_id,condition,batch,cell_count,median_genes,mito_percent,doublet_rate,passed_qc
+control_1,control,batch_1,1240,2180,4.2,3.1,TRUE
+control_2,control,batch_1,1385,2310,5.1,2.8,TRUE
+control_3,control,batch_2,1090,1950,8.7,4.5,FALSE
+treated_1,treated,batch_1,1520,2460,3.8,3.4,TRUE
+treated_2,treated,batch_2,980,1870,9.4,,FALSE
+treated_3,treated,batch_2,1430,2390,4.6,3.0,TRUE

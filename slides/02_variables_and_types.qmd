@@ -1,0 +1,379 @@
+---
+title: "2차시: 변수와 기본 자료형"
+subtitle: "R 기초 프로그래밍"
+---
+
+## 오늘의 학습 목표 {.learning-objectives}
+
+1. 값을 변수에 저장하고 다시 사용할 수 있다.
+2. 숫자형, 문자형, 논리형 자료를 구분할 수 있다.
+3. 객체의 값과 자료형을 확인할 수 있다.
+4. 결측값을 확인하고 기본 자료형을 변환할 수 있다.
+
+## 선수 지식 {.prerequisites}
+
+- RStudio에서 R 스크립트를 열고 저장할 수 있습니다.
+- `Ctrl + Enter`로 코드를 실행할 수 있습니다.
+- `<-`를 사용해 값을 변수에 저장할 수 있습니다.
+
+## 1차시 복습: 변수는 값에 붙이는 이름이다
+
+```r
+cell_count <- 1250
+cell_count
+```
+
+- `<-` 오른쪽의 값을 왼쪽 이름에 저장합니다.
+- 저장한 값은 변수 이름으로 다시 사용할 수 있습니다.
+- R에서는 생성된 변수를 **객체**라고도 부릅니다.
+
+## 의미가 분명한 변수 이름을 사용한다
+
+```r
+sample_name <- "control_1"
+cell_count <- 1250
+passed_qc <- TRUE
+```
+
+- 이름만 보고 값의 의미를 짐작할 수 있게 작성합니다.
+- 여러 단어는 밑줄로 연결하는 `snake_case`를 사용합니다.
+- R은 대소문자를 구분합니다. `cell_count`와 `Cell_count`는 다릅니다.
+
+## 변수 이름을 작성할 때 주의한다
+
+좋은 이름:
+
+```r
+sample_name <- "control_1"
+mito_percent <- 4.2
+```
+
+피해야 할 이름:
+
+```r
+x <- "control_1"
+my.sample.name <- "control_1"
+```
+
+- 숫자로 시작하거나 공백이 들어간 이름은 사용할 수 없습니다.
+- 이 과정에서는 일관되게 `snake_case`를 사용합니다.
+
+## 자료형은 값의 종류를 나타낸다
+
+R은 값의 종류에 따라 저장하고 처리하는 방법을 결정합니다.
+
+| 자료형 | 예 | 의미 |
+|---|---|---|
+| 숫자형 | `1250`, `4.2` | 계산할 수 있는 수 |
+| 문자형 | `"control_1"` | 글자나 이름 |
+| 논리형 | `TRUE`, `FALSE` | 참 또는 거짓 |
+
+## 숫자형은 계산할 수 있는 값이다
+
+```r
+cell_count <- 1250
+mito_percent <- 4.2
+
+cell_count + 250
+mito_percent / 100
+```
+
+- 정수와 소수는 모두 숫자형으로 다룰 수 있습니다.
+- 숫자형 값에는 산술 연산을 적용할 수 있습니다.
+
+## 문자형은 따옴표로 감싼다
+
+```r
+sample_name <- "control_1"
+condition <- "treated"
+
+sample_name
+condition
+```
+
+- 샘플 이름이나 실험 조건처럼 글자로 된 값을 저장합니다.
+- 큰따옴표 또는 작은따옴표를 사용할 수 있습니다.
+- 이 과정에서는 큰따옴표를 기본으로 사용합니다.
+
+## 따옴표가 없으면 변수 이름으로 해석한다
+
+```r
+condition <- "treated"
+condition
+```
+
+다음 코드는 `treated`라는 변수를 찾으므로 오류가 발생합니다.
+
+```r
+# condition <- treated
+```
+
+> 글자를 저장할 때 따옴표를 빠뜨리지 않았는지 확인합니다.
+
+## 논리형은 참과 거짓을 나타낸다
+
+```r
+passed_qc <- TRUE
+is_treated <- FALSE
+
+passed_qc
+is_treated
+```
+
+- 논리형 값은 `TRUE`와 `FALSE` 두 가지입니다.
+- 따옴표 없이 대문자로 작성합니다.
+- 품질 기준 통과 여부나 조건의 만족 여부를 표현할 때 사용합니다.
+
+## 비교 연산의 결과는 논리형이다
+
+```r
+cell_count <- 1250
+cell_count > 1000
+cell_count == 1250
+cell_count < 500
+```
+
+| 연산자 | 의미 |
+|---|---|
+| `>` | 왼쪽이 더 크다 |
+| `<` | 왼쪽이 더 작다 |
+| `==` | 두 값이 같다 |
+
+> `=` 하나가 아니라 `==` 두 개로 같은지 비교합니다.
+
+## 값을 출력해 현재 상태를 확인한다
+
+```r
+sample_name <- "control_1"
+sample_name
+print(sample_name)
+```
+
+- 변수 이름을 실행하면 저장된 값이 출력됩니다.
+- `print()`를 사용해도 값을 출력할 수 있습니다.
+- 입문 단계에서는 자주 출력하여 중간 결과를 확인합니다.
+
+## `class()`로 자료형을 확인한다
+
+```r
+cell_count <- 1250
+sample_name <- "control_1"
+passed_qc <- TRUE
+
+class(cell_count)
+class(sample_name)
+class(passed_qc)
+```
+
+`class()`는 객체를 사용할 때 알아야 하는 자료형을 보여 줍니다.
+
+## `typeof()`는 내부 저장 방식을 보여 준다
+
+```r
+typeof(cell_count)
+typeof(sample_name)
+typeof(passed_qc)
+```
+
+- `typeof()`는 R이 값을 내부적으로 저장한 방식을 보여 줍니다.
+- `1250`은 보통 `double`로 표시됩니다.
+- 지금은 `class()`를 중심으로 확인하고, `typeof()`는 차이를 관찰합니다.
+
+## 변수에는 새 값을 다시 저장할 수 있다
+
+```r
+cell_count <- 1250
+cell_count
+
+cell_count <- 1400
+cell_count
+```
+
+- 같은 변수에 새 값을 저장하면 이전 값은 바뀝니다.
+- 코드를 실행한 순서에 따라 현재 값이 결정됩니다.
+
+## 변수를 사용하면 계산을 다시 수행하기 쉽다
+
+```r
+cell_count <- 1250
+filtered_cell_count <- 1100
+
+removed_cell_count <- cell_count - filtered_cell_count
+removed_cell_count
+```
+
+원래 값이 바뀌면 같은 계산 코드를 다시 사용할 수 있습니다.
+
+## `NA`는 값이 없음을 나타낸다
+
+```r
+sample_name <- "control_1"
+cell_count <- NA
+
+sample_name
+cell_count
+```
+
+- `NA`는 아직 측정되지 않았거나 알 수 없는 값을 나타냅니다.
+- 숫자 0이나 빈 문자열 `""`과 의미가 다릅니다.
+- `NA`는 따옴표 없이 작성합니다.
+
+## `is.na()`로 결측값을 확인한다
+
+```r
+cell_count <- NA
+is.na(cell_count)
+
+sample_name <- "control_1"
+is.na(sample_name)
+```
+
+- 결측값이면 `TRUE`, 아니면 `FALSE`를 반환합니다.
+- `cell_count == NA`로 결측값을 검사하지 않습니다.
+
+## 결측값이 포함된 계산을 살펴본다
+
+```r
+cell_count <- NA
+cell_count + 100
+```
+
+- 알 수 없는 값에 100을 더해도 결과는 알 수 없습니다.
+- 따라서 계산 결과도 `NA`가 됩니다.
+- 결측값을 어떻게 처리할지는 분석 목적에 따라 결정해야 합니다.
+
+## 자료형을 변환할 수 있다
+
+```r
+cell_count_text <- "1250"
+cell_count <- as.numeric(cell_count_text)
+
+cell_count
+class(cell_count)
+```
+
+- `as.numeric()`은 숫자형으로 변환합니다.
+- 숫자처럼 보이는 문자도 변환 전에는 문자형입니다.
+
+## 자주 사용하는 자료형 변환 함수
+
+```r
+as.character(1250)
+as.numeric("1250")
+as.logical("TRUE")
+```
+
+| 함수 | 변환 결과 |
+|---|---|
+| `as.numeric()` | 숫자형 |
+| `as.character()` | 문자형 |
+| `as.logical()` | 논리형 |
+
+## 모든 문자를 숫자로 바꿀 수는 없다
+
+```r
+as.numeric("1250")
+```
+
+다음 코드는 변환할 수 없는 문자 때문에 경고가 발생하고 `NA`를 만듭니다.
+
+```r
+# as.numeric("one thousand")
+```
+
+- 경고는 코드가 중단되지는 않았지만 확인할 문제가 있다는 뜻입니다.
+- 변환 전에는 값이 기대한 형태인지 먼저 확인합니다.
+
+## 흔한 오류 1: 대소문자가 다르다
+
+```r
+sample_name <- "control_1"
+sample_name
+```
+
+다음 코드는 서로 다른 이름을 사용하므로 오류가 발생합니다.
+
+```r
+# Sample_name
+```
+
+> 객체를 찾을 수 없다는 오류가 나오면 철자와 대소문자를 확인합니다.
+
+## 흔한 오류 2: 숫자처럼 보이는 문자로 계산한다
+
+```r
+cell_count_text <- "1250"
+class(cell_count_text)
+
+cell_count <- as.numeric(cell_count_text)
+cell_count + 100
+```
+
+- 따옴표로 감싼 값은 문자형입니다.
+- 계산이 필요하면 적절한 자료형으로 변환합니다.
+
+## 실습 1: 세 가지 자료형 만들기
+
+다음 정보를 각각 알맞은 변수에 저장합니다.
+
+```r
+sample_name <- "control_1"
+cell_count <- 1250
+passed_qc <- TRUE
+```
+
+각 변수의 값과 `class()` 결과를 확인합니다.
+
+## 실습 2: 결측값 확인하기
+
+```r
+doublet_rate <- NA
+
+doublet_rate
+is.na(doublet_rate)
+```
+
+1. `doublet_rate`의 값은 무엇입니까?
+2. `is.na(doublet_rate)`는 왜 `TRUE`를 반환합니까?
+
+## 실습 3: 자료형 변환하기
+
+```r
+cell_count_text <- "1250"
+cell_count <- as.numeric(cell_count_text)
+
+class(cell_count_text)
+class(cell_count)
+```
+
+변환 전후의 값과 자료형을 비교합니다.
+
+## 실습 4: 오류를 찾아 수정하기
+
+다음 코드에서 잘못된 부분을 찾습니다.
+
+```r
+# sample_name <- control_1
+# Cell_count + 100
+```
+
+1. 문자형 값에 필요한 기호는 무엇입니까?
+2. 변수 이름의 철자와 대소문자는 일치합니까?
+3. 수정한 코드를 실행하여 결과를 확인합니다.
+
+## 오늘 배운 내용 {.summary}
+
+- 변수는 값을 저장하고 다시 사용하기 위한 이름입니다.
+- 기본 자료형에는 숫자형, 문자형, 논리형이 있습니다.
+- `class()`와 `typeof()`로 객체의 자료형을 확인할 수 있습니다.
+- `NA`는 값이 없음을 나타내고 `is.na()`로 확인합니다.
+- `as.numeric()` 등의 함수로 자료형을 변환할 수 있습니다.
+
+## 종료 점검과 다음 차시 {.checkpoint}
+
+1. 문자형 값을 저장할 때 왜 따옴표가 필요합니까?
+2. `TRUE`와 `"TRUE"`의 자료형은 어떻게 다릅니까?
+3. 결측값은 어떤 함수로 확인합니까?
+4. 숫자처럼 보이는 문자로 계산하려면 무엇을 해야 합니까?
+
+**다음 차시:** 같은 종류의 여러 값을 벡터로 만들고 선택하기

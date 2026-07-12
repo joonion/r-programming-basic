@@ -1,0 +1,30 @@
+---
+title: "R 기초 프로그래밍"
+subtitle: "생물학 전공 대학원생을 위한 12시간 입문 과정"
+toc: false
+---
+
+프로그래밍 경험이 거의 없는 생물학 전공 대학원생이 R의 기본 문법과 데이터 처리 방법을 익히고, 이후 Seurat를 활용한 전사체 분석을 학습할 수 있도록 준비하는 과정입니다.
+
+## 강의 구성
+
+| 차시 | 주제 | 강의자료 | 실습 파일 |
+|---:|---|---|---|
+| 1 | R과 RStudio 시작하기 | [슬라이드](slides/01_getting_started.qmd) | [R 실습](labs/01_getting_started.R) |
+| 2 | 변수와 기본 자료형 | [슬라이드](slides/02_variables_and_types.qmd) | [R 실습](labs/02_variables_and_types.R) |
+| 3 | 벡터와 인덱싱 | [슬라이드](slides/03_vectors_and_indexing.qmd) | [R 실습](labs/03_vectors_and_indexing.R) |
+| 4 | 행렬과 팩터 | [슬라이드](slides/04_matrices_and_factors.qmd) | [R 실습](labs/04_matrices_and_factors.R) |
+| 5 | 데이터 프레임 다루기 | [슬라이드](slides/05_data_frames.qmd) | [R 실습](labs/05_data_frames.R) |
+| 6 | 데이터 불러오기와 저장하기 | [슬라이드](slides/06_data_io.qmd) | [R 실습](labs/06_data_io.R) |
+| 7 | 조건식과 데이터 필터링 | [슬라이드](slides/07_conditions_and_filtering.qmd) | [R 실습](labs/07_conditions_and_filtering.R) |
+| 8 | 반복 처리와 벡터화 연산 | [슬라이드](slides/08_loops_and_vectorization.qmd) | [R 실습](labs/08_loops_and_vectorization.R) |
+| 9 | 함수 작성하기 | [슬라이드](slides/09_functions.qmd) | [R 실습](labs/09_functions.R) |
+| 10 | 데이터 요약과 시각화 | [슬라이드](slides/10_summaries_and_visualization.qmd) | [R 실습](labs/10_summaries_and_visualization.R) |
+| 11 | 패키지, 리스트와 R 객체 | [슬라이드](slides/11_packages_lists_and_objects.qmd) | [R 실습](labs/11_packages_lists_and_objects.R) |
+| 12 | 미니 프로젝트 — 전사체 형태의 데이터 분석 | [슬라이드](slides/12_transcriptomics_project.qmd) | [R 실습](labs/12_transcriptomics_project.R) |
+
+## 수업 운영
+
+- 총 12회, 회당 1시간으로 진행합니다.
+- 각 차시는 짧은 개념 설명, 강사 시범, 학생 실습 순서로 구성합니다.
+- 기본 R 문법을 우선 익힌 뒤 전사체 데이터 분석에 필요한 자료구조로 연결합니다.

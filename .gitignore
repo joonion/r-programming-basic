@@ -1,0 +1,6 @@
+# Quarto local build artifacts
+/.quarto/
+/_site/
+/site_libs/
+
+# Keep _freeze/, _publish.yml, and .github/ under version control.

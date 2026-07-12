@@ -1,0 +1,620 @@
+---
+title: "11차시: 패키지, 리스트와 R 객체"
+subtitle: "R 기초 프로그래밍"
+---
+
+## 오늘의 학습 목표 {.learning-objectives}
+
+1. 패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.
+2. 서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.
+3. `class()`, `str()`, `attributes()`로 객체 구조를 조사할 수 있다.
+4. 복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다.
+
+## 선수 지식 {.prerequisites}
+
+- 함수와 인자의 역할을 설명할 수 있습니다.
+- 벡터, 행렬, 데이터 프레임을 만들고 값을 선택할 수 있습니다.
+- CSV 파일을 불러오고 저장할 수 있습니다.
+
+## R의 기능은 패키지로 확장된다
+
+- 패키지는 함수, 데이터, 도움말을 묶어 배포하는 단위입니다.
+- R을 설치하면 기본 패키지와 권장 패키지가 함께 제공됩니다.
+- 필요한 외부 패키지를 추가하면 새로운 분석 기능을 사용할 수 있습니다.
+- Seurat도 단일세포 전사체 분석 기능을 제공하는 R 패키지입니다.
+
+## 패키지 사용은 두 단계로 나뉜다
+
+```text
+1. 설치: 컴퓨터에 패키지를 내려받아 준비한다.
+2. 불러오기: 현재 R 세션에서 패키지를 사용하도록 연결한다.
+```
+
+설치는 보통 한 번, 불러오기는 R을 새로 시작할 때마다 수행합니다.
+
+## `install.packages()`로 외부 패키지를 설치한다
+
+```r
+# install.packages("ggplot2")
+```
+
+- 따옴표 안에 패키지 이름을 작성합니다.
+- 인터넷 연결이 필요합니다.
+- 설치는 콘솔에서 한 번 실행하고 수업 스크립트에는 반복해서 넣지 않습니다.
+
+> 이 차시에서는 추가 설치 없이 기본 R만으로 실습합니다.
+
+## 큰 패키지는 설치 전에 준비 사항을 확인한다
+
+```r
+# install.packages("Seurat")
+```
+
+- Seurat처럼 의존 패키지가 많은 패키지는 설치 시간이 오래 걸릴 수 있습니다.
+- R 버전, 운영체제, 설치 오류 메시지를 함께 확인합니다.
+- 수업 중 매번 다시 설치하지 않습니다.
+
+## `library()`로 패키지를 현재 세션에 불러온다
+
+```r
+# library(ggplot2)
+```
+
+- 패키지 이름에 따옴표를 쓰지 않는 형태를 주로 사용합니다.
+- 설치되지 않은 패키지는 `library()`로 불러올 수 없습니다.
+- R을 다시 시작하면 필요한 패키지를 다시 불러옵니다.
+
+## 설치와 불러오기를 구분한다
+
+| 목적 | 함수 | 실행 빈도 |
+|---|---|---|
+| 컴퓨터에 패키지 준비 | `install.packages()` | 보통 한 번 |
+| 현재 세션에서 사용 | `library()` | 새 세션마다 |
+
+오류 메시지에 “there is no package called”가 나오면 설치 여부를 확인합니다.
+
+## 패키지가 설치됐는지 확인한다
+
+```r
+"stats" %in% rownames(installed.packages())
+```
+
+- `installed.packages()`는 설치된 패키지 정보를 반환합니다.
+- 패키지 이름이 목록에 있는지 `%in%`으로 확인할 수 있습니다.
+
+## `requireNamespace()`로 조용히 확인할 수 있다
+
+```r
+requireNamespace("stats", quietly = TRUE)
+requireNamespace("a_package_not_installed", quietly = TRUE)
+```
+
+- 설치되어 있으면 `TRUE`, 없으면 `FALSE`입니다.
+- 패키지를 검색 경로에 연결하지 않고 설치 여부만 확인합니다.
+
+## 패키지 버전을 확인한다
+
+```r
+packageVersion("stats")
+```
+
+- 같은 코드도 패키지 버전에 따라 동작이 달라질 수 있습니다.
+- 재현 가능한 분석 기록에는 R과 주요 패키지 버전이 중요합니다.
+
+## `패키지::함수`로 출처를 명시한다
+
+```r
+stats::median(c(1200, 1350, 980))
+utils::head(sample_metadata)
+```
+
+- 패키지를 `library()`로 불러오지 않고 특정 함수를 사용할 수 있습니다.
+- 함수가 어느 패키지에서 왔는지 코드에 분명히 표시됩니다.
+
+## 같은 이름의 함수가 있을 수 있다
+
+여러 패키지가 같은 이름의 함수를 제공하면 어떤 함수가 사용되는지 혼동할 수 있습니다.
+
+```r
+package_name::function_name()
+```
+
+`::` 표기를 사용하면 원하는 패키지의 함수를 명시적으로 선택할 수 있습니다.
+
+## 도움말에서 함수의 패키지를 확인한다
+
+```r
+?stats::median
+```
+
+도움말의 제목과 설명에서 함수가 속한 패키지, 인자, 반환값, 예제를 확인합니다.
+
+## `sessionInfo()`로 실행 환경을 기록한다
+
+```r
+sessionInfo()
+```
+
+다음 정보를 확인할 수 있습니다.
+
+- R 버전과 운영체제
+- 현재 연결된 패키지
+- 불러온 네임스페이스
+
+## 서로 다른 자료형을 하나로 묶고 싶다
+
+```r
+sample_id <- "control_1"
+cell_count <- 1240
+passed_qc <- TRUE
+```
+
+- 벡터는 원소의 자료형을 하나로 맞춥니다.
+- 관련된 문자, 숫자, 논리값을 원래 자료형 그대로 묶으려면 리스트를 사용합니다.
+
+## `list()`로 리스트를 만든다
+
+```r
+sample_result <- list(
+  "control_1",
+  1240,
+  TRUE
+)
+
+sample_result
+```
+
+리스트의 각 원소는 서로 다른 자료형과 크기를 가질 수 있습니다.
+
+## 리스트 원소에 이름을 붙인다
+
+```r
+sample_result <- list(
+  sample_id = "control_1",
+  cell_count = 1240,
+  passed_qc = TRUE
+)
+
+sample_result
+names(sample_result)
+```
+
+이름을 붙이면 각 원소의 의미와 접근 방법이 분명해집니다.
+
+## `$`로 이름이 있는 원소를 꺼낸다
+
+```r
+sample_result$sample_id
+sample_result$cell_count
+sample_result$passed_qc
+```
+
+`$`는 원소의 내용을 원래 자료형으로 반환합니다.
+
+## `[[ ]]`로 원소의 내용을 꺼낸다
+
+```r
+sample_result[[1]]
+sample_result[["cell_count"]]
+```
+
+- 위치 또는 이름을 사용할 수 있습니다.
+- 선택한 원소의 내용 자체를 반환합니다.
+
+## `[ ]`는 원소를 포함한 리스트를 반환한다
+
+```r
+sample_result[1]
+sample_result["cell_count"]
+```
+
+- 결과는 원소가 하나여도 리스트입니다.
+- 리스트의 일부를 다시 리스트로 유지할 때 사용합니다.
+
+## `[ ]`와 `[[ ]]`의 결과를 비교한다
+
+```r
+class(sample_result["cell_count"])
+class(sample_result[["cell_count"]])
+```
+
+| 선택 방법 | 결과 |
+|---|---|
+| `[ ]` | 리스트 |
+| `[[ ]]` | 원소의 내용 |
+| `$` | 이름으로 선택한 원소의 내용 |
+
+## 여러 원소를 리스트로 선택한다
+
+```r
+sample_result[c("sample_id", "passed_qc")]
+```
+
+여러 원소를 선택할 때는 `[ ]` 안에 이름 벡터를 사용합니다.
+
+## 리스트에는 벡터와 데이터 프레임도 넣을 수 있다
+
+```r
+analysis_result <- list(
+  cell_counts = c(1240, 1385, 1090),
+  qc_labels = c("pass", "pass", "review"),
+  metadata = sample_metadata
+)
+
+str(analysis_result)
+```
+
+각 원소는 길이가 다른 벡터나 전체 데이터 프레임일 수도 있습니다.
+
+## 리스트 안에 리스트를 넣을 수 있다
+
+```r
+analysis_parameters <- list(
+  qc = list(
+    min_cells = 1200,
+    min_genes = 2000,
+    max_mito = 8
+  ),
+  project_name = "training_project"
+)
+```
+
+이처럼 리스트가 여러 단계로 들어 있는 구조를 중첩 리스트라고 합니다.
+
+## 중첩 리스트의 값에 단계적으로 접근한다
+
+```r
+analysis_parameters$qc$min_cells
+analysis_parameters[["qc"]][["max_mito"]]
+```
+
+바깥 원소부터 안쪽 원소로 한 단계씩 이동합니다.
+
+## 중간 구조를 확인하면서 접근한다
+
+```r
+names(analysis_parameters)
+names(analysis_parameters$qc)
+str(analysis_parameters$qc)
+```
+
+복잡한 객체에서는 이름을 추측하기보다 각 단계의 구조를 확인합니다.
+
+## 기존 리스트 원소를 수정한다
+
+```r
+sample_result$cell_count <- 1300
+sample_result$cell_count
+```
+
+기존 이름에 새 값을 저장하면 해당 원소가 수정됩니다.
+
+## 새 원소를 추가한다
+
+```r
+sample_result$mito_percent <- 4.2
+sample_result
+```
+
+존재하지 않는 이름에 값을 저장하면 새 원소가 추가됩니다.
+
+## 원소를 제거할 수 있다
+
+```r
+sample_result$mito_percent <- NULL
+sample_result
+```
+
+리스트 원소에 `NULL`을 저장하면 해당 원소가 제거됩니다.
+
+## `NULL`과 `NA`는 의미가 다르다
+
+- `NA`: 값이 있어야 하지만 알 수 없는 결측값
+- `NULL`: 객체나 원소 자체가 없음을 나타냄
+
+```r
+list(measured_value = NA)
+list()
+```
+
+분석에서 두 값을 같은 의미로 사용하지 않습니다.
+
+## 데이터 프레임도 리스트의 한 종류다
+
+```r
+is.list(sample_metadata)
+class(sample_metadata)
+```
+
+- 데이터 프레임은 길이가 같은 열 벡터들을 묶은 특별한 리스트입니다.
+- 데이터 프레임의 `$`와 `[[ ]]`가 리스트와 비슷하게 동작하는 이유입니다.
+
+## 분석 결과를 하나의 리스트로 정리한다
+
+```r
+condition_summary <- aggregate(
+  cell_count ~ condition,
+  data = sample_metadata,
+  FUN = mean
+)
+
+analysis_result <- list(
+  metadata = sample_metadata,
+  summary = condition_summary,
+  parameters = analysis_parameters
+)
+```
+
+관련된 입력 데이터, 결과, 설정값을 한 객체에 묶을 수 있습니다.
+
+## `class()`는 객체의 종류를 알려 준다
+
+```r
+class(sample_metadata)
+class(sample_metadata$cell_count)
+class(analysis_result)
+```
+
+객체의 종류에 따라 사용할 수 있는 함수와 접근 방법이 달라집니다.
+
+## `typeof()`는 내부 저장 방식을 보여 준다
+
+```r
+typeof(sample_metadata)
+typeof(analysis_result)
+```
+
+데이터 프레임과 일반 리스트의 `class()`는 다르지만 내부적으로 둘 다 리스트 구조를 사용합니다.
+
+## `str()`는 복잡한 객체를 조사하는 출발점이다
+
+```r
+str(analysis_result)
+```
+
+`str()`는 다음 정보를 한 번에 보여 줍니다.
+
+- 객체와 하위 원소의 종류
+- 원소 이름과 길이
+- 저장된 값의 일부
+
+## 큰 객체는 표시할 깊이를 제한한다
+
+```r
+str(analysis_result, max.level = 2)
+```
+
+중첩 단계가 많은 객체는 필요한 깊이까지만 확인하면 출력이 지나치게 길어지는 것을 막을 수 있습니다.
+
+## `names()`로 현재 단계의 원소 이름을 확인한다
+
+```r
+names(analysis_result)
+names(analysis_result$parameters)
+names(analysis_result$parameters$qc)
+```
+
+한 단계씩 이름을 확인한 뒤 필요한 원소에 접근합니다.
+
+## `attributes()`로 객체의 속성을 확인한다
+
+```r
+attributes(sample_metadata)
+```
+
+데이터 프레임에는 다음과 같은 속성이 있습니다.
+
+- 열 이름을 나타내는 `names`
+- 행 이름을 나타내는 `row.names`
+- 객체 종류를 나타내는 `class`
+
+## 행렬의 속성을 확인한다
+
+```r
+example_matrix <- matrix(1:6, nrow = 2)
+
+class(example_matrix)
+attributes(example_matrix)
+```
+
+행렬은 차원을 나타내는 `dim` 속성을 가집니다.
+
+## `object.size()`로 객체 크기를 확인한다
+
+```r
+object.size(analysis_result)
+format(object.size(analysis_result), units = "auto")
+```
+
+전사체 분석 객체는 클 수 있으므로 메모리에서 차지하는 크기를 확인하는 습관이 중요합니다.
+
+## 함수는 객체의 클래스에 따라 다르게 동작할 수 있다
+
+```r
+summary(sample_metadata$cell_count)
+summary(sample_metadata)
+```
+
+같은 `summary()`라도 숫자형 벡터와 데이터 프레임에서 다른 형태의 결과를 만듭니다.
+
+## 사용 가능한 메서드를 확인할 수 있다
+
+```r
+head(methods("summary"))
+```
+
+- R의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.
+- 입문 단계에서는 먼저 `class()`와 도움말로 올바른 사용법을 확인합니다.
+
+## 복잡한 분석 객체는 구조를 먼저 확인한다
+
+```text
+1. class(object)
+2. str(object, max.level = 2)
+3. names(object)
+4. 필요한 하위 원소의 class()와 names()
+```
+
+처음부터 깊은 위치를 추측하지 않고 바깥 구조부터 단계적으로 살펴봅니다.
+
+## Seurat 객체도 여러 정보를 담는 복합 객체다
+
+Seurat 객체에는 일반적으로 다음과 같은 종류의 정보가 함께 들어 있습니다.
+
+- 발현 데이터
+- 세포 메타데이터
+- 차원 축소 결과
+- 분석 과정에서 생성된 결과와 설정
+
+실제 접근 방법은 Seurat 버전과 객체 클래스의 공식 사용법을 확인합니다.
+
+## 복잡한 객체는 제공된 접근 함수를 우선 사용한다
+
+- 객체 내부 구조는 패키지 버전에 따라 달라질 수 있습니다.
+- 내부 위치를 직접 수정하면 객체의 일관성이 깨질 수 있습니다.
+- 패키지가 제공하는 함수와 공식 도움말을 우선 사용합니다.
+- 문제가 생기면 `class()`, `str()`, 패키지 버전을 함께 확인합니다.
+
+## CSV는 복합 객체 전체를 저장할 수 없다
+
+- CSV는 하나의 직사각형 표를 저장하기에 적합합니다.
+- 리스트 안의 행렬, 데이터 프레임, 설정값을 한 CSV에 그대로 저장할 수 없습니다.
+- R 객체 구조 전체를 보존하려면 RDS 형식을 사용할 수 있습니다.
+
+## `saveRDS()`로 객체 하나를 저장한다
+
+```r
+dir.create("results", showWarnings = FALSE)
+
+saveRDS(
+  analysis_result,
+  "results/analysis_result.rds"
+)
+```
+
+RDS 파일은 객체의 자료형과 중첩 구조를 함께 보존합니다.
+
+## `readRDS()`로 객체를 다시 불러온다
+
+```r
+restored_result <- readRDS("results/analysis_result.rds")
+
+class(restored_result)
+names(restored_result)
+str(restored_result, max.level = 2)
+```
+
+`readRDS()`의 결과를 원하는 변수 이름에 저장합니다.
+
+## 저장 전후 객체가 같은지 확인한다
+
+```r
+identical(analysis_result, restored_result)
+```
+
+`TRUE`이면 자료형과 값, 구조가 모두 같습니다.
+
+## CSV와 RDS를 목적에 맞게 선택한다
+
+| 형식 | 적합한 대상 | 특징 |
+|---|---|---|
+| CSV | 데이터 프레임, 요약표 | 다른 프로그램에서도 열기 쉬움 |
+| RDS | 리스트, 모델, 복합 R 객체 | R 객체 구조를 그대로 보존 |
+
+공유 목적과 다시 사용할 방법을 고려해 저장 형식을 선택합니다.
+
+## 흔한 오류 1: 설치와 불러오기를 혼동한다
+
+```r
+# 한 번 설치
+# install.packages("package_name")
+
+# 새 R 세션에서 불러오기
+# library(package_name)
+```
+
+설치 명령을 분석 스크립트가 실행될 때마다 반복하지 않습니다.
+
+## 흔한 오류 2: `[ ]`와 `[[ ]]`를 혼동한다
+
+```r
+class(sample_result["cell_count"])
+class(sample_result[["cell_count"]])
+```
+
+필요한 결과가 리스트인지 원소 내용인지 확인합니다.
+
+## 흔한 오류 3: 내부 구조를 추측한다
+
+```r
+class(analysis_result)
+names(analysis_result)
+str(analysis_result, max.level = 2)
+```
+
+존재하지 않는 이름을 반복해서 시도하기보다 구조와 이름을 먼저 조사합니다.
+
+## 실습 1: 패키지 상태 확인하기
+
+```r
+"stats" %in% rownames(installed.packages())
+requireNamespace("stats", quietly = TRUE)
+packageVersion("stats")
+stats::median(c(1200, 1350, 980))
+```
+
+설치, 불러오기, `::` 사용의 차이를 설명합니다.
+
+## 실습 2: 이름이 있는 리스트 만들기
+
+```r
+sample_result <- list(
+  sample_id = "control_1",
+  cell_count = 1240,
+  passed_qc = TRUE
+)
+
+sample_result$cell_count
+sample_result[["cell_count"]]
+sample_result["cell_count"]
+```
+
+세 선택 결과의 자료형을 비교합니다.
+
+## 실습 3: 중첩된 분석 객체 탐색하기
+
+```r
+names(analysis_result)
+str(analysis_result, max.level = 2)
+analysis_result$parameters$qc$min_cells
+```
+
+바깥 단계부터 이름과 구조를 확인해 필요한 값에 접근합니다.
+
+## 실습 4: RDS로 저장하고 복원하기
+
+```r
+saveRDS(analysis_result, "results/analysis_result.rds")
+restored_result <- readRDS("results/analysis_result.rds")
+
+identical(analysis_result, restored_result)
+```
+
+복원한 객체의 클래스, 이름, 구조도 확인합니다.
+
+## 오늘 배운 내용 {.summary}
+
+- 패키지 설치와 현재 세션에 불러오기는 서로 다른 과정입니다.
+- 리스트는 자료형과 크기가 다른 여러 객체를 함께 저장합니다.
+- `[ ]`는 리스트를, `[[ ]]`와 `$`는 원소 내용을 반환합니다.
+- 복잡한 객체는 `class()`, `str()`, `names()`, `attributes()`로 조사합니다.
+- RDS는 복합 R 객체의 구조를 보존하여 저장합니다.
+
+## 종료 점검과 다음 차시 {.checkpoint}
+
+1. `install.packages()`와 `library()`는 어떻게 다릅니까?
+2. 리스트의 `[ ]`와 `[[ ]]`는 어떤 결과를 반환합니까?
+3. 처음 보는 복잡한 객체는 어떤 순서로 조사합니까?
+4. CSV 대신 RDS를 사용하는 것이 적합한 상황은 언제입니까?
+
+**다음 차시:** 지금까지 배운 내용을 연결해 전사체 형태의 데이터를 분석하는 미니 프로젝트

@@ -1,0 +1,401 @@
+---
+title: "5차시: 데이터 프레임 다루기"
+subtitle: "R 기초 프로그래밍"
+---
+
+## 오늘의 학습 목표 {.learning-objectives}
+
+1. 여러 자료형으로 구성된 데이터 프레임을 만들 수 있다.
+2. 데이터 프레임의 구조를 확인하고 행과 열을 선택할 수 있다.
+3. 새로운 열을 추가하고 기존 값을 수정할 수 있다.
+4. 결측값이 있는 위치와 개수를 확인할 수 있다.
+
+## 선수 지식 {.prerequisites}
+
+- 벡터를 만들고 원소를 선택할 수 있습니다.
+- 행렬에서 `[행, 열]`로 값을 선택할 수 있습니다.
+- 범주형 값을 팩터로 표현할 수 있습니다.
+
+## 여러 벡터로 샘플 정보를 관리할 때의 문제
+
+```r
+sample_names <- c("control_1", "control_2", "treated_1")
+conditions <- c("control", "control", "treated")
+cell_counts <- c(1200, 1350, 980)
+```
+
+- 세 벡터의 같은 위치가 같은 샘플을 나타냅니다.
+- 벡터가 많아지면 서로의 순서와 길이를 맞추기 어렵습니다.
+- 관련된 벡터를 하나의 표로 묶으면 관리하기 쉽습니다.
+
+## 데이터 프레임은 행과 열로 이루어진 표다
+
+| sample_name | condition | cell_count | passed_qc |
+|---|---|---:|---|
+| control_1 | control | 1200 | TRUE |
+| control_2 | control | 1350 | TRUE |
+| treated_1 | treated | 980 | FALSE |
+
+- 한 행은 하나의 관측 대상, 여기서는 샘플 하나를 나타냅니다.
+- 한 열은 하나의 변수, 즉 샘플의 한 가지 특성을 나타냅니다.
+
+## 데이터 프레임은 열마다 자료형이 달라도 된다
+
+| 열 | 자료형 |
+|---|---|
+| `sample_name` | 문자형 |
+| `condition` | 문자형 또는 팩터 |
+| `cell_count` | 숫자형 |
+| `passed_qc` | 논리형 |
+
+행렬은 모든 원소의 자료형이 같지만, 데이터 프레임은 열마다 다른 자료형을 가질 수 있습니다.
+
+## `data.frame()`으로 데이터 프레임을 만든다
+
+```r
+sample_info <- data.frame(
+  sample_name = c("control_1", "control_2", "treated_1"),
+  condition = c("control", "control", "treated"),
+  cell_count = c(1200, 1350, 980),
+  passed_qc = c(TRUE, TRUE, FALSE)
+)
+
+sample_info
+```
+
+각 인자는 데이터 프레임의 한 열이 됩니다.
+
+## 모든 열의 길이가 같아야 한다
+
+```r
+sample_names <- c("control_1", "control_2", "treated_1")
+cell_counts <- c(1200, 1350, 980)
+
+length(sample_names)
+length(cell_counts)
+```
+
+- 한 행에 각 열의 값이 하나씩 필요합니다.
+- 길이가 맞지 않으면 데이터 프레임을 만들 때 오류가 발생할 수 있습니다.
+- 생성 전에 각 벡터의 길이를 확인합니다.
+
+## 데이터 프레임을 출력해 전체 모습을 확인한다
+
+```r
+sample_info
+print(sample_info)
+```
+
+- 작은 데이터 프레임은 전체를 출력해 확인할 수 있습니다.
+- 데이터가 크면 일부와 구조를 먼저 확인하는 편이 좋습니다.
+
+## `head()`와 `tail()`로 일부 행을 확인한다
+
+```r
+head(sample_info)
+tail(sample_info)
+```
+
+- `head()`는 처음 6개 행을 보여 줍니다.
+- `tail()`은 마지막 6개 행을 보여 줍니다.
+- 두 번째 인자로 확인할 행의 수를 지정할 수 있습니다.
+
+```r
+head(sample_info, 2)
+```
+
+## 데이터 프레임의 크기를 확인한다
+
+```r
+dim(sample_info)
+nrow(sample_info)
+ncol(sample_info)
+```
+
+- `dim()`은 행 수와 열 수를 차례로 반환합니다.
+- `nrow()`는 행 수, `ncol()`은 열 수를 반환합니다.
+
+## 열 이름을 확인한다
+
+```r
+names(sample_info)
+colnames(sample_info)
+```
+
+- 두 함수 모두 데이터 프레임의 열 이름을 보여 줍니다.
+- 정확한 열 이름을 확인하면 철자 오류를 줄일 수 있습니다.
+
+## `str()`로 구조를 확인한다
+
+```r
+str(sample_info)
+```
+
+`str()`는 다음 정보를 간결하게 보여 줍니다.
+
+- 데이터 프레임의 행과 열 개수
+- 각 열의 이름과 자료형
+- 각 열에 저장된 값의 일부
+
+## `summary()`로 열별 요약을 확인한다
+
+```r
+summary(sample_info)
+```
+
+- 숫자형 열은 최솟값, 평균, 중앙값 등을 보여 줍니다.
+- 문자형과 논리형 열은 자료형에 맞는 정보를 보여 줍니다.
+- 분석을 시작할 때 데이터의 전체적인 모습을 파악하는 데 유용합니다.
+
+## `$`로 한 열을 선택한다
+
+```r
+sample_info$cell_count
+sample_info$condition
+```
+
+- `$` 뒤에 열 이름을 작성합니다.
+- 결과는 해당 열의 벡터입니다.
+- 열 이름을 직접 알고 있을 때 읽기 쉬운 방법입니다.
+
+## `[[ ]]`로 한 열을 선택한다
+
+```r
+sample_info[["cell_count"]]
+
+column_name <- "cell_count"
+sample_info[[column_name]]
+```
+
+- `[[ ]]`의 결과도 한 열의 벡터입니다.
+- 열 이름을 변수에 저장해 선택할 때 유용합니다.
+
+## `[행, 열]`로 위치를 지정한다
+
+```r
+sample_info[1, 2]
+sample_info[1, ]
+sample_info[, 2]
+```
+
+- 쉼표 앞은 행, 뒤는 열입니다.
+- 자리를 비워 두면 모든 행 또는 모든 열을 뜻합니다.
+- `sample_info[1, ]`은 첫 번째 행의 모든 열을 선택합니다.
+
+## 여러 행을 선택한다
+
+```r
+sample_info[c(1, 3), ]
+sample_info[1:2, ]
+```
+
+벡터 인덱싱과 마찬가지로 선택할 행 번호를 벡터로 전달할 수 있습니다.
+
+## 열 이름으로 여러 열을 선택한다
+
+```r
+sample_info[, c("sample_name", "cell_count")]
+```
+
+선택 결과가 여러 열이면 데이터 프레임 형태가 유지됩니다.
+
+## 한 열 선택 결과의 차이를 관찰한다
+
+```r
+sample_info$cell_count
+sample_info[, "cell_count"]
+sample_info[, "cell_count", drop = FALSE]
+```
+
+- 앞의 두 결과는 보통 벡터입니다.
+- `drop = FALSE`를 사용하면 한 열이어도 데이터 프레임을 유지합니다.
+- 현재 필요한 결과 형태가 벡터인지 표인지 생각하고 선택합니다.
+
+## 논리형 벡터로 행을 선택할 수 있다
+
+```r
+sample_info$passed_qc
+sample_info[sample_info$passed_qc, ]
+```
+
+`passed_qc`가 `TRUE`인 행만 선택됩니다.
+
+> 여러 조건을 결합하는 자세한 방법은 7차시에서 학습합니다.
+
+## 비교 결과로 행을 선택할 수 있다
+
+```r
+enough_cells <- sample_info$cell_count >= 1200
+enough_cells
+
+sample_info[enough_cells, ]
+```
+
+1. 열을 벡터로 선택합니다.
+2. 각 원소를 기준과 비교합니다.
+3. 결과가 `TRUE`인 행을 선택합니다.
+
+## `$`로 새로운 열을 추가한다
+
+```r
+sample_info$cell_count_k <- sample_info$cell_count / 1000
+sample_info
+```
+
+- 존재하지 않는 열 이름에 값을 저장하면 새 열이 만들어집니다.
+- 새 열의 값 개수는 데이터 프레임의 행 수와 맞아야 합니다.
+
+## 기존 열 전체를 수정한다
+
+```r
+sample_info$condition <- factor(sample_info$condition)
+str(sample_info)
+```
+
+같은 열 이름에 새 값을 저장하면 기존 열이 바뀝니다.
+
+## 특정 위치의 값을 수정한다
+
+```r
+sample_info[3, "cell_count"] <- 1050
+sample_info
+```
+
+- 세 번째 행의 `cell_count` 값만 변경합니다.
+- 수정 전에는 선택한 행과 열이 맞는지 먼저 확인합니다.
+
+```r
+sample_info[3, "cell_count"]
+```
+
+## 조건에 맞는 값을 수정한다
+
+```r
+failed_rows <- !sample_info$passed_qc
+sample_info[failed_rows, "cell_count"] <- NA
+sample_info
+```
+
+- `!`는 논리값을 반대로 바꿉니다.
+- QC를 통과하지 못한 행의 세포 수를 결측값으로 변경했습니다.
+
+## `is.na()`로 결측값을 확인한다
+
+```r
+is.na(sample_info)
+```
+
+각 셀이 결측값인지 같은 크기의 논리형 결과로 보여 줍니다.
+
+## 열별 결측값 개수를 확인한다
+
+```r
+sum(is.na(sample_info$cell_count))
+```
+
+- `is.na()`는 결측값 위치에 `TRUE`를 반환합니다.
+- `sum()`은 `TRUE`의 개수를 세어 결측값 개수를 계산합니다.
+
+## `complete.cases()`로 완전한 행을 확인한다
+
+```r
+complete.cases(sample_info)
+sample_info[complete.cases(sample_info), ]
+```
+
+- 모든 열에 값이 있는 행은 `TRUE`입니다.
+- 결측값이 하나라도 있는 행은 `FALSE`입니다.
+- 행을 제외하기 전에는 결측 이유와 분석 목적을 먼저 확인합니다.
+
+## 흔한 오류 1: 열 이름의 철자가 다르다
+
+```r
+names(sample_info)
+sample_info$cell_count
+```
+
+```r
+# sample_info$cell_counts
+```
+
+원하는 결과가 나오지 않으면 `names()`로 실제 열 이름을 확인합니다.
+
+## 흔한 오류 2: 행과 열의 순서를 바꾼다
+
+```r
+sample_info[1, 2]
+```
+
+- 쉼표 앞은 행, 뒤는 열입니다.
+- 코드를 실행하기 전에 `[행, 열]`이라고 읽어 봅니다.
+
+## 흔한 오류 3: 원본을 바로 덮어쓴다
+
+```r
+sample_info_qc <- sample_info[complete.cases(sample_info), ]
+```
+
+- 학습 중에는 수정 결과를 새 이름에 저장하면 비교하기 쉽습니다.
+- 원본을 바꾸기 전에는 변경할 위치와 결과를 먼저 확인합니다.
+
+## 실습 1: 샘플 표 만들기
+
+```r
+sample_info <- data.frame(
+  sample_name = c("control_1", "control_2", "treated_1", "treated_2"),
+  condition = c("control", "control", "treated", "treated"),
+  cell_count = c(1200, 1350, 980, 1420),
+  passed_qc = c(TRUE, TRUE, FALSE, TRUE)
+)
+```
+
+`str()`, `dim()`, `names()`로 구조를 확인합니다.
+
+## 실습 2: 행과 열 선택하기
+
+```r
+sample_info$cell_count
+sample_info[1:2, ]
+sample_info[, c("sample_name", "passed_qc")]
+```
+
+각 결과가 벡터인지 데이터 프레임인지 확인합니다.
+
+## 실습 3: 열 추가하고 값 수정하기
+
+```r
+sample_info$cell_count_k <- sample_info$cell_count / 1000
+sample_info[3, "cell_count"] <- 1050
+sample_info
+```
+
+새 열과 수정된 값이 예상한 위치에 있는지 확인합니다.
+
+## 실습 4: 결측값 점검하기
+
+```r
+sample_info$doublet_rate <- c(3.2, NA, 4.1, 2.8)
+
+is.na(sample_info$doublet_rate)
+sum(is.na(sample_info$doublet_rate))
+complete.cases(sample_info)
+```
+
+어떤 샘플에 결측값이 있는지 선택해 봅니다.
+
+## 오늘 배운 내용 {.summary}
+
+- 데이터 프레임은 행마다 관측 대상, 열마다 변수를 저장합니다.
+- `str()`, `dim()`, `names()` 등으로 구조를 확인합니다.
+- `$`, `[[ ]]`, `[행, 열]`을 사용해 필요한 부분을 선택합니다.
+- `$` 또는 `[행, 열]`을 사용해 열을 추가하고 값을 수정합니다.
+- `is.na()`와 `complete.cases()`로 결측값을 점검합니다.
+
+## 종료 점검과 다음 차시 {.checkpoint}
+
+1. 데이터 프레임과 행렬의 자료형에는 어떤 차이가 있습니까?
+2. 첫 번째 행의 모든 열을 선택하려면 어떻게 작성합니까?
+3. `sample_info$cell_count`의 결과는 어떤 형태입니까?
+4. 열별 결측값 개수는 어떻게 계산합니까?
+
+**다음 차시:** CSV 파일을 데이터 프레임으로 불러오고 분석 결과 저장하기

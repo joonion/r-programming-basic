@@ -1,0 +1,471 @@
+---
+title: "8차시: 반복 처리와 벡터화 연산"
+subtitle: "R 기초 프로그래밍"
+---
+
+## 오늘의 학습 목표 {.learning-objectives}
+
+1. `for` 반복문의 구성과 실행 흐름을 설명할 수 있다.
+2. 여러 값에 같은 작업을 반복하고 결과를 저장할 수 있다.
+3. 벡터화 연산으로 반복문을 간단하게 바꿀 수 있다.
+4. 작업의 목적에 따라 반복문과 벡터화 연산을 선택할 수 있다.
+
+## 선수 지식 {.prerequisites}
+
+- 벡터와 데이터 프레임의 원소를 선택할 수 있습니다.
+- 조건식과 `if ... else`를 작성할 수 있습니다.
+- 숫자형·문자형·논리형 벡터를 만들 수 있습니다.
+
+## 같은 코드를 여러 번 작성하면 불편하다
+
+```r
+print(1200 / 1000)
+print(1350 / 1000)
+print(980 / 1000)
+```
+
+- 값이 많아지면 코드가 길어집니다.
+- 계산 방법을 바꾸려면 모든 줄을 수정해야 합니다.
+- 반복문은 같은 작업을 여러 값에 순서대로 적용합니다.
+
+## `for` 반복문의 기본 구조
+
+```r
+for (value in values) {
+  # value를 사용하는 코드
+}
+```
+
+- `values`: 순서대로 처리할 값들
+- `value`: 현재 처리 중인 값
+- `{ }`: 매번 반복해서 실행할 코드
+
+## 가장 간단한 반복문
+
+```r
+cell_counts <- c(1200, 1350, 980)
+
+for (cell_count in cell_counts) {
+  print(cell_count)
+}
+```
+
+벡터의 첫 번째 원소부터 마지막 원소까지 하나씩 꺼내 실행합니다.
+
+## 반복문의 실행 흐름
+
+```text
+cell_count <- 1200  →  print(1200)
+cell_count <- 1350  →  print(1350)
+cell_count <- 980   →  print(980)
+반복 종료
+```
+
+한 번의 실행이 끝나면 다음 원소로 이동합니다.
+
+## 반복 변수의 이름은 의미 있게 작성한다
+
+```r
+sample_names <- c("control_1", "control_2", "treated_1")
+
+for (sample_name in sample_names) {
+  print(sample_name)
+}
+```
+
+`i`처럼 짧은 이름보다 현재 값의 의미가 드러나는 이름이 입문자에게 이해하기 쉽습니다.
+
+## 반복문 안에서 계산할 수 있다
+
+```r
+cell_counts <- c(1200, 1350, 980)
+
+for (cell_count in cell_counts) {
+  cell_count_k <- cell_count / 1000
+  print(cell_count_k)
+}
+```
+
+각 원소에 같은 계산이 순서대로 적용됩니다.
+
+## 출력과 저장은 다르다
+
+```r
+for (cell_count in cell_counts) {
+  cell_count_k <- cell_count / 1000
+  print(cell_count_k)
+}
+
+cell_count_k
+```
+
+- `print()`는 실행 중 값을 화면에 보여 줍니다.
+- 반복이 끝난 뒤 `cell_count_k`에는 마지막 계산 결과만 남습니다.
+- 모든 결과가 필요하면 결과 벡터를 준비해야 합니다.
+
+## 결과 벡터를 미리 만든다
+
+```r
+cell_count_k <- numeric(length(cell_counts))
+cell_count_k
+```
+
+- `numeric(n)`은 길이 `n`인 숫자형 벡터를 만듭니다.
+- 처음에는 모든 값이 0입니다.
+- 필요한 크기를 먼저 만드는 것을 **사전 할당**이라고 합니다.
+
+## 위치 번호를 반복한다
+
+```r
+seq_along(cell_counts)
+```
+
+`seq_along()`은 벡터 길이에 맞는 안전한 위치 번호를 만듭니다.
+
+```r
+for (index in seq_along(cell_counts)) {
+  print(index)
+}
+```
+
+## 각 위치에 결과를 저장한다
+
+```r
+cell_count_k <- numeric(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  cell_count_k[index] <- cell_counts[index] / 1000
+}
+
+cell_count_k
+```
+
+현재 입력 위치와 같은 결과 위치에 값을 저장합니다.
+
+## 왜 `1:length(x)`보다 `seq_along(x)`를 사용하는가
+
+```r
+cell_counts <- numeric(0)
+
+1:length(cell_counts)
+seq_along(cell_counts)
+```
+
+- 빈 벡터에서 `1:length(x)`는 의도하지 않은 `1, 0`을 만듭니다.
+- `seq_along(x)`은 빈 벡터에 대해 빈 위치 벡터를 만듭니다.
+- 위치 반복에는 `seq_along()`을 기본으로 사용합니다.
+
+## 자료형에 맞는 결과 벡터를 준비한다
+
+```r
+numeric_result <- numeric(3)
+character_result <- character(3)
+logical_result <- logical(3)
+```
+
+| 함수 | 초기값 | 용도 |
+|---|---|---|
+| `numeric()` | `0` | 숫자형 결과 |
+| `character()` | `""` | 문자형 결과 |
+| `logical()` | `FALSE` | 논리형 결과 |
+
+## 반복문 안에서 조건을 사용할 수 있다
+
+```r
+cell_counts <- c(1200, 1350, 980)
+qc_labels <- character(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  if (cell_counts[index] >= 1200) {
+    qc_labels[index] <- "pass"
+  } else {
+    qc_labels[index] <- "review"
+  }
+}
+
+qc_labels
+```
+
+## 두 벡터의 같은 위치를 함께 사용한다
+
+```r
+cell_counts <- c(1200, 1350, 980)
+mito_percent <- c(4.2, 5.1, 9.4)
+passed_qc <- logical(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  passed_qc[index] <-
+    cell_counts[index] >= 1200 &&
+    mito_percent[index] < 8
+}
+
+passed_qc
+```
+
+한 번에 확인하는 값은 각각 길이 1이므로 `&&`를 사용할 수 있습니다.
+
+## 반복문으로 데이터 프레임의 행을 처리한다
+
+```r
+sample_metadata <- read.csv("data/sample_metadata.csv")
+metadata_qc_labels <- character(nrow(sample_metadata))
+
+for (row_index in seq_len(nrow(sample_metadata))) {
+  if (sample_metadata$passed_qc[row_index]) {
+    metadata_qc_labels[row_index] <- "pass"
+  } else {
+    metadata_qc_labels[row_index] <- "review"
+  }
+}
+
+metadata_qc_labels
+```
+
+## `seq_len()`은 원하는 길이의 위치를 만든다
+
+```r
+seq_len(4)
+seq_len(nrow(sample_metadata))
+```
+
+- `seq_along(x)`은 객체의 원소 위치를 반복할 때 사용합니다.
+- `seq_len(n)`은 행 수처럼 길이가 숫자로 주어질 때 사용합니다.
+
+## 결과를 데이터 프레임에 추가한다
+
+```r
+sample_metadata$qc_label_loop <- metadata_qc_labels
+head(sample_metadata)
+```
+
+결과 벡터의 길이는 데이터 프레임의 행 수와 같아야 합니다.
+
+## 실행 과정을 확인하며 오류를 찾는다
+
+```r
+for (index in seq_along(cell_counts)) {
+  print(index)
+  print(cell_counts[index])
+}
+```
+
+- 현재 위치와 값을 출력하면 반복 흐름을 확인할 수 있습니다.
+- 확인이 끝나면 불필요한 `print()`는 제거합니다.
+
+## 흔한 오류 1: 결과를 저장하지 않는다
+
+```r
+# 마지막 결과만 남는 코드
+for (cell_count in cell_counts) {
+  result <- cell_count / 1000
+}
+
+result
+```
+
+모든 결과가 필요하면 결과 벡터와 위치 번호를 사용합니다.
+
+## 흔한 오류 2: 결과 위치를 빠뜨린다
+
+```r
+result <- numeric(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  result[index] <- cell_counts[index] / 1000
+}
+```
+
+왼쪽의 `result[index]`가 현재 결과를 저장할 위치입니다.
+
+## 흔한 오류 3: 입력과 결과 길이가 다르다
+
+```r
+length(cell_counts)
+length(result)
+```
+
+- 반복 전후에 길이를 비교합니다.
+- 데이터 프레임에 열로 추가할 때는 특히 길이가 같아야 합니다.
+
+## 벡터화 연산은 반복을 내부에서 처리한다
+
+```r
+cell_counts <- c(1200, 1350, 980)
+cell_count_k <- cell_counts / 1000
+cell_count_k
+```
+
+R은 벡터의 모든 원소에 나눗셈을 적용합니다.
+
+## 산술 반복문을 벡터화한다
+
+반복문:
+
+```r
+for (index in seq_along(cell_counts)) {
+  result[index] <- cell_counts[index] / 1000
+}
+```
+
+벡터화 연산:
+
+```r
+result_vectorized <- cell_counts / 1000
+```
+
+## 비교 연산도 벡터화되어 있다
+
+```r
+cell_counts >= 1200
+mito_percent < 8
+
+passed_qc_vectorized <-
+  cell_counts >= 1200 & mito_percent < 8
+
+passed_qc_vectorized
+```
+
+각 원소에 같은 비교가 적용됩니다.
+
+## 원소별 분기는 `ifelse()`로 벡터화한다
+
+```r
+qc_labels_vectorized <- ifelse(
+  passed_qc_vectorized,
+  "pass",
+  "review"
+)
+
+qc_labels_vectorized
+```
+
+반복문 안의 `if ... else`를 간단하게 표현할 수 있습니다.
+
+## 요약 함수도 반복을 대신한다
+
+```r
+cell_counts <- c(1200, 1350, 980)
+
+sum(cell_counts)
+mean(cell_counts)
+max(cell_counts)
+```
+
+합계나 평균을 직접 반복하여 계산하기보다 준비된 요약 함수를 사용합니다.
+
+## 반복문과 벡터화 결과를 비교한다
+
+```r
+identical(result, result_vectorized)
+identical(qc_labels, qc_labels_vectorized)
+```
+
+코드를 바꾼 뒤 결과가 같은지 확인하면 실수를 줄일 수 있습니다.
+
+## 벡터화 연산을 우선 고려한다
+
+벡터화 연산이 적합한 경우:
+
+- 모든 원소에 같은 산술 계산을 적용할 때
+- 각 원소를 같은 기준과 비교할 때
+- `sum()`, `mean()`처럼 목적에 맞는 함수가 있을 때
+
+코드가 짧고 계산 의도가 잘 드러납니다.
+
+## 반복문이 더 자연스러운 경우도 있다
+
+반복문이 적합한 경우:
+
+- 각 단계에서 여러 줄의 작업을 순서대로 수행할 때
+- 현재 결과에 따라 실행할 작업이 달라질 때
+- 반복 과정을 출력하며 확인해야 할 때
+- 간단한 벡터화 표현이 없는 작업일 때
+
+## 짧은 코드보다 이해하기 쉬운 코드가 우선이다
+
+```r
+qc_condition <-
+  sample_metadata$cell_count >= 1200 &
+  sample_metadata$median_genes >= 2000 &
+  sample_metadata$mito_percent < 8
+```
+
+- 벡터화한다고 해서 한 줄에 모든 내용을 넣을 필요는 없습니다.
+- 계산 단계를 의미 있는 변수에 나누어 저장할 수 있습니다.
+
+## 실습 1: 값과 위치 반복하기
+
+```r
+cell_counts <- c(1240, 1385, 1090, 1520)
+
+for (cell_count in cell_counts) {
+  print(cell_count)
+}
+
+for (index in seq_along(cell_counts)) {
+  print(cell_counts[index])
+}
+```
+
+두 반복문의 결과와 반복 변수의 의미를 비교합니다.
+
+## 실습 2: 반복 결과 저장하기
+
+```r
+cell_count_k <- numeric(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  cell_count_k[index] <- cell_counts[index] / 1000
+}
+
+cell_count_k
+```
+
+결과 벡터의 길이와 값을 확인합니다.
+
+## 실습 3: 조건별 결과 만들기
+
+```r
+qc_labels <- character(length(cell_counts))
+
+for (index in seq_along(cell_counts)) {
+  if (cell_counts[index] >= 1200) {
+    qc_labels[index] <- "pass"
+  } else {
+    qc_labels[index] <- "review"
+  }
+}
+```
+
+각 위치에 올바른 레이블이 저장됐는지 확인합니다.
+
+## 실습 4: 벡터화하고 결과 비교하기
+
+```r
+cell_count_k_vectorized <- cell_counts / 1000
+qc_labels_vectorized <- ifelse(
+  cell_counts >= 1200,
+  "pass",
+  "review"
+)
+
+identical(cell_count_k, cell_count_k_vectorized)
+identical(qc_labels, qc_labels_vectorized)
+```
+
+## 오늘 배운 내용 {.summary}
+
+- `for`는 여러 값을 하나씩 꺼내 같은 코드 블록을 실행합니다.
+- 모든 결과를 보존하려면 결과 벡터를 사전 할당하고 위치별로 저장합니다.
+- 위치 반복에는 `seq_along()` 또는 `seq_len()`을 사용합니다.
+- 산술·비교·요약은 벡터화 연산과 기존 함수를 우선 고려합니다.
+- 코드 목적과 실행 과정에 따라 반복문이 더 이해하기 쉬울 수도 있습니다.
+
+## 종료 점검과 다음 차시 {.checkpoint}
+
+1. 반복문이 끝난 뒤 마지막 결과만 남는 이유는 무엇입니까?
+2. 사전 할당은 무엇이며 왜 사용합니까?
+3. 위치 반복에 `seq_along()`을 사용하는 이유는 무엇입니까?
+4. 어떤 작업에서 벡터화 연산을 우선 고려합니까?
+
+**다음 차시:** 반복되는 코드를 하나의 함수로 만들고 재사용하기
