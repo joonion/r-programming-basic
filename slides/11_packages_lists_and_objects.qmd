@@ -8,7 +8,8 @@ subtitle: "R 기초 프로그래밍"
 1. 패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.
 2. 서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.
 3. `class()`, `str()`, `attributes()`로 객체 구조를 조사할 수 있다.
-4. 복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다.
+4. `ggplot2`와 Seurat의 시각화 결과가 R 객체임을 설명할 수 있다.
+5. 복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다.
 
 ## 선수 지식 {.prerequisites}
 
@@ -445,6 +446,79 @@ head(methods("summary"))
 
 - R의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.
 - 입문 단계에서는 먼저 `class()`와 도움말로 올바른 사용법을 확인합니다.
+
+## `ggplot2` 그래프도 조사할 수 있는 R 객체다
+
+```r
+library(ggplot2)
+
+qc_plot <- ggplot(
+  sample_metadata,
+  aes(x = condition, y = cell_count)
+) +
+  geom_boxplot()
+
+class(qc_plot)
+```
+
+그래프를 화면에 그리는 명령의 결과를 이름에 저장하면 다시 사용하고 수정할 수 있습니다.
+
+## 기존 그래프 객체에 층을 더할 수 있다
+
+```r
+labeled_plot <- qc_plot +
+  labs(
+    title = "실험 조건별 세포 수",
+    x = "실험 조건",
+    y = "세포 수"
+  ) +
+  theme_minimal()
+```
+
+원본 `qc_plot`은 유지되고, 설명이 추가된 새 객체가 만들어집니다.
+
+## `patchwork` 결과도 하나의 복합 객체다
+
+```r
+library(patchwork)
+
+relationship_plot <- ggplot(
+  sample_metadata,
+  aes(x = cell_count, y = median_genes)
+) +
+  geom_point()
+
+combined_plot <- labeled_plot | relationship_plot
+class(combined_plot)
+```
+
+완성된 그래프를 객체로 다루기 때문에 조합과 저장을 단계적으로 수행할 수 있습니다.
+
+## Seurat 시각화 함수도 그래프 객체를 반환한다
+
+```r
+# 부록의 Seurat 실습에서 실행
+umap_plot <- DimPlot(pbmc, reduction = "umap")
+
+class(umap_plot)
+umap_plot + ggtitle("PBMC 세포 군집")
+```
+
+`DimPlot()`, `FeaturePlot()`, `VlnPlot()`의 결과도 이름에 저장해 제목을 더하거나 `patchwork`로 조합할 수 있습니다.
+
+## 그래프 객체는 `ggsave()`로 명시해 저장한다
+
+```r
+ggsave(
+  filename = "results/qc_plot.png",
+  plot = labeled_plot,
+  width = 7,
+  height = 5,
+  dpi = 150
+)
+```
+
+`plot` 인자에 저장할 객체를 명시하면 마지막으로 표시된 그래프에 의존하지 않습니다.
 
 ## 복잡한 분석 객체는 구조를 먼저 확인한다
 

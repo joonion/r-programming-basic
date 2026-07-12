@@ -112,6 +112,130 @@ sample_metadata[
 
 조건을 변수에 먼저 저장하면 중간 결과를 확인하기 쉽고, 직접 작성하면 코드가 짧아집니다.
 
+## dplyr은 데이터 프레임 작업을 읽기 쉽게 표현한다
+
+```r
+# 최초 한 번만 실행한다.
+# install.packages("dplyr")
+
+library(dplyr)
+```
+
+- dplyr은 데이터 프레임을 선택하고 변환하는 함수를 제공합니다.
+- 설치는 한 번, `library()`는 새 R 세션마다 실행합니다.
+- 이 차시에서는 기본 R과 dplyr 표현을 함께 비교합니다.
+
+## 기본 R과 `filter()`는 같은 조건을 다르게 표현한다
+
+```r
+# 기본 R
+sample_metadata[
+  sample_metadata$cell_count >= 1200,
+]
+
+# dplyr
+filter(sample_metadata, cell_count >= 1200)
+```
+
+두 코드는 세포 수가 1200 이상인 행을 선택합니다.
+
+## 데이터 마스킹에서는 열 이름을 직접 쓴다
+
+```r
+# 함수 밖에서는 객체와 열 이름을 함께 쓴다.
+sample_metadata$cell_count
+
+# filter() 안에서는 열 이름을 직접 쓸 수 있다.
+filter(sample_metadata, cell_count >= 1200)
+```
+
+`filter()`가 첫 번째 입력 데이터의 열 이름을 먼저 찾기 때문입니다. 이를 **데이터 마스킹**이라고 합니다.
+
+## 데이터 마스킹의 범위를 구분한다
+
+```r
+min_cells <- 1200
+
+filter(
+  sample_metadata,
+  cell_count >= min_cells
+)
+```
+
+- `cell_count`는 `sample_metadata` 안의 열입니다.
+- `min_cells`는 함수 밖에서 만든 변수입니다.
+- 열 이름과 외부 변수 이름을 서로 다르게 작성하면 혼동을 줄일 수 있습니다.
+
+## `%>%`는 왼쪽 결과를 다음 함수로 전달한다
+
+```r
+sample_metadata %>%
+  filter(cell_count >= 1200)
+```
+
+위 코드는 다음 함수 호출과 같은 의미입니다.
+
+```r
+filter(sample_metadata, cell_count >= 1200)
+```
+
+> `%>%`는 “그다음”이라고 읽으면 분석 순서를 이해하기 쉽습니다.
+
+## 파이프를 사용해 여러 단계를 연결한다
+
+```r
+filtered_metadata <- sample_metadata %>%
+  filter(cell_count >= 1200) %>%
+  select(sample_id, condition, cell_count)
+
+filtered_metadata
+```
+
+- `filter()`는 행을 선택합니다.
+- `select()`는 열을 선택합니다.
+- 결과는 기존 방식대로 `<-`로 저장합니다.
+
+## `filter()`에서 여러 조건을 결합한다
+
+```r
+sample_metadata %>%
+  filter(
+    cell_count >= 1200,
+    median_genes >= 2000,
+    mito_percent < 8
+  )
+```
+
+쉼표로 나눈 조건은 모두 만족해야 하므로 `&`로 결합한 것과 같습니다.
+
+## 기존 논리 연산자를 그대로 사용할 수 있다
+
+```r
+sample_metadata %>%
+  filter(
+    condition == "treated" |
+      batch == "batch_1"
+  )
+
+sample_metadata %>%
+  filter(!is.na(doublet_rate))
+```
+
+`&`, `|`, `!`, `%in%`, `is.na()`의 의미는 기본 R과 같습니다.
+
+## `dplyr::`로 함수의 출처를 표시할 수 있다
+
+```r
+dplyr::filter(
+  sample_metadata,
+  cell_count >= 1200
+)
+```
+
+- `패키지::함수`는 어느 패키지의 함수인지 명확히 보여 줍니다.
+- 같은 이름의 함수가 여러 패키지에 있을 때 특히 유용합니다.
+- 이 표기는 `library(dplyr)` 없이도 사용할 수 있습니다.
+
 ## 문자형 열도 비교할 수 있다
 
 ```r
@@ -467,11 +591,39 @@ sample_metadata[, c("sample_id", "qc_label")]
 
 `if ... else`로 전체 데이터의 QC 상태 메시지도 만듭니다.
 
+## 실습 5: 기본 R과 dplyr 비교하기
+
+```r
+base_result <- sample_metadata[
+  sample_metadata$cell_count >= 1200,
+]
+
+dplyr_result <- sample_metadata %>%
+  filter(cell_count >= 1200)
+```
+
+두 결과의 행 수와 샘플 ID를 비교합니다.
+
+## 실습 6: 파이프로 행과 열 선택하기
+
+```r
+qc_overview <- sample_metadata %>%
+  filter(passed_qc, !is.na(doublet_rate)) %>%
+  select(sample_id, condition, cell_count, doublet_rate)
+
+qc_overview
+```
+
+각 함수가 행과 열 중 무엇을 선택하는지 설명합니다.
+
 ## 오늘 배운 내용 {.summary}
 
 - 비교 연산자는 조건별 `TRUE`, `FALSE`를 만듭니다.
 - `&`, `|`, `!`로 여러 조건을 결합하거나 반대로 바꿉니다.
 - 논리형 벡터를 `[행, 열]`의 행 위치에 사용해 필터링합니다.
+- dplyr의 `filter()`와 `select()`로 행과 열을 선택할 수 있습니다.
+- 데이터 마스킹에서는 함수 안에서 열 이름을 직접 사용합니다.
+- `%>%`로 분석 단계를 위에서 아래로 연결할 수 있습니다.
 - 결측값이 있는 조건에는 `is.na()` 처리를 함께 고려합니다.
 - 단일 실행 흐름에는 `if`, 원소별 결과에는 `ifelse()`를 사용합니다.
 
@@ -480,6 +632,7 @@ sample_metadata[, c("sample_id", "qc_label")]
 1. `=`와 `==`는 어떻게 다릅니까?
 2. 두 조건을 모두 만족하는 행은 어떤 연산자로 찾습니까?
 3. 결측값 여부는 어떤 함수로 확인합니까?
-4. `if`와 `ifelse()`는 언제 각각 사용합니까?
+4. `filter()` 안에서 열 이름을 직접 쓸 수 있는 이유는 무엇입니까?
+5. `if`와 `ifelse()`는 언제 각각 사용합니까?
 
 **다음 차시:** 여러 값에 같은 작업을 반복하고 벡터화 연산과 비교하기

@@ -13,6 +13,14 @@ sample_metadata <- read.csv(input_path)
 head(sample_metadata)
 str(sample_metadata)
 
+# dplyr이 설치되지 않았다면 다음 줄을 콘솔에서 한 번 실행하세요.
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("patchwork")
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+
 dir.create("results", showWarnings = FALSE)
 
 
@@ -144,7 +152,73 @@ condition_summary
 # TODO: batch_summary 데이터 프레임을 만드세요.
 
 
-# 실습 6: 막대그래프 작성하기 ----------------------------------------
+# 실습 6: dplyr로 그룹별 요약하기 ------------------------------------
+
+# 조건별 샘플 수와 QC 지표 평균을 계산하세요.
+condition_summary_dplyr <- sample_metadata %>%
+  group_by(condition) %>%
+  summarise(
+    sample_count = n(),
+    mean_cells = mean(cell_count),
+    median_cells = median(cell_count),
+    mean_genes = mean(median_genes),
+    mean_mito = mean(mito_percent),
+    .groups = "drop"
+  )
+
+condition_summary_dplyr
+
+# 결측값이 있는 열을 조건별로 요약하세요.
+doublet_summary_dplyr <- sample_metadata %>%
+  group_by(condition) %>%
+  summarise(
+    mean_doublet = mean(doublet_rate, na.rm = TRUE),
+    missing_count = sum(is.na(doublet_rate)),
+    .groups = "drop"
+  )
+
+doublet_summary_dplyr
+
+# TODO: batch별 샘플 수, 평균 cell_count, 평균 median_genes를
+# TODO: group_by()와 summarise()로 계산하세요.
+
+
+# 실습 7: 그룹별 상위 행과 마커 선택하기 ----------------------------
+
+# 조건별로 cell_count가 큰 샘플 두 개를 선택하세요.
+top_samples <- sample_metadata %>%
+  group_by(condition) %>%
+  arrange(desc(cell_count)) %>%
+  slice_head(n = 2) %>%
+  ungroup()
+
+top_samples
+
+# Seurat FindAllMarkers() 결과와 비슷한 교육용 데이터를 만드세요.
+pbmc_markers <- data.frame(
+  cluster = c(0, 0, 0, 1, 1, 1, 2, 2, 2),
+  gene = c(
+    "IL7R", "CCR7", "LTB",
+    "CD14", "LYZ", "S100A8",
+    "MS4A1", "CD79A", "TCL1A"
+  ),
+  avg_log2FC = c(1.8, 1.5, 0.8, 2.4, 2.1, 0.9, 2.7, 2.2, 1.4)
+)
+
+# 각 cluster에서 log2 fold change가 1보다 큰 상위 마커 두 개를 선택하세요.
+top_markers <- pbmc_markers %>%
+  group_by(cluster) %>%
+  filter(avg_log2FC > 1) %>%
+  arrange(desc(avg_log2FC)) %>%
+  slice_head(n = 2) %>%
+  ungroup()
+
+top_markers
+
+# TODO: 각 cluster에서 상위 마커 하나만 선택하세요.
+
+
+# 실습 8: 막대그래프 작성하기 ----------------------------------------
 
 # 조건별 샘플 수를 막대그래프로 표시하세요.
 barplot(
@@ -168,7 +242,7 @@ barplot(
 # TODO: 제목과 축 이름을 추가하세요.
 
 
-# 실습 7: 히스토그램 작성하기 ----------------------------------------
+# 실습 9: 히스토그램 작성하기 ----------------------------------------
 
 # 세포 수 분포를 히스토그램으로 표시하세요.
 hist(
@@ -185,7 +259,7 @@ hist(
 # TODO: 제목, 축 이름, 색상을 지정하세요.
 
 
-# 실습 8: 그룹별 상자그림 작성하기 ----------------------------------
+# 실습 10: 그룹별 상자그림 작성하기 ---------------------------------
 
 # 조건별 세포 수를 상자그림으로 비교하세요.
 boxplot(
@@ -201,7 +275,7 @@ boxplot(
 # TODO: 표본 수가 적을 때 해석에 주의할 점을 주석으로 적으세요.
 
 
-# 실습 9: 산점도와 범례 작성하기 ------------------------------------
+# 실습 11: 산점도와 범례 작성하기 -----------------------------------
 
 # 조건에 따라 점 색상을 지정하세요.
 point_colors <- ifelse(
@@ -233,7 +307,48 @@ legend(
 # TODO: 제목과 축 이름을 추가하고 조건에 따라 점 색상을 지정하세요.
 
 
-# 실습 10: 요약표와 그래프 저장하기 ----------------------------------
+# 실습 12: ggplot2 그래프 만들고 조합하기 ---------------------------
+
+condition_colors <- c(
+  control = "#2563EB",
+  treated = "#B45309"
+)
+
+cell_box_plot <- ggplot(
+  sample_metadata,
+  aes(x = condition, y = cell_count, fill = condition)
+) +
+  geom_boxplot() +
+  scale_fill_manual(values = condition_colors) +
+  labs(title = "실험 조건별 세포 수", x = "실험 조건", y = "세포 수") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none")
+
+relationship_plot <- ggplot(
+  sample_metadata,
+  aes(x = cell_count, y = median_genes, color = condition)
+) +
+  geom_point(size = 3) +
+  scale_color_manual(values = condition_colors) +
+  labs(
+    title = "세포 수와 검출 유전자 수의 관계",
+    x = "세포 수",
+    y = "검출 유전자 수 중앙값",
+    color = "실험 조건"
+  ) +
+  theme_minimal(base_size = 14)
+
+combined_plot <- cell_box_plot | relationship_plot
+annotated_plot <- combined_plot +
+  plot_annotation(title = "PBMC 샘플 QC 요약")
+
+annotated_plot
+class(annotated_plot)
+
+# TODO: 조건별 mito_percent 상자그림을 추가해 세 그래프를 조합하세요.
+
+
+# 실습 13: 요약표와 그래프 저장하기 ---------------------------------
 
 # 조건별 요약표를 CSV 파일로 저장하세요.
 summary_path <- "results/condition_summary.csv"
@@ -272,6 +387,19 @@ boxplot(
 
 dev.off()
 file.exists(plot_path)
+
+# ggplot2 또는 patchwork 객체는 ggsave()로 저장하세요.
+ggplot_path <- "results/qc_summary_ggplot.png"
+
+ggsave(
+  filename = ggplot_path,
+  plot = annotated_plot,
+  width = 10,
+  height = 5,
+  dpi = 150
+)
+
+file.exists(ggplot_path)
 
 # TODO: 산점도를 results/cell_count_vs_genes.png로 저장하세요.
 # TODO: 저장한 PNG 파일을 직접 열어 제목과 축을 확인하세요.
