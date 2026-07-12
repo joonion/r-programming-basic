@@ -1,0 +1,3145 @@
+[
+  {
+    "objectID": "slides/12_transcriptomics_project.html#오늘의-학습-목표",
+    "href": "slides/12_transcriptomics_project.html#오늘의-학습-목표",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n메타데이터와 유전자 발현 데이터를 불러와 구조와 품질을 점검할 수 있다.\n샘플 순서를 검증하고 QC 조건에 맞는 샘플을 선택할 수 있다.\n실험 조건별 유전자 발현을 요약하고 기본 그래프로 표현할 수 있다.\n분석 결과와 설정값을 CSV, PNG, RDS 파일로 정리할 수 있다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#지금까지-배운-내용을-연결한다",
+    "href": "slides/12_transcriptomics_project.html#지금까지-배운-내용을-연결한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "지금까지 배운 내용을 연결한다",
+    "text": "지금까지 배운 내용을 연결한다\n\n\n\n단계\n사용하는 내용\n\n\n\n\n데이터 불러오기\n상대 경로, read.csv()\n\n\n품질 점검\nstr(), summary(), is.na(), duplicated()\n\n\n샘플 선택\n비교·논리 연산자, 데이터 프레임 인덱싱\n\n\n계산\n함수, 벡터화 연산, 그룹별 요약\n\n\n시각화\n막대그래프, 상자그림, 산점도\n\n\n결과 정리\n리스트, CSV, PNG, RDS"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#프로젝트-질문",
+    "href": "slides/12_transcriptomics_project.html#프로젝트-질문",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "프로젝트 질문",
+    "text": "프로젝트 질문\n이 프로젝트에서는 다음 질문에 답합니다.\n\n분석 기준을 만족하는 샘플은 무엇인가?\ncontrol과 treated에 분석 가능한 샘플이 각각 몇 개 있는가?\n각 유전자의 조건별 평균 발현량은 얼마인가?\n조건 간 평균 발현 차이가 큰 유전자는 무엇인가?"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#사용하는-데이터",
+    "href": "slides/12_transcriptomics_project.html#사용하는-데이터",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "사용하는 데이터",
+    "text": "사용하는 데이터\ndata/\n├─ sample_metadata.csv\n└─ gene_expression.csv\n\nsample_metadata.csv: 샘플별 조건과 QC 지표\ngene_expression.csv: 유전자별 샘플 발현량\n두 파일 모두 수업용으로 만든 합성 데이터입니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#샘플-메타데이터의-구조",
+    "href": "slides/12_transcriptomics_project.html#샘플-메타데이터의-구조",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "샘플 메타데이터의 구조",
+    "text": "샘플 메타데이터의 구조\n\n\n\n행\n의미\n\n\n\n\n한 행\n한 샘플\n\n\n\n주요 열:\n\nsample_id, condition, batch\ncell_count, median_genes, mito_percent\ndoublet_rate, passed_qc"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#유전자-발현표의-구조",
+    "href": "slides/12_transcriptomics_project.html#유전자-발현표의-구조",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "유전자 발현표의 구조",
+    "text": "유전자 발현표의 구조\ngene_id,control_1,control_2,...,treated_3\nMS4A1,52,48,...,24\nCD3D,18,20,...,64\n\n한 행은 유전자 하나입니다.\ngene_id를 제외한 각 열은 샘플 하나입니다.\n각 셀에는 교육용 발현량이 들어 있습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#프로젝트-분석-흐름",
+    "href": "slides/12_transcriptomics_project.html#프로젝트-분석-흐름",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "프로젝트 분석 흐름",
+    "text": "프로젝트 분석 흐름\n1. 파일 확인 및 불러오기\n2. 구조·결측값·중복 점검\n3. 두 파일의 샘플 정렬 검증\n4. QC 조건 생성 및 샘플 선택\n5. 조건별 평균 발현 계산\n6. 요약표와 그래프 작성\n7. 결과 저장 및 읽기 검증\n각 단계의 결과를 확인한 뒤 다음 단계로 이동합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-입력-파일-경로를-지정한다",
+    "href": "slides/12_transcriptomics_project.html#단계-입력-파일-경로를-지정한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "1단계: 입력 파일 경로를 지정한다",
+    "text": "1단계: 입력 파일 경로를 지정한다\nmetadata_path &lt;- \"data/sample_metadata.csv\"\nexpression_path &lt;- \"data/gene_expression.csv\"\n\nfile.exists(metadata_path)\nfile.exists(expression_path)\n두 결과가 모두 TRUE인지 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#두-csv-파일을-불러온다",
+    "href": "slides/12_transcriptomics_project.html#두-csv-파일을-불러온다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "두 CSV 파일을 불러온다",
+    "text": "두 CSV 파일을 불러온다\nsample_metadata &lt;- read.csv(metadata_path)\ngene_expression &lt;- read.csv(\n  expression_path,\n  check.names = FALSE\n)\ncheck.names = FALSE는 CSV에 기록된 샘플 열 이름을 그대로 유지합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#불러온-직후-일부-행을-확인한다",
+    "href": "slides/12_transcriptomics_project.html#불러온-직후-일부-행을-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "불러온 직후 일부 행을 확인한다",
+    "text": "불러온 직후 일부 행을 확인한다\nhead(sample_metadata)\nhead(gene_expression)\n확인할 사항:\n\n예상한 파일이 맞는가?\n첫 행이 열 이름으로 처리됐는가?\n값이 여러 열로 올바르게 나뉘었는가?"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-데이터-크기를-확인한다",
+    "href": "slides/12_transcriptomics_project.html#단계-데이터-크기를-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "2단계: 데이터 크기를 확인한다",
+    "text": "2단계: 데이터 크기를 확인한다\ndim(sample_metadata)\ndim(gene_expression)\n\n메타데이터 행 수는 샘플 수입니다.\n발현표 행 수는 유전자 수입니다.\n발현표 열 수는 gene_id 열과 샘플 열을 합한 수입니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#열-이름과-자료형을-확인한다",
+    "href": "slides/12_transcriptomics_project.html#열-이름과-자료형을-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "열 이름과 자료형을 확인한다",
+    "text": "열 이름과 자료형을 확인한다\nnames(sample_metadata)\nnames(gene_expression)\n\nstr(sample_metadata)\nstr(gene_expression)\n발현량 열이 숫자형으로 불러와졌는지 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#결측값-개수를-확인한다",
+    "href": "slides/12_transcriptomics_project.html#결측값-개수를-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "결측값 개수를 확인한다",
+    "text": "결측값 개수를 확인한다\ncolSums(is.na(sample_metadata))\ncolSums(is.na(gene_expression))\n\n메타데이터의 doublet_rate에는 의도적인 결측값이 하나 있습니다.\n발현표에는 결측값이 없어야 합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#중복-식별자를-확인한다",
+    "href": "slides/12_transcriptomics_project.html#중복-식별자를-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "중복 식별자를 확인한다",
+    "text": "중복 식별자를 확인한다\nany(duplicated(sample_metadata$sample_id))\nany(duplicated(gene_expression$gene_id))\n샘플 ID와 유전자 ID는 각각 고유해야 합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#숫자형-값의-범위를-확인한다",
+    "href": "slides/12_transcriptomics_project.html#숫자형-값의-범위를-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "숫자형 값의 범위를 확인한다",
+    "text": "숫자형 값의 범위를 확인한다\nsummary(sample_metadata)\nsummary(gene_expression[, -1])\n음수 발현량이나 예상 밖의 QC 값이 없는지 살펴봅니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-두-파일의-샘플-이름을-추출한다",
+    "href": "slides/12_transcriptomics_project.html#단계-두-파일의-샘플-이름을-추출한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "3단계: 두 파일의 샘플 이름을 추출한다",
+    "text": "3단계: 두 파일의 샘플 이름을 추출한다\nmetadata_sample_ids &lt;- sample_metadata$sample_id\nexpression_sample_ids &lt;- names(gene_expression)[-1]\n\nmetadata_sample_ids\nexpression_sample_ids\n-1은 첫 번째 gene_id 열을 제외합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#샘플-이름과-순서가-모두-같은지-확인한다",
+    "href": "slides/12_transcriptomics_project.html#샘플-이름과-순서가-모두-같은지-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "샘플 이름과 순서가 모두 같은지 확인한다",
+    "text": "샘플 이름과 순서가 모두 같은지 확인한다\nidentical(metadata_sample_ids, expression_sample_ids)\nTRUE여야 각 샘플의 메타데이터와 발현량이 같은 순서로 대응합니다.\n\n이름 집합만 같아도 순서가 다르면 잘못된 샘플끼리 연결될 수 있습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#샘플-정렬-검증은-분석-전에-수행한다",
+    "href": "slides/12_transcriptomics_project.html#샘플-정렬-검증은-분석-전에-수행한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "샘플 정렬 검증은 분석 전에 수행한다",
+    "text": "샘플 정렬 검증은 분석 전에 수행한다\nstopifnot(\n  identical(metadata_sample_ids, expression_sample_ids)\n)\n\n조건이 TRUE이면 분석을 계속합니다.\nFALSE이면 실행을 중단하고 두 파일의 이름과 순서를 수정합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-qc-기준을-명시한다",
+    "href": "slides/12_transcriptomics_project.html#단계-qc-기준을-명시한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "4단계: QC 기준을 명시한다",
+    "text": "4단계: QC 기준을 명시한다\nqc_parameters &lt;- list(\n  min_cells = 1200,\n  min_genes = 2000,\n  max_mito = 8,\n  max_doublet = 4\n)\n설정값을 리스트에 모으면 어떤 기준을 사용했는지 기록하기 쉽습니다.\n\n이 수치는 R 프로젝트 연습을 위한 예시이며 실제 분석 기준이 아닙니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#결측값이-없는-doublet-조건을-만든다",
+    "href": "slides/12_transcriptomics_project.html#결측값이-없는-doublet-조건을-만든다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "결측값이 없는 doublet 조건을 만든다",
+    "text": "결측값이 없는 doublet 조건을 만든다\nknown_doublet_rate &lt;-\n  !is.na(sample_metadata$doublet_rate)\n\nlow_doublet_rate &lt;-\n  sample_metadata$doublet_rate &lt;= qc_parameters$max_doublet\n결측값을 먼저 확인하고 기준과 비교합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#모든-qc-조건을-결합한다",
+    "href": "slides/12_transcriptomics_project.html#모든-qc-조건을-결합한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "모든 QC 조건을 결합한다",
+    "text": "모든 QC 조건을 결합한다\nqc_condition &lt;-\n  sample_metadata$passed_qc &\n  sample_metadata$cell_count &gt;= qc_parameters$min_cells &\n  sample_metadata$median_genes &gt;= qc_parameters$min_genes &\n  sample_metadata$mito_percent &lt; qc_parameters$max_mito &\n  known_doublet_rate &\n  low_doublet_rate\n각 행에 대해 모든 조건이 참이어야 TRUE입니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#qc-결과를-메타데이터에-추가한다",
+    "href": "slides/12_transcriptomics_project.html#qc-결과를-메타데이터에-추가한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "QC 결과를 메타데이터에 추가한다",
+    "text": "QC 결과를 메타데이터에 추가한다\nsample_metadata$qc_result &lt;- qc_condition\nsample_metadata$qc_label &lt;- ifelse(\n  qc_condition,\n  \"pass\",\n  \"review\"\n)\n\nsample_metadata[, c(\"sample_id\", \"condition\", \"qc_label\")]\n원본 QC 지표와 새 판정 결과를 함께 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#qc-통과-샘플을-선택한다",
+    "href": "slides/12_transcriptomics_project.html#qc-통과-샘플을-선택한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "QC 통과 샘플을 선택한다",
+    "text": "QC 통과 샘플을 선택한다\nanalysis_metadata &lt;- sample_metadata[qc_condition, ]\nanalysis_metadata\nanalysis_sample_ids &lt;- analysis_metadata$sample_id\nanalysis_sample_ids\n선택 결과의 행 수와 샘플 이름을 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#조건별-분석-샘플-수를-확인한다",
+    "href": "slides/12_transcriptomics_project.html#조건별-분석-샘플-수를-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "조건별 분석 샘플 수를 확인한다",
+    "text": "조건별 분석 샘플 수를 확인한다\nanalysis_condition_counts &lt;- table(\n  analysis_metadata$condition\n)\n\nanalysis_condition_counts\n두 조건에 분석 가능한 샘플이 있는지 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#발현표에서도-같은-샘플-열을-선택한다",
+    "href": "slides/12_transcriptomics_project.html#발현표에서도-같은-샘플-열을-선택한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "발현표에서도 같은 샘플 열을 선택한다",
+    "text": "발현표에서도 같은 샘플 열을 선택한다\nanalysis_expression &lt;- gene_expression[, c(\n  \"gene_id\",\n  analysis_sample_ids\n)]\n\nanalysis_expression\n메타데이터에서 통과한 샘플 ID를 발현표의 열 이름으로 사용합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#선택한-두-객체의-대응을-다시-확인한다",
+    "href": "slides/12_transcriptomics_project.html#선택한-두-객체의-대응을-다시-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "선택한 두 객체의 대응을 다시 확인한다",
+    "text": "선택한 두 객체의 대응을 다시 확인한다\nidentical(\n  analysis_metadata$sample_id,\n  names(analysis_expression)[-1]\n)\n필터링 이후에도 샘플 이름과 순서가 같아야 합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-조건별-샘플-id를-만든다",
+    "href": "slides/12_transcriptomics_project.html#단계-조건별-샘플-id를-만든다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "5단계: 조건별 샘플 ID를 만든다",
+    "text": "5단계: 조건별 샘플 ID를 만든다\ncontrol_ids &lt;- analysis_metadata$sample_id[\n  analysis_metadata$condition == \"control\"\n]\n\ntreated_ids &lt;- analysis_metadata$sample_id[\n  analysis_metadata$condition == \"treated\"\n]\n각 조건에 해당하는 발현표 열 이름을 얻습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#조건별-발현값을-선택한다",
+    "href": "slides/12_transcriptomics_project.html#조건별-발현값을-선택한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "조건별 발현값을 선택한다",
+    "text": "조건별 발현값을 선택한다\ncontrol_expression &lt;- analysis_expression[\n  , control_ids, drop = FALSE\n]\n\ntreated_expression &lt;- analysis_expression[\n  , treated_ids, drop = FALSE\n]\ndrop = FALSE는 샘플이 하나뿐이어도 데이터 프레임 형태를 유지합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#rowmeans로-유전자별-평균을-계산한다",
+    "href": "slides/12_transcriptomics_project.html#rowmeans로-유전자별-평균을-계산한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "rowMeans()로 유전자별 평균을 계산한다",
+    "text": "rowMeans()로 유전자별 평균을 계산한다\ncontrol_mean &lt;- rowMeans(control_expression)\ntreated_mean &lt;- rowMeans(treated_expression)\n\n각 행은 유전자 하나입니다.\nrowMeans()는 행마다 여러 샘플 값의 평균을 계산합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#유전자별-요약표를-만든다",
+    "href": "slides/12_transcriptomics_project.html#유전자별-요약표를-만든다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "유전자별 요약표를 만든다",
+    "text": "유전자별 요약표를 만든다\ngene_summary &lt;- data.frame(\n  gene_id = analysis_expression$gene_id,\n  control_mean = control_mean,\n  treated_mean = treated_mean\n)\n\ngene_summary\n한 행에 한 유전자의 조건별 평균을 정리합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#조건-간-평균-차이를-계산한다",
+    "href": "slides/12_transcriptomics_project.html#조건-간-평균-차이를-계산한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "조건 간 평균 차이를 계산한다",
+    "text": "조건 간 평균 차이를 계산한다\ngene_summary$difference &lt;-\n  gene_summary$treated_mean - gene_summary$control_mean\n\ngene_summary\n\n양수: treated 평균이 더 큼\n음수: control 평균이 더 큼\n이 값만으로 통계적 유의성이나 생물학적 중요성을 판단할 수는 없습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#절댓값-차이가-큰-순서로-정렬한다",
+    "href": "slides/12_transcriptomics_project.html#절댓값-차이가-큰-순서로-정렬한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "절댓값 차이가 큰 순서로 정렬한다",
+    "text": "절댓값 차이가 큰 순서로 정렬한다\ngene_order &lt;- order(\n  abs(gene_summary$difference),\n  decreasing = TRUE\n)\n\ngene_summary_sorted &lt;- gene_summary[gene_order, ]\ngene_summary_sorted\norder()는 값을 정렬할 행 위치를 반환합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#이-프로젝트의-발현-비교-한계",
+    "href": "slides/12_transcriptomics_project.html#이-프로젝트의-발현-비교-한계",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "이 프로젝트의 발현 비교 한계",
+    "text": "이 프로젝트의 발현 비교 한계\n\n교육용 합성 데이터입니다.\n샘플 수와 유전자 수가 매우 적습니다.\n정규화, 배치 보정, 분산 추정, 통계 검정을 수행하지 않았습니다.\n평균 차이는 실제 차등 발현 분석 결과가 아닙니다.\n\n이 프로젝트의 목적은 R 분석 흐름을 연결하는 것입니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-qc-결과를-막대그래프로-표시한다",
+    "href": "slides/12_transcriptomics_project.html#단계-qc-결과를-막대그래프로-표시한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "6단계: QC 결과를 막대그래프로 표시한다",
+    "text": "6단계: QC 결과를 막대그래프로 표시한다\nbarplot(\n  analysis_condition_counts,\n  main = \"조건별 QC 통과 샘플 수\",\n  xlab = \"실험 조건\",\n  ylab = \"샘플 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n각 조건에 최종 분석 샘플이 몇 개 있는지 보여 줍니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#qc-지표를-조건별-상자그림으로-비교한다",
+    "href": "slides/12_transcriptomics_project.html#qc-지표를-조건별-상자그림으로-비교한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "QC 지표를 조건별 상자그림으로 비교한다",
+    "text": "QC 지표를 조건별 상자그림으로 비교한다\nboxplot(\n  cell_count ~ condition,\n  data = sample_metadata,\n  main = \"실험 조건별 세포 수\",\n  xlab = \"실험 조건\",\n  ylab = \"세포 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n표본 수가 적으므로 분포 차이를 단정하지 않습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#선택한-유전자의-조건별-평균을-표시한다",
+    "href": "slides/12_transcriptomics_project.html#선택한-유전자의-조건별-평균을-표시한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "선택한 유전자의 조건별 평균을 표시한다",
+    "text": "선택한 유전자의 조건별 평균을 표시한다\nselected_gene &lt;- \"CD3D\"\nselected_row &lt;- gene_summary[\n  gene_summary$gene_id == selected_gene,\n]\n\nselected_means &lt;- c(\n  control = selected_row$control_mean,\n  treated = selected_row$treated_mean\n)"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#유전자-평균-발현-막대그래프를-그린다",
+    "href": "slides/12_transcriptomics_project.html#유전자-평균-발현-막대그래프를-그린다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "유전자 평균 발현 막대그래프를 그린다",
+    "text": "유전자 평균 발현 막대그래프를 그린다\nbarplot(\n  selected_means,\n  main = paste(selected_gene, \"조건별 평균 발현량\"),\n  xlab = \"실험 조건\",\n  ylab = \"평균 발현량\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n그래프 제목에 유전자 이름을 포함합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#qc-지표의-관계를-산점도로-확인한다",
+    "href": "slides/12_transcriptomics_project.html#qc-지표의-관계를-산점도로-확인한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "QC 지표의 관계를 산점도로 확인한다",
+    "text": "QC 지표의 관계를 산점도로 확인한다\npoint_colors &lt;- ifelse(\n  sample_metadata$condition == \"control\",\n  \"#4472C4\",\n  \"#ED7D31\"\n)\n\nplot(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes,\n  main = \"세포 수와 검출 유전자 수의 관계\",\n  xlab = \"세포 수\",\n  ylab = \"검출 유전자 수 중앙값\",\n  pch = 19,\n  col = point_colors\n)"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#산점도에-범례를-추가한다",
+    "href": "slides/12_transcriptomics_project.html#산점도에-범례를-추가한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "산점도에 범례를 추가한다",
+    "text": "산점도에 범례를 추가한다\nlegend(\n  \"bottomright\",\n  legend = c(\"control\", \"treated\"),\n  col = c(\"#4472C4\", \"#ED7D31\"),\n  pch = 19\n)\n색상의 의미를 그래프 안에서 설명합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#단계-결과-폴더를-준비한다",
+    "href": "slides/12_transcriptomics_project.html#단계-결과-폴더를-준비한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "7단계: 결과 폴더를 준비한다",
+    "text": "7단계: 결과 폴더를 준비한다\ndir.create(\"results\", showWarnings = FALSE)\n원본 데이터가 있는 data/와 분석 결과가 있는 results/를 분리합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#메타데이터와-유전자-요약표를-저장한다",
+    "href": "slides/12_transcriptomics_project.html#메타데이터와-유전자-요약표를-저장한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "메타데이터와 유전자 요약표를 저장한다",
+    "text": "메타데이터와 유전자 요약표를 저장한다\nwrite.csv(\n  analysis_metadata,\n  \"results/project_analysis_metadata.csv\",\n  row.names = FALSE\n)\n\nwrite.csv(\n  gene_summary_sorted,\n  \"results/project_gene_summary.csv\",\n  row.names = FALSE\n)\nCSV는 사람이 확인하고 다른 프로그램과 공유하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#그래프를-png로-저장한다",
+    "href": "slides/12_transcriptomics_project.html#그래프를-png로-저장한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "그래프를 PNG로 저장한다",
+    "text": "그래프를 PNG로 저장한다\npng(\n  \"results/project_gene_expression.png\",\n  width = 900,\n  height = 600,\n  res = 120\n)\n\nbarplot(\n  selected_means,\n  main = paste(selected_gene, \"조건별 평균 발현량\"),\n  xlab = \"실험 조건\",\n  ylab = \"평균 발현량\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n\ndev.off()"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#분석-전체를-리스트로-정리한다",
+    "href": "slides/12_transcriptomics_project.html#분석-전체를-리스트로-정리한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "분석 전체를 리스트로 정리한다",
+    "text": "분석 전체를 리스트로 정리한다\nproject_result &lt;- list(\n  metadata = analysis_metadata,\n  expression = analysis_expression,\n  gene_summary = gene_summary_sorted,\n  parameters = qc_parameters\n)\n입력에서 선택된 데이터, 요약 결과, 사용 기준을 하나의 객체에 묶습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#프로젝트-객체를-rds로-저장한다",
+    "href": "slides/12_transcriptomics_project.html#프로젝트-객체를-rds로-저장한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "프로젝트 객체를 RDS로 저장한다",
+    "text": "프로젝트 객체를 RDS로 저장한다\nsaveRDS(\n  project_result,\n  \"results/transcriptomics_project.rds\"\n)\nRDS는 리스트 내부의 데이터 프레임과 설정값 구조를 보존합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#저장-결과를-다시-읽어-검증한다",
+    "href": "slides/12_transcriptomics_project.html#저장-결과를-다시-읽어-검증한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "저장 결과를 다시 읽어 검증한다",
+    "text": "저장 결과를 다시 읽어 검증한다\nrestored_project &lt;- readRDS(\n  \"results/transcriptomics_project.rds\"\n)\n\nidentical(project_result, restored_project)\nstr(restored_project, max.level = 2)\nCSV와 PNG 파일도 실제로 열어 내용을 확인합니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#재현-가능한-프로젝트가-갖춰야-할-것",
+    "href": "slides/12_transcriptomics_project.html#재현-가능한-프로젝트가-갖춰야-할-것",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "재현 가능한 프로젝트가 갖춰야 할 것",
+    "text": "재현 가능한 프로젝트가 갖춰야 할 것\n\n입력 파일의 위치와 의미\n데이터 구조 및 품질 점검 코드\n선택 기준과 결측값 처리 방법\n요약과 그래프를 만드는 코드\n결과 파일과 실행 환경 정보\n결과의 한계와 해석 범위"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#결과를-설명할-때-과정과-한계를-함께-말한다",
+    "href": "slides/12_transcriptomics_project.html#결과를-설명할-때-과정과-한계를-함께-말한다",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "결과를 설명할 때 과정과 한계를 함께 말한다",
+    "text": "결과를 설명할 때 과정과 한계를 함께 말한다\n예시:\n\n교육용 QC 기준을 적용해 분석 샘플을 선택하고, 조건별 유전자 평균 발현량을 계산했다. 이 데이터는 합성 자료이고 표본 수가 적으며 정규화와 통계 검정을 수행하지 않았으므로 실제 차등 발현 결과로 해석할 수 없다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#프로젝트-점검표",
+    "href": "slides/12_transcriptomics_project.html#프로젝트-점검표",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "프로젝트 점검표",
+    "text": "프로젝트 점검표\n\n입력 파일이 존재하는가?\n식별자에 결측값이나 중복이 없는가?\n메타데이터와 발현표의 샘플 이름 및 순서가 같은가?\nQC 기준과 결측값 처리 방법이 코드에 기록됐는가?\n필터링 후 두 조건에 샘플이 남아 있는가?\nCSV, PNG, RDS 결과를 다시 열어 확인했는가?"
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#오늘-완성한-분석-흐름",
+    "href": "slides/12_transcriptomics_project.html#오늘-완성한-분석-흐름",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "오늘 완성한 분석 흐름",
+    "text": "오늘 완성한 분석 흐름\n불러오기 → 검증 → QC → 샘플 선택 →\n조건별 발현 요약 → 시각화 → 저장 → 복원 검증\n이 흐름은 실제 Seurat 분석에서도 입력과 함수는 달라지지만 기본 사고 과정으로 이어집니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#과정-전체-정리",
+    "href": "slides/12_transcriptomics_project.html#과정-전체-정리",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "과정 전체 정리",
+    "text": "과정 전체 정리\n\nR 객체와 기본 자료형을 확인했습니다.\n벡터, 행렬, 데이터 프레임, 리스트를 사용했습니다.\n조건식, 반복, 함수로 분석 작업을 표현했습니다.\n데이터를 요약하고 그래프로 전달했습니다.\n상대 경로와 검증 단계를 사용해 재현 가능한 결과를 만들었습니다."
+  },
+  {
+    "objectID": "slides/12_transcriptomics_project.html#종료-점검",
+    "href": "slides/12_transcriptomics_project.html#종료-점검",
+    "title": "12차시: 미니 프로젝트 — 전사체 형태의 데이터 분석",
+    "section": "종료 점검",
+    "text": "종료 점검\n\n두 파일의 샘플 순서를 왜 확인해야 합니까?\nQC 기준을 리스트에 저장하면 어떤 점이 좋습니까?\nrowMeans()는 발현표의 어느 방향으로 계산합니까?\n이 프로젝트의 평균 발현 차이를 실제 차등 발현 결과로 해석할 수 없는 이유는 무엇입니까?\n\n다음 단계: 실제 데이터와 Seurat의 공식 함수를 사용하되, 구조 확인과 검증 습관을 그대로 적용합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#오늘의-학습-목표",
+    "href": "slides/10_summaries_and_visualization.html#오늘의-학습-목표",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n전체 데이터와 그룹별 데이터를 기초 통계량으로 요약할 수 있다.\n분석 질문과 자료형에 맞는 기본 그래프를 선택할 수 있다.\n제목, 축 이름, 색상이 포함된 그래프를 작성할 수 있다.\n요약표와 그래프를 파일로 저장하고 확인할 수 있다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#선수-지식",
+    "href": "slides/10_summaries_and_visualization.html#선수-지식",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "선수 지식",
+    "text": "선수 지식\n\nCSV 파일을 데이터 프레임으로 불러올 수 있습니다.\n데이터 프레임의 열을 선택하고 조건으로 행을 선택할 수 있습니다.\n함수를 호출하고 인자를 이름으로 지정할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#이번-차시의-분석-흐름",
+    "href": "slides/10_summaries_and_visualization.html#이번-차시의-분석-흐름",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "이번 차시의 분석 흐름",
+    "text": "이번 차시의 분석 흐름\n데이터 확인\n  ↓\n전체 요약\n  ↓\n그룹별 요약\n  ↓\n질문에 맞는 그래프 선택\n  ↓\n표와 그래프 저장\n숫자만 계산하는 데서 끝나지 않고 결과가 무엇을 의미하는지 해석합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#샘플-메타데이터를-불러온다",
+    "href": "slides/10_summaries_and_visualization.html#샘플-메타데이터를-불러온다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "샘플 메타데이터를 불러온다",
+    "text": "샘플 메타데이터를 불러온다\nsample_metadata &lt;- read.csv(\"data/sample_metadata.csv\")\n\nhead(sample_metadata)\nstr(sample_metadata)\n요약과 시각화 전에 행 수, 열 이름, 자료형을 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#분석-질문을-먼저-정한다",
+    "href": "slides/10_summaries_and_visualization.html#분석-질문을-먼저-정한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "분석 질문을 먼저 정한다",
+    "text": "분석 질문을 먼저 정한다\n이번 차시에서는 다음 질문을 살펴봅니다.\n\n각 실험 조건에는 샘플이 몇 개 있는가?\n세포 수는 어느 범위에 분포하는가?\n조건별 세포 수에 차이가 있는가?\n세포 수와 검출 유전자 수는 어떤 관계가 있는가?\n\n질문이 정해져야 필요한 요약과 그래프를 선택할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#summary로-전체-모습을-확인한다",
+    "href": "slides/10_summaries_and_visualization.html#summary로-전체-모습을-확인한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "summary()로 전체 모습을 확인한다",
+    "text": "summary()로 전체 모습을 확인한다\nsummary(sample_metadata)\n\n숫자형 열의 최솟값, 사분위수, 중앙값, 평균, 최댓값\n논리형 열의 TRUE, FALSE 개수\n결측값이 있는 열의 NA's 개수"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#한-숫자형-열을-요약한다",
+    "href": "slides/10_summaries_and_visualization.html#한-숫자형-열을-요약한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "한 숫자형 열을 요약한다",
+    "text": "한 숫자형 열을 요약한다\ncell_counts &lt;- sample_metadata$cell_count\n\nmin(cell_counts)\nmax(cell_counts)\nmean(cell_counts)\nmedian(cell_counts)\n각 함수는 데이터의 서로 다른 특징을 보여 줍니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#평균과-중앙값을-구분한다",
+    "href": "slides/10_summaries_and_visualization.html#평균과-중앙값을-구분한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "평균과 중앙값을 구분한다",
+    "text": "평균과 중앙값을 구분한다\n\n평균: 모든 값을 더한 뒤 개수로 나눈 값\n중앙값: 값을 정렬했을 때 가운데에 있는 값\n\nmean(cell_counts)\nmedian(cell_counts)\n극단적으로 크거나 작은 값이 있으면 평균과 중앙값이 달라질 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#범위와-사분위-범위를-확인한다",
+    "href": "slides/10_summaries_and_visualization.html#범위와-사분위-범위를-확인한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "범위와 사분위 범위를 확인한다",
+    "text": "범위와 사분위 범위를 확인한다\nrange(cell_counts)\nquantile(cell_counts)\nIQR(cell_counts)\n\nrange()는 최솟값과 최댓값을 반환합니다.\nquantile()은 사분위수를 보여 줍니다.\nIQR()은 3사분위수와 1사분위수의 차이입니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#표준편차는-값이-퍼진-정도를-나타낸다",
+    "href": "slides/10_summaries_and_visualization.html#표준편차는-값이-퍼진-정도를-나타낸다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "표준편차는 값이 퍼진 정도를 나타낸다",
+    "text": "표준편차는 값이 퍼진 정도를 나타낸다\nsd(cell_counts)\n\n표준편차가 작으면 값들이 평균 주변에 모여 있습니다.\n표준편차가 크면 값들이 더 넓게 퍼져 있습니다.\n서로 다른 단위의 변수는 표준편차만으로 직접 비교하지 않습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#결측값이-있으면-먼저-확인한다",
+    "href": "slides/10_summaries_and_visualization.html#결측값이-있으면-먼저-확인한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "결측값이 있으면 먼저 확인한다",
+    "text": "결측값이 있으면 먼저 확인한다\ndoublet_rates &lt;- sample_metadata$doublet_rate\n\nis.na(doublet_rates)\nsum(is.na(doublet_rates))\nmean(doublet_rates)\n결측값이 포함되면 기본 평균 결과도 NA입니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#필요한-경우-결측값을-제외하고-요약한다",
+    "href": "slides/10_summaries_and_visualization.html#필요한-경우-결측값을-제외하고-요약한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "필요한 경우 결측값을 제외하고 요약한다",
+    "text": "필요한 경우 결측값을 제외하고 요약한다\nmean(doublet_rates, na.rm = TRUE)\nmedian(doublet_rates, na.rm = TRUE)\nna.rm = TRUE를 사용하기 전에 결측 원인과 제외 가능 여부를 판단해야 합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#범주별-개수를-table로-센다",
+    "href": "slides/10_summaries_and_visualization.html#범주별-개수를-table로-센다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "범주별 개수를 table()로 센다",
+    "text": "범주별 개수를 table()로 센다\ncondition_counts &lt;- table(sample_metadata$condition)\ncondition_counts\ntable()은 각 고유한 값이 몇 번 나타나는지 계산합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#두-범주를-함께-교차-집계한다",
+    "href": "slides/10_summaries_and_visualization.html#두-범주를-함께-교차-집계한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "두 범주를 함께 교차 집계한다",
+    "text": "두 범주를 함께 교차 집계한다\ntable(\n  sample_metadata$condition,\n  sample_metadata$passed_qc\n)\n행은 실험 조건, 열은 QC 통과 여부가 되어 조합별 개수를 보여 줍니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#비율로-바꾸어-볼-수-있다",
+    "href": "slides/10_summaries_and_visualization.html#비율로-바꾸어-볼-수-있다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "비율로 바꾸어 볼 수 있다",
+    "text": "비율로 바꾸어 볼 수 있다\ncondition_counts / sum(condition_counts)\nprop.table(condition_counts)\nprop.table()은 전체 합이 1이 되도록 개수를 비율로 변환합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그룹별-요약은-나누고-계산하는-과정이다",
+    "href": "slides/10_summaries_and_visualization.html#그룹별-요약은-나누고-계산하는-과정이다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그룹별 요약은 나누고 계산하는 과정이다",
+    "text": "그룹별 요약은 나누고 계산하는 과정이다\ncontrol 값들 ─→ 평균 계산\ntreated 값들 ─→ 평균 계산\n그룹 변수와 요약할 숫자형 변수가 필요합니다.\nsample_metadata$condition\nsample_metadata$cell_count"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#tapply로-그룹별-한-값을-계산한다",
+    "href": "slides/10_summaries_and_visualization.html#tapply로-그룹별-한-값을-계산한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "tapply()로 그룹별 한 값을 계산한다",
+    "text": "tapply()로 그룹별 한 값을 계산한다\nmean_cell_counts &lt;- tapply(\n  sample_metadata$cell_count,\n  sample_metadata$condition,\n  mean\n)\n\nmean_cell_counts\n\n첫 번째 인자: 요약할 값\n두 번째 인자: 그룹\n세 번째 인자: 적용할 함수"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#다른-요약-함수도-적용할-수-있다",
+    "href": "slides/10_summaries_and_visualization.html#다른-요약-함수도-적용할-수-있다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "다른 요약 함수도 적용할 수 있다",
+    "text": "다른 요약 함수도 적용할 수 있다\ntapply(\n  sample_metadata$cell_count,\n  sample_metadata$condition,\n  median\n)\n\ntapply(\n  sample_metadata$cell_count,\n  sample_metadata$condition,\n  sd\n)\n같은 그룹 기준에 여러 요약 함수를 적용해 비교할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#결측값이-있는-열을-그룹별로-요약한다",
+    "href": "slides/10_summaries_and_visualization.html#결측값이-있는-열을-그룹별로-요약한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "결측값이 있는 열을 그룹별로 요약한다",
+    "text": "결측값이 있는 열을 그룹별로 요약한다\ntapply(\n  sample_metadata$doublet_rate,\n  sample_metadata$condition,\n  mean,\n  na.rm = TRUE\n)\nna.rm = TRUE가 mean()으로 전달되어 그룹별 결측값을 제외합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#aggregate는-결과를-데이터-프레임으로-만든다",
+    "href": "slides/10_summaries_and_visualization.html#aggregate는-결과를-데이터-프레임으로-만든다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "aggregate()는 결과를 데이터 프레임으로 만든다",
+    "text": "aggregate()는 결과를 데이터 프레임으로 만든다\ncondition_summary &lt;- aggregate(\n  cell_count ~ condition,\n  data = sample_metadata,\n  FUN = mean\n)\n\ncondition_summary\n\ncell_count ~ condition은 조건별 세포 수를 뜻합니다.\n결과가 표 형태라 저장하거나 다른 열을 추가하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#여러-숫자형-열을-함께-요약한다",
+    "href": "slides/10_summaries_and_visualization.html#여러-숫자형-열을-함께-요약한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "여러 숫자형 열을 함께 요약한다",
+    "text": "여러 숫자형 열을 함께 요약한다\ncondition_summary &lt;- aggregate(\n  cbind(cell_count, median_genes, mito_percent) ~ condition,\n  data = sample_metadata,\n  FUN = mean\n)\n\ncondition_summary\ncbind()로 함께 요약할 숫자형 열을 묶습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그룹별-샘플-수를-요약표에-추가한다",
+    "href": "slides/10_summaries_and_visualization.html#그룹별-샘플-수를-요약표에-추가한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그룹별 샘플 수를 요약표에 추가한다",
+    "text": "그룹별 샘플 수를 요약표에 추가한다\ncondition_counts &lt;- table(sample_metadata$condition)\n\ncondition_summary$sample_count &lt;- as.integer(\n  condition_counts[condition_summary$condition]\n)\n\ncondition_summary\n같은 조건 이름을 이용해 개수를 올바른 행에 연결합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#표시할-자릿수를-정리한다",
+    "href": "slides/10_summaries_and_visualization.html#표시할-자릿수를-정리한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "표시할 자릿수를 정리한다",
+    "text": "표시할 자릿수를 정리한다\ncondition_summary$cell_count &lt;-\n  round(condition_summary$cell_count, digits = 1)\n\ncondition_summary$mito_percent &lt;-\n  round(condition_summary$mito_percent, digits = 2)\n\nround()는 표시할 소수점 자릿수를 정리합니다.\n원본 측정값을 바꾸기보다 요약 결과의 표시를 정리합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프는-질문에-맞게-선택한다",
+    "href": "slides/10_summaries_and_visualization.html#그래프는-질문에-맞게-선택한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프는 질문에 맞게 선택한다",
+    "text": "그래프는 질문에 맞게 선택한다\n\n\n\n질문\n그래프\n\n\n\n\n범주별 개수는 몇 개인가?\n막대그래프\n\n\n숫자형 값은 어떻게 분포하는가?\n히스토그램\n\n\n그룹별 분포가 어떻게 다른가?\n상자그림\n\n\n두 숫자형 변수는 어떤 관계인가?\n산점도\n\n\n\n한 그래프에 모든 정보를 넣기보다 질문 하나에 집중합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#막대그래프로-범주별-개수를-비교한다",
+    "href": "slides/10_summaries_and_visualization.html#막대그래프로-범주별-개수를-비교한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "막대그래프로 범주별 개수를 비교한다",
+    "text": "막대그래프로 범주별 개수를 비교한다\ncondition_counts &lt;- table(sample_metadata$condition)\n\nbarplot(condition_counts)\n\n막대의 높이는 각 범주의 개수입니다.\n범주형 자료의 빈도를 비교할 때 사용합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#막대그래프에-설명을-추가한다",
+    "href": "slides/10_summaries_and_visualization.html#막대그래프에-설명을-추가한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "막대그래프에 설명을 추가한다",
+    "text": "막대그래프에 설명을 추가한다\nbarplot(\n  condition_counts,\n  main = \"실험 조건별 샘플 수\",\n  xlab = \"실험 조건\",\n  ylab = \"샘플 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n\nmain: 그래프 제목\nxlab, ylab: 축 이름\ncol: 막대 색상"
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그룹별-평균도-막대그래프로-표현할-수-있다",
+    "href": "slides/10_summaries_and_visualization.html#그룹별-평균도-막대그래프로-표현할-수-있다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그룹별 평균도 막대그래프로 표현할 수 있다",
+    "text": "그룹별 평균도 막대그래프로 표현할 수 있다\nbarplot(\n  mean_cell_counts,\n  main = \"조건별 평균 세포 수\",\n  xlab = \"실험 조건\",\n  ylab = \"평균 세포 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n평균 막대만으로는 각 값의 분포가 보이지 않는다는 한계가 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#히스토그램은-숫자형-값의-분포를-보여-준다",
+    "href": "slides/10_summaries_and_visualization.html#히스토그램은-숫자형-값의-분포를-보여-준다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "히스토그램은 숫자형 값의 분포를 보여 준다",
+    "text": "히스토그램은 숫자형 값의 분포를 보여 준다\nhist(sample_metadata$cell_count)\n\nx축은 값의 구간입니다.\ny축은 각 구간에 속한 관측값의 개수입니다.\n샘플 수가 적으면 분포 해석에 주의합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#히스토그램에-설명을-추가한다",
+    "href": "slides/10_summaries_and_visualization.html#히스토그램에-설명을-추가한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "히스토그램에 설명을 추가한다",
+    "text": "히스토그램에 설명을 추가한다\nhist(\n  sample_metadata$cell_count,\n  breaks = 4,\n  main = \"샘플별 세포 수 분포\",\n  xlab = \"세포 수\",\n  ylab = \"빈도\",\n  col = \"#70AD47\",\n  border = \"white\"\n)\nbreaks는 값을 나눌 구간 수에 영향을 줍니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#상자그림은-그룹별-분포를-비교한다",
+    "href": "slides/10_summaries_and_visualization.html#상자그림은-그룹별-분포를-비교한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "상자그림은 그룹별 분포를 비교한다",
+    "text": "상자그림은 그룹별 분포를 비교한다\nboxplot(\n  cell_count ~ condition,\n  data = sample_metadata\n)\n\n상자 안의 굵은 선은 중앙값입니다.\n상자는 가운데 50%의 값이 있는 범위를 나타냅니다.\n그룹별 값의 중심과 퍼짐을 비교할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#상자그림에-설명을-추가한다",
+    "href": "slides/10_summaries_and_visualization.html#상자그림에-설명을-추가한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "상자그림에 설명을 추가한다",
+    "text": "상자그림에 설명을 추가한다\nboxplot(\n  cell_count ~ condition,\n  data = sample_metadata,\n  main = \"실험 조건별 세포 수\",\n  xlab = \"실험 조건\",\n  ylab = \"세포 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n표본 수가 매우 적을 때는 상자 모양만으로 차이를 단정하지 않습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#산점도는-두-숫자형-변수의-관계를-보여-준다",
+    "href": "slides/10_summaries_and_visualization.html#산점도는-두-숫자형-변수의-관계를-보여-준다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "산점도는 두 숫자형 변수의 관계를 보여 준다",
+    "text": "산점도는 두 숫자형 변수의 관계를 보여 준다\nplot(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes\n)\n각 점은 샘플 하나를 나타냅니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#산점도에-설명과-점-모양을-추가한다",
+    "href": "slides/10_summaries_and_visualization.html#산점도에-설명과-점-모양을-추가한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "산점도에 설명과 점 모양을 추가한다",
+    "text": "산점도에 설명과 점 모양을 추가한다\nplot(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes,\n  main = \"세포 수와 검출 유전자 수의 관계\",\n  xlab = \"세포 수\",\n  ylab = \"검출 유전자 수 중앙값\",\n  pch = 19,\n  col = \"#4472C4\"\n)\n\npch = 19는 채워진 원을 사용합니다.\n산점도에서 x축과 y축에 어떤 변수를 놓았는지 명확히 표시합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#조건에-따라-점-색상을-지정할-수-있다",
+    "href": "slides/10_summaries_and_visualization.html#조건에-따라-점-색상을-지정할-수-있다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "조건에 따라 점 색상을 지정할 수 있다",
+    "text": "조건에 따라 점 색상을 지정할 수 있다\npoint_colors &lt;- ifelse(\n  sample_metadata$condition == \"control\",\n  \"#4472C4\",\n  \"#ED7D31\"\n)\n\nplot(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes,\n  pch = 19,\n  col = point_colors,\n  xlab = \"세포 수\",\n  ylab = \"검출 유전자 수 중앙값\"\n)\n색상은 데이터와 같은 길이의 벡터로 지정할 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#범례로-색상의-의미를-설명한다",
+    "href": "slides/10_summaries_and_visualization.html#범례로-색상의-의미를-설명한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "범례로 색상의 의미를 설명한다",
+    "text": "범례로 색상의 의미를 설명한다\nlegend(\n  \"bottomright\",\n  legend = c(\"control\", \"treated\"),\n  col = c(\"#4472C4\", \"#ED7D31\"),\n  pch = 19\n)\n색상이나 모양으로 그룹을 구분했다면 범례를 함께 제공합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프-제목은-내용을-구체적으로-적는다",
+    "href": "slides/10_summaries_and_visualization.html#그래프-제목은-내용을-구체적으로-적는다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프 제목은 내용을 구체적으로 적는다",
+    "text": "그래프 제목은 내용을 구체적으로 적는다\n피해야 할 제목:\n결과 그래프\n권장 제목:\n실험 조건별 세포 수\n세포 수와 검출 유전자 수의 관계\n제목만 읽어도 무엇을 보여 주는지 알 수 있게 작성합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#축-이름에는-변수와-단위를-적는다",
+    "href": "slides/10_summaries_and_visualization.html#축-이름에는-변수와-단위를-적는다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "축 이름에는 변수와 단위를 적는다",
+    "text": "축 이름에는 변수와 단위를 적는다\nxlab = \"미토콘드리아 유전자 비율 (%)\"\nylab = \"세포 수\"\n\n열 이름을 그대로 복사하기보다 사람이 이해할 표현을 사용합니다.\n단위가 있으면 괄호 안에 표시합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프를-해석할-때-주의한다",
+    "href": "slides/10_summaries_and_visualization.html#그래프를-해석할-때-주의한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프를 해석할 때 주의한다",
+    "text": "그래프를 해석할 때 주의한다\n\n그래프에서 보이는 차이가 항상 중요한 생물학적 차이는 아닙니다.\n샘플 수가 적으면 우연한 패턴일 수 있습니다.\n상관관계가 원인과 결과를 의미하지는 않습니다.\n축 범위와 결측값 처리 방법도 함께 확인합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#요약표를-csv-파일로-저장한다",
+    "href": "slides/10_summaries_and_visualization.html#요약표를-csv-파일로-저장한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "요약표를 CSV 파일로 저장한다",
+    "text": "요약표를 CSV 파일로 저장한다\ndir.create(\"results\", showWarnings = FALSE)\n\nwrite.csv(\n  condition_summary,\n  \"results/condition_summary.csv\",\n  row.names = FALSE\n)\n저장한 파일을 다시 불러와 행, 열, 값을 확인합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#png로-그래프-저장을-시작한다",
+    "href": "slides/10_summaries_and_visualization.html#png로-그래프-저장을-시작한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "png()로 그래프 저장을 시작한다",
+    "text": "png()로 그래프 저장을 시작한다\npng(\n  \"results/cell_count_by_condition.png\",\n  width = 900,\n  height = 600,\n  res = 120\n)\n\n이후에 그리는 그래프가 PNG 파일로 전달됩니다.\n너비와 높이는 픽셀 단위입니다.\nres는 해상도를 지정합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#그래프를-그리고-dev.off로-저장을-마친다",
+    "href": "slides/10_summaries_and_visualization.html#그래프를-그리고-dev.off로-저장을-마친다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "그래프를 그리고 dev.off()로 저장을 마친다",
+    "text": "그래프를 그리고 dev.off()로 저장을 마친다\nboxplot(\n  cell_count ~ condition,\n  data = sample_metadata,\n  main = \"실험 조건별 세포 수\",\n  xlab = \"실험 조건\",\n  ylab = \"세포 수\",\n  col = c(\"#4472C4\", \"#ED7D31\")\n)\n\ndev.off()\ndev.off()를 실행해야 그래프 파일 저장이 완료됩니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#저장된-결과-파일을-확인한다",
+    "href": "slides/10_summaries_and_visualization.html#저장된-결과-파일을-확인한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "저장된 결과 파일을 확인한다",
+    "text": "저장된 결과 파일을 확인한다\nfile.exists(\"results/condition_summary.csv\")\nfile.exists(\"results/cell_count_by_condition.png\")\nRStudio의 Files 창에서도 결과 파일을 열어 표와 그래프를 직접 확인합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#흔한-오류-1-숫자형-변수를-막대그래프로만-표현한다",
+    "href": "slides/10_summaries_and_visualization.html#흔한-오류-1-숫자형-변수를-막대그래프로만-표현한다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "흔한 오류 1: 숫자형 변수를 막대그래프로만 표현한다",
+    "text": "흔한 오류 1: 숫자형 변수를 막대그래프로만 표현한다\n\n샘플별 숫자형 값의 분포를 보려면 히스토그램을 고려합니다.\n그룹별 분포를 비교하려면 상자그림을 고려합니다.\n그룹 평균 막대그래프는 원래 값의 퍼짐을 숨길 수 있습니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#흔한-오류-2-축-이름이-없다",
+    "href": "slides/10_summaries_and_visualization.html#흔한-오류-2-축-이름이-없다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "흔한 오류 2: 축 이름이 없다",
+    "text": "흔한 오류 2: 축 이름이 없다\nplot(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes,\n  xlab = \"세포 수\",\n  ylab = \"검출 유전자 수 중앙값\"\n)\n그래프만 따로 보아도 변수의 의미를 알 수 있게 작성합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#흔한-오류-3-dev.off를-실행하지-않는다",
+    "href": "slides/10_summaries_and_visualization.html#흔한-오류-3-dev.off를-실행하지-않는다",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "흔한 오류 3: dev.off()를 실행하지 않는다",
+    "text": "흔한 오류 3: dev.off()를 실행하지 않는다\npng(\"results/example.png\")\nplot(sample_metadata$cell_count)\ndev.off()\n파일 저장 코드는 png() → 그래프 함수 → dev.off() 순서로 작성합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-1-전체와-그룹별-요약하기",
+    "href": "slides/10_summaries_and_visualization.html#실습-1-전체와-그룹별-요약하기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 1: 전체와 그룹별 요약하기",
+    "text": "실습 1: 전체와 그룹별 요약하기\nsummary(sample_metadata)\ntable(sample_metadata$condition)\n\ntapply(\n  sample_metadata$cell_count,\n  sample_metadata$condition,\n  mean\n)\n조건별 평균과 중앙값을 비교합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-2-그룹별-요약표-만들기",
+    "href": "slides/10_summaries_and_visualization.html#실습-2-그룹별-요약표-만들기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 2: 그룹별 요약표 만들기",
+    "text": "실습 2: 그룹별 요약표 만들기\ncondition_summary &lt;- aggregate(\n  cbind(cell_count, median_genes, mito_percent) ~ condition,\n  data = sample_metadata,\n  FUN = mean\n)\n\ncondition_summary\n샘플 수를 추가하고 소수점 자릿수를 정리합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-3-질문별-그래프-작성하기",
+    "href": "slides/10_summaries_and_visualization.html#실습-3-질문별-그래프-작성하기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 3: 질문별 그래프 작성하기",
+    "text": "실습 3: 질문별 그래프 작성하기\nbarplot(table(sample_metadata$condition))\nhist(sample_metadata$cell_count)\nboxplot(cell_count ~ condition, data = sample_metadata)\nplot(sample_metadata$cell_count, sample_metadata$median_genes)\n각 그래프가 어떤 질문에 답하는지 설명합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#실습-4-결과-저장하기",
+    "href": "slides/10_summaries_and_visualization.html#실습-4-결과-저장하기",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "실습 4: 결과 저장하기",
+    "text": "실습 4: 결과 저장하기\nwrite.csv(\n  condition_summary,\n  \"results/condition_summary.csv\",\n  row.names = FALSE\n)\n\npng(\"results/cell_count_by_condition.png\")\nboxplot(cell_count ~ condition, data = sample_metadata)\ndev.off()\n저장한 표와 그래프 파일을 직접 열어 확인합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#오늘-배운-내용",
+    "href": "slides/10_summaries_and_visualization.html#오늘-배운-내용",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n전체 요약과 그룹별 요약은 서로 다른 질문에 답합니다.\ntable(), tapply(), aggregate()로 그룹 정보를 요약할 수 있습니다.\n질문과 자료형에 맞춰 막대그래프, 히스토그램, 상자그림, 산점도를 선택합니다.\n제목, 축 이름, 범례로 그래프의 의미를 설명합니다.\n요약표는 write.csv(), 그래프는 png()와 dev.off()로 저장합니다."
+  },
+  {
+    "objectID": "slides/10_summaries_and_visualization.html#종료-점검과-다음-차시",
+    "href": "slides/10_summaries_and_visualization.html#종료-점검과-다음-차시",
+    "title": "10차시: 데이터 요약과 시각화",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\ntapply()의 세 가지 주요 인자는 무엇입니까?\n그룹별 숫자형 분포를 비교하려면 어떤 그래프가 적합합니까?\n두 숫자형 변수의 관계는 어떤 그래프로 확인합니까?\nPNG 그래프 저장을 마칠 때 어떤 함수를 실행합니까?\n\n다음 차시: 패키지를 사용하고 리스트와 복잡한 R 객체의 구조 살펴보기"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#오늘의-학습-목표",
+    "href": "slides/08_loops_and_vectorization.html#오늘의-학습-목표",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\nfor 반복문의 구성과 실행 흐름을 설명할 수 있다.\n여러 값에 같은 작업을 반복하고 결과를 저장할 수 있다.\n벡터화 연산으로 반복문을 간단하게 바꿀 수 있다.\n작업의 목적에 따라 반복문과 벡터화 연산을 선택할 수 있다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#선수-지식",
+    "href": "slides/08_loops_and_vectorization.html#선수-지식",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n벡터와 데이터 프레임의 원소를 선택할 수 있습니다.\n조건식과 if ... else를 작성할 수 있습니다.\n숫자형·문자형·논리형 벡터를 만들 수 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#같은-코드를-여러-번-작성하면-불편하다",
+    "href": "slides/08_loops_and_vectorization.html#같은-코드를-여러-번-작성하면-불편하다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "같은 코드를 여러 번 작성하면 불편하다",
+    "text": "같은 코드를 여러 번 작성하면 불편하다\nprint(1200 / 1000)\nprint(1350 / 1000)\nprint(980 / 1000)\n\n값이 많아지면 코드가 길어집니다.\n계산 방법을 바꾸려면 모든 줄을 수정해야 합니다.\n반복문은 같은 작업을 여러 값에 순서대로 적용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#for-반복문의-기본-구조",
+    "href": "slides/08_loops_and_vectorization.html#for-반복문의-기본-구조",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "for 반복문의 기본 구조",
+    "text": "for 반복문의 기본 구조\nfor (value in values) {\n  # value를 사용하는 코드\n}\n\nvalues: 순서대로 처리할 값들\nvalue: 현재 처리 중인 값\n{ }: 매번 반복해서 실행할 코드"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#가장-간단한-반복문",
+    "href": "slides/08_loops_and_vectorization.html#가장-간단한-반복문",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "가장 간단한 반복문",
+    "text": "가장 간단한 반복문\ncell_counts &lt;- c(1200, 1350, 980)\n\nfor (cell_count in cell_counts) {\n  print(cell_count)\n}\n벡터의 첫 번째 원소부터 마지막 원소까지 하나씩 꺼내 실행합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문의-실행-흐름",
+    "href": "slides/08_loops_and_vectorization.html#반복문의-실행-흐름",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문의 실행 흐름",
+    "text": "반복문의 실행 흐름\ncell_count &lt;- 1200  →  print(1200)\ncell_count &lt;- 1350  →  print(1350)\ncell_count &lt;- 980   →  print(980)\n반복 종료\n한 번의 실행이 끝나면 다음 원소로 이동합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복-변수의-이름은-의미-있게-작성한다",
+    "href": "slides/08_loops_and_vectorization.html#반복-변수의-이름은-의미-있게-작성한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복 변수의 이름은 의미 있게 작성한다",
+    "text": "반복 변수의 이름은 의미 있게 작성한다\nsample_names &lt;- c(\"control_1\", \"control_2\", \"treated_1\")\n\nfor (sample_name in sample_names) {\n  print(sample_name)\n}\ni처럼 짧은 이름보다 현재 값의 의미가 드러나는 이름이 입문자에게 이해하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문-안에서-계산할-수-있다",
+    "href": "slides/08_loops_and_vectorization.html#반복문-안에서-계산할-수-있다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문 안에서 계산할 수 있다",
+    "text": "반복문 안에서 계산할 수 있다\ncell_counts &lt;- c(1200, 1350, 980)\n\nfor (cell_count in cell_counts) {\n  cell_count_k &lt;- cell_count / 1000\n  print(cell_count_k)\n}\n각 원소에 같은 계산이 순서대로 적용됩니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#출력과-저장은-다르다",
+    "href": "slides/08_loops_and_vectorization.html#출력과-저장은-다르다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "출력과 저장은 다르다",
+    "text": "출력과 저장은 다르다\nfor (cell_count in cell_counts) {\n  cell_count_k &lt;- cell_count / 1000\n  print(cell_count_k)\n}\n\ncell_count_k\n\nprint()는 실행 중 값을 화면에 보여 줍니다.\n반복이 끝난 뒤 cell_count_k에는 마지막 계산 결과만 남습니다.\n모든 결과가 필요하면 결과 벡터를 준비해야 합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#결과-벡터를-미리-만든다",
+    "href": "slides/08_loops_and_vectorization.html#결과-벡터를-미리-만든다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "결과 벡터를 미리 만든다",
+    "text": "결과 벡터를 미리 만든다\ncell_count_k &lt;- numeric(length(cell_counts))\ncell_count_k\n\nnumeric(n)은 길이 n인 숫자형 벡터를 만듭니다.\n처음에는 모든 값이 0입니다.\n필요한 크기를 먼저 만드는 것을 사전 할당이라고 합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#위치-번호를-반복한다",
+    "href": "slides/08_loops_and_vectorization.html#위치-번호를-반복한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "위치 번호를 반복한다",
+    "text": "위치 번호를 반복한다\nseq_along(cell_counts)\nseq_along()은 벡터 길이에 맞는 안전한 위치 번호를 만듭니다.\nfor (index in seq_along(cell_counts)) {\n  print(index)\n}"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#각-위치에-결과를-저장한다",
+    "href": "slides/08_loops_and_vectorization.html#각-위치에-결과를-저장한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "각 위치에 결과를 저장한다",
+    "text": "각 위치에 결과를 저장한다\ncell_count_k &lt;- numeric(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  cell_count_k[index] &lt;- cell_counts[index] / 1000\n}\n\ncell_count_k\n현재 입력 위치와 같은 결과 위치에 값을 저장합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#왜-1lengthx보다-seq_alongx를-사용하는가",
+    "href": "slides/08_loops_and_vectorization.html#왜-1lengthx보다-seq_alongx를-사용하는가",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "왜 1:length(x)보다 seq_along(x)를 사용하는가",
+    "text": "왜 1:length(x)보다 seq_along(x)를 사용하는가\ncell_counts &lt;- numeric(0)\n\n1:length(cell_counts)\nseq_along(cell_counts)\n\n빈 벡터에서 1:length(x)는 의도하지 않은 1, 0을 만듭니다.\nseq_along(x)은 빈 벡터에 대해 빈 위치 벡터를 만듭니다.\n위치 반복에는 seq_along()을 기본으로 사용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#자료형에-맞는-결과-벡터를-준비한다",
+    "href": "slides/08_loops_and_vectorization.html#자료형에-맞는-결과-벡터를-준비한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "자료형에 맞는 결과 벡터를 준비한다",
+    "text": "자료형에 맞는 결과 벡터를 준비한다\nnumeric_result &lt;- numeric(3)\ncharacter_result &lt;- character(3)\nlogical_result &lt;- logical(3)\n\n\n\n함수\n초기값\n용도\n\n\n\n\nnumeric()\n0\n숫자형 결과\n\n\ncharacter()\n\"\"\n문자형 결과\n\n\nlogical()\nFALSE\n논리형 결과"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문-안에서-조건을-사용할-수-있다",
+    "href": "slides/08_loops_and_vectorization.html#반복문-안에서-조건을-사용할-수-있다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문 안에서 조건을 사용할 수 있다",
+    "text": "반복문 안에서 조건을 사용할 수 있다\ncell_counts &lt;- c(1200, 1350, 980)\nqc_labels &lt;- character(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  if (cell_counts[index] &gt;= 1200) {\n    qc_labels[index] &lt;- \"pass\"\n  } else {\n    qc_labels[index] &lt;- \"review\"\n  }\n}\n\nqc_labels"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#두-벡터의-같은-위치를-함께-사용한다",
+    "href": "slides/08_loops_and_vectorization.html#두-벡터의-같은-위치를-함께-사용한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "두 벡터의 같은 위치를 함께 사용한다",
+    "text": "두 벡터의 같은 위치를 함께 사용한다\ncell_counts &lt;- c(1200, 1350, 980)\nmito_percent &lt;- c(4.2, 5.1, 9.4)\npassed_qc &lt;- logical(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  passed_qc[index] &lt;-\n    cell_counts[index] &gt;= 1200 &&\n    mito_percent[index] &lt; 8\n}\n\npassed_qc\n한 번에 확인하는 값은 각각 길이 1이므로 &&를 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문으로-데이터-프레임의-행을-처리한다",
+    "href": "slides/08_loops_and_vectorization.html#반복문으로-데이터-프레임의-행을-처리한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문으로 데이터 프레임의 행을 처리한다",
+    "text": "반복문으로 데이터 프레임의 행을 처리한다\nsample_metadata &lt;- read.csv(\"data/sample_metadata.csv\")\nmetadata_qc_labels &lt;- character(nrow(sample_metadata))\n\nfor (row_index in seq_len(nrow(sample_metadata))) {\n  if (sample_metadata$passed_qc[row_index]) {\n    metadata_qc_labels[row_index] &lt;- \"pass\"\n  } else {\n    metadata_qc_labels[row_index] &lt;- \"review\"\n  }\n}\n\nmetadata_qc_labels"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#seq_len은-원하는-길이의-위치를-만든다",
+    "href": "slides/08_loops_and_vectorization.html#seq_len은-원하는-길이의-위치를-만든다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "seq_len()은 원하는 길이의 위치를 만든다",
+    "text": "seq_len()은 원하는 길이의 위치를 만든다\nseq_len(4)\nseq_len(nrow(sample_metadata))\n\nseq_along(x)은 객체의 원소 위치를 반복할 때 사용합니다.\nseq_len(n)은 행 수처럼 길이가 숫자로 주어질 때 사용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#결과를-데이터-프레임에-추가한다",
+    "href": "slides/08_loops_and_vectorization.html#결과를-데이터-프레임에-추가한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "결과를 데이터 프레임에 추가한다",
+    "text": "결과를 데이터 프레임에 추가한다\nsample_metadata$qc_label_loop &lt;- metadata_qc_labels\nhead(sample_metadata)\n결과 벡터의 길이는 데이터 프레임의 행 수와 같아야 합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#실행-과정을-확인하며-오류를-찾는다",
+    "href": "slides/08_loops_and_vectorization.html#실행-과정을-확인하며-오류를-찾는다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "실행 과정을 확인하며 오류를 찾는다",
+    "text": "실행 과정을 확인하며 오류를 찾는다\nfor (index in seq_along(cell_counts)) {\n  print(index)\n  print(cell_counts[index])\n}\n\n현재 위치와 값을 출력하면 반복 흐름을 확인할 수 있습니다.\n확인이 끝나면 불필요한 print()는 제거합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#흔한-오류-1-결과를-저장하지-않는다",
+    "href": "slides/08_loops_and_vectorization.html#흔한-오류-1-결과를-저장하지-않는다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "흔한 오류 1: 결과를 저장하지 않는다",
+    "text": "흔한 오류 1: 결과를 저장하지 않는다\n# 마지막 결과만 남는 코드\nfor (cell_count in cell_counts) {\n  result &lt;- cell_count / 1000\n}\n\nresult\n모든 결과가 필요하면 결과 벡터와 위치 번호를 사용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#흔한-오류-2-결과-위치를-빠뜨린다",
+    "href": "slides/08_loops_and_vectorization.html#흔한-오류-2-결과-위치를-빠뜨린다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "흔한 오류 2: 결과 위치를 빠뜨린다",
+    "text": "흔한 오류 2: 결과 위치를 빠뜨린다\nresult &lt;- numeric(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  result[index] &lt;- cell_counts[index] / 1000\n}\n왼쪽의 result[index]가 현재 결과를 저장할 위치입니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#흔한-오류-3-입력과-결과-길이가-다르다",
+    "href": "slides/08_loops_and_vectorization.html#흔한-오류-3-입력과-결과-길이가-다르다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "흔한 오류 3: 입력과 결과 길이가 다르다",
+    "text": "흔한 오류 3: 입력과 결과 길이가 다르다\nlength(cell_counts)\nlength(result)\n\n반복 전후에 길이를 비교합니다.\n데이터 프레임에 열로 추가할 때는 특히 길이가 같아야 합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#벡터화-연산은-반복을-내부에서-처리한다",
+    "href": "slides/08_loops_and_vectorization.html#벡터화-연산은-반복을-내부에서-처리한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "벡터화 연산은 반복을 내부에서 처리한다",
+    "text": "벡터화 연산은 반복을 내부에서 처리한다\ncell_counts &lt;- c(1200, 1350, 980)\ncell_count_k &lt;- cell_counts / 1000\ncell_count_k\nR은 벡터의 모든 원소에 나눗셈을 적용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#산술-반복문을-벡터화한다",
+    "href": "slides/08_loops_and_vectorization.html#산술-반복문을-벡터화한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "산술 반복문을 벡터화한다",
+    "text": "산술 반복문을 벡터화한다\n반복문:\nfor (index in seq_along(cell_counts)) {\n  result[index] &lt;- cell_counts[index] / 1000\n}\n벡터화 연산:\nresult_vectorized &lt;- cell_counts / 1000"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#비교-연산도-벡터화되어-있다",
+    "href": "slides/08_loops_and_vectorization.html#비교-연산도-벡터화되어-있다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "비교 연산도 벡터화되어 있다",
+    "text": "비교 연산도 벡터화되어 있다\ncell_counts &gt;= 1200\nmito_percent &lt; 8\n\npassed_qc_vectorized &lt;-\n  cell_counts &gt;= 1200 & mito_percent &lt; 8\n\npassed_qc_vectorized\n각 원소에 같은 비교가 적용됩니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#원소별-분기는-ifelse로-벡터화한다",
+    "href": "slides/08_loops_and_vectorization.html#원소별-분기는-ifelse로-벡터화한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "원소별 분기는 ifelse()로 벡터화한다",
+    "text": "원소별 분기는 ifelse()로 벡터화한다\nqc_labels_vectorized &lt;- ifelse(\n  passed_qc_vectorized,\n  \"pass\",\n  \"review\"\n)\n\nqc_labels_vectorized\n반복문 안의 if ... else를 간단하게 표현할 수 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#요약-함수도-반복을-대신한다",
+    "href": "slides/08_loops_and_vectorization.html#요약-함수도-반복을-대신한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "요약 함수도 반복을 대신한다",
+    "text": "요약 함수도 반복을 대신한다\ncell_counts &lt;- c(1200, 1350, 980)\n\nsum(cell_counts)\nmean(cell_counts)\nmax(cell_counts)\n합계나 평균을 직접 반복하여 계산하기보다 준비된 요약 함수를 사용합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문과-벡터화-결과를-비교한다",
+    "href": "slides/08_loops_and_vectorization.html#반복문과-벡터화-결과를-비교한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문과 벡터화 결과를 비교한다",
+    "text": "반복문과 벡터화 결과를 비교한다\nidentical(result, result_vectorized)\nidentical(qc_labels, qc_labels_vectorized)\n코드를 바꾼 뒤 결과가 같은지 확인하면 실수를 줄일 수 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#벡터화-연산을-우선-고려한다",
+    "href": "slides/08_loops_and_vectorization.html#벡터화-연산을-우선-고려한다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "벡터화 연산을 우선 고려한다",
+    "text": "벡터화 연산을 우선 고려한다\n벡터화 연산이 적합한 경우:\n\n모든 원소에 같은 산술 계산을 적용할 때\n각 원소를 같은 기준과 비교할 때\nsum(), mean()처럼 목적에 맞는 함수가 있을 때\n\n코드가 짧고 계산 의도가 잘 드러납니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#반복문이-더-자연스러운-경우도-있다",
+    "href": "slides/08_loops_and_vectorization.html#반복문이-더-자연스러운-경우도-있다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "반복문이 더 자연스러운 경우도 있다",
+    "text": "반복문이 더 자연스러운 경우도 있다\n반복문이 적합한 경우:\n\n각 단계에서 여러 줄의 작업을 순서대로 수행할 때\n현재 결과에 따라 실행할 작업이 달라질 때\n반복 과정을 출력하며 확인해야 할 때\n간단한 벡터화 표현이 없는 작업일 때"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#짧은-코드보다-이해하기-쉬운-코드가-우선이다",
+    "href": "slides/08_loops_and_vectorization.html#짧은-코드보다-이해하기-쉬운-코드가-우선이다",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "짧은 코드보다 이해하기 쉬운 코드가 우선이다",
+    "text": "짧은 코드보다 이해하기 쉬운 코드가 우선이다\nqc_condition &lt;-\n  sample_metadata$cell_count &gt;= 1200 &\n  sample_metadata$median_genes &gt;= 2000 &\n  sample_metadata$mito_percent &lt; 8\n\n벡터화한다고 해서 한 줄에 모든 내용을 넣을 필요는 없습니다.\n계산 단계를 의미 있는 변수에 나누어 저장할 수 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#실습-1-값과-위치-반복하기",
+    "href": "slides/08_loops_and_vectorization.html#실습-1-값과-위치-반복하기",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "실습 1: 값과 위치 반복하기",
+    "text": "실습 1: 값과 위치 반복하기\ncell_counts &lt;- c(1240, 1385, 1090, 1520)\n\nfor (cell_count in cell_counts) {\n  print(cell_count)\n}\n\nfor (index in seq_along(cell_counts)) {\n  print(cell_counts[index])\n}\n두 반복문의 결과와 반복 변수의 의미를 비교합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#실습-2-반복-결과-저장하기",
+    "href": "slides/08_loops_and_vectorization.html#실습-2-반복-결과-저장하기",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "실습 2: 반복 결과 저장하기",
+    "text": "실습 2: 반복 결과 저장하기\ncell_count_k &lt;- numeric(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  cell_count_k[index] &lt;- cell_counts[index] / 1000\n}\n\ncell_count_k\n결과 벡터의 길이와 값을 확인합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#실습-3-조건별-결과-만들기",
+    "href": "slides/08_loops_and_vectorization.html#실습-3-조건별-결과-만들기",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "실습 3: 조건별 결과 만들기",
+    "text": "실습 3: 조건별 결과 만들기\nqc_labels &lt;- character(length(cell_counts))\n\nfor (index in seq_along(cell_counts)) {\n  if (cell_counts[index] &gt;= 1200) {\n    qc_labels[index] &lt;- \"pass\"\n  } else {\n    qc_labels[index] &lt;- \"review\"\n  }\n}\n각 위치에 올바른 레이블이 저장됐는지 확인합니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#실습-4-벡터화하고-결과-비교하기",
+    "href": "slides/08_loops_and_vectorization.html#실습-4-벡터화하고-결과-비교하기",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "실습 4: 벡터화하고 결과 비교하기",
+    "text": "실습 4: 벡터화하고 결과 비교하기\ncell_count_k_vectorized &lt;- cell_counts / 1000\nqc_labels_vectorized &lt;- ifelse(\n  cell_counts &gt;= 1200,\n  \"pass\",\n  \"review\"\n)\n\nidentical(cell_count_k, cell_count_k_vectorized)\nidentical(qc_labels, qc_labels_vectorized)"
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#오늘-배운-내용",
+    "href": "slides/08_loops_and_vectorization.html#오늘-배운-내용",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\nfor는 여러 값을 하나씩 꺼내 같은 코드 블록을 실행합니다.\n모든 결과를 보존하려면 결과 벡터를 사전 할당하고 위치별로 저장합니다.\n위치 반복에는 seq_along() 또는 seq_len()을 사용합니다.\n산술·비교·요약은 벡터화 연산과 기존 함수를 우선 고려합니다.\n코드 목적과 실행 과정에 따라 반복문이 더 이해하기 쉬울 수도 있습니다."
+  },
+  {
+    "objectID": "slides/08_loops_and_vectorization.html#종료-점검과-다음-차시",
+    "href": "slides/08_loops_and_vectorization.html#종료-점검과-다음-차시",
+    "title": "8차시: 반복 처리와 벡터화 연산",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n반복문이 끝난 뒤 마지막 결과만 남는 이유는 무엇입니까?\n사전 할당은 무엇이며 왜 사용합니까?\n위치 반복에 seq_along()을 사용하는 이유는 무엇입니까?\n어떤 작업에서 벡터화 연산을 우선 고려합니까?\n\n다음 차시: 반복되는 코드를 하나의 함수로 만들고 재사용하기"
+  },
+  {
+    "objectID": "slides/06_data_io.html#오늘의-학습-목표",
+    "href": "slides/06_data_io.html#오늘의-학습-목표",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\nCSV 파일을 데이터 프레임으로 불러올 수 있다.\n불러온 데이터의 구조와 이상 여부를 확인할 수 있다.\n프로젝트 루트 기준의 상대 경로를 사용할 수 있다.\n분석 결과를 CSV 파일로 저장하고 다시 확인할 수 있다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#선수-지식",
+    "href": "slides/06_data_io.html#선수-지식",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n데이터 프레임의 행과 열을 설명할 수 있습니다.\nstr(), dim(), names()로 데이터 구조를 확인할 수 있습니다.\n$와 [행, 열]로 값을 선택하고 열을 추가할 수 있습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#실제-분석-데이터는-파일에서-시작한다",
+    "href": "slides/06_data_io.html#실제-분석-데이터는-파일에서-시작한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "실제 분석 데이터는 파일에서 시작한다",
+    "text": "실제 분석 데이터는 파일에서 시작한다\n전사체 분석에서는 다음과 같은 파일을 자주 사용합니다.\n\n샘플 이름과 실험 조건을 기록한 메타데이터\n유전자별 발현량을 저장한 행렬\n품질 관리 결과를 저장한 표\n\n이 차시에서는 표 형태의 데이터를 저장하는 CSV 파일을 사용합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#csv는-쉼표로-값을-구분하는-텍스트-파일이다",
+    "href": "slides/06_data_io.html#csv는-쉼표로-값을-구분하는-텍스트-파일이다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "CSV는 쉼표로 값을 구분하는 텍스트 파일이다",
+    "text": "CSV는 쉼표로 값을 구분하는 텍스트 파일이다\nsample_id,condition,cell_count,passed_qc\ncontrol_1,control,1200,TRUE\ncontrol_2,control,1350,TRUE\ntreated_1,treated,980,FALSE\n\n첫 줄은 열 이름입니다.\n이후 각 줄은 데이터 프레임의 한 행이 됩니다.\n일반 텍스트이므로 여러 프로그램에서 열 수 있습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#이번-실습의-프로젝트-구조",
+    "href": "slides/06_data_io.html#이번-실습의-프로젝트-구조",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "이번 실습의 프로젝트 구조",
+    "text": "이번 실습의 프로젝트 구조\nR 프로그래밍 기초/\n├─ data/\n│  └─ sample_metadata.csv\n├─ labs/\n│  └─ 06_data_io.R\n└─ results/\n   └─ sample_metadata_checked.csv\n\ndata/에는 원본 예제 데이터를 둡니다.\nresults/에는 코드로 만든 결과를 저장합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#작업-폴더는-상대-경로의-출발점이다",
+    "href": "slides/06_data_io.html#작업-폴더는-상대-경로의-출발점이다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "작업 폴더는 상대 경로의 출발점이다",
+    "text": "작업 폴더는 상대 경로의 출발점이다\ngetwd()\n\ngetwd()는 현재 작업 폴더를 보여 줍니다.\n이 수업에서는 프로젝트 루트가 작업 폴더라고 가정합니다.\nRStudio에서 프로젝트를 연 뒤 실습 파일을 실행합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#상대-경로는-프로젝트-안의-위치를-나타낸다",
+    "href": "slides/06_data_io.html#상대-경로는-프로젝트-안의-위치를-나타낸다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "상대 경로는 프로젝트 안의 위치를 나타낸다",
+    "text": "상대 경로는 프로젝트 안의 위치를 나타낸다\ninput_path &lt;- \"data/sample_metadata.csv\"\n\n프로젝트 루트에서 data 폴더 안의 파일을 가리킵니다.\n다른 컴퓨터에서도 같은 프로젝트 구조를 유지하면 실행할 수 있습니다.\nWindows에서도 코드 안에서는 /를 사용하면 간단합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#절대-경로는-사용자의-컴퓨터에-의존한다",
+    "href": "slides/06_data_io.html#절대-경로는-사용자의-컴퓨터에-의존한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "절대 경로는 사용자의 컴퓨터에 의존한다",
+    "text": "절대 경로는 사용자의 컴퓨터에 의존한다\n# \"C:/Users/name/Desktop/sample_metadata.csv\"\n\n절대 경로는 컴퓨터의 특정 위치 전체를 적습니다.\n다른 사람의 컴퓨터에서는 같은 위치가 없을 수 있습니다.\n재현 가능한 분석을 위해 프로젝트 내부의 상대 경로를 사용합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#file.exists로-파일을-먼저-확인한다",
+    "href": "slides/06_data_io.html#file.exists로-파일을-먼저-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "file.exists()로 파일을 먼저 확인한다",
+    "text": "file.exists()로 파일을 먼저 확인한다\ninput_path &lt;- \"data/sample_metadata.csv\"\nfile.exists(input_path)\n\n파일이 있으면 TRUE, 없으면 FALSE입니다.\n불러오기 오류가 발생하면 경로와 파일 이름을 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#read.csv로-csv-파일을-불러온다",
+    "href": "slides/06_data_io.html#read.csv로-csv-파일을-불러온다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "read.csv()로 CSV 파일을 불러온다",
+    "text": "read.csv()로 CSV 파일을 불러온다\nsample_metadata &lt;- read.csv(input_path)\nsample_metadata\n\nread.csv()의 결과는 데이터 프레임입니다.\n파일의 첫 줄을 기본적으로 열 이름으로 사용합니다.\n이번 실습에는 외부 패키지가 필요하지 않습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#불러온-직후-일부-행을-확인한다",
+    "href": "slides/06_data_io.html#불러온-직후-일부-행을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "불러온 직후 일부 행을 확인한다",
+    "text": "불러온 직후 일부 행을 확인한다\nhead(sample_metadata)\ntail(sample_metadata)\n\n데이터가 예상한 파일인지 확인합니다.\n열이 잘못 나뉘거나 제목 행이 데이터로 들어오지 않았는지 봅니다.\n큰 파일은 전체를 출력하기보다 일부부터 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#행과-열의-개수를-확인한다",
+    "href": "slides/06_data_io.html#행과-열의-개수를-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "행과 열의 개수를 확인한다",
+    "text": "행과 열의 개수를 확인한다\ndim(sample_metadata)\nnrow(sample_metadata)\nncol(sample_metadata)\n예상한 샘플 수와 변수 수가 맞는지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#열-이름을-확인한다",
+    "href": "slides/06_data_io.html#열-이름을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "열 이름을 확인한다",
+    "text": "열 이름을 확인한다\nnames(sample_metadata)\n이번 파일에는 다음 열이 있어야 합니다.\nsample_id, condition, batch, cell_count,\nmedian_genes, mito_percent, doublet_rate, passed_qc"
+  },
+  {
+    "objectID": "slides/06_data_io.html#str로-열의-자료형을-확인한다",
+    "href": "slides/06_data_io.html#str로-열의-자료형을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "str()로 열의 자료형을 확인한다",
+    "text": "str()로 열의 자료형을 확인한다\nstr(sample_metadata)\n확인할 사항:\n\nsample_id, condition, batch는 문자형인가?\n측정값 열은 숫자형인가?\npassed_qc는 논리형인가?"
+  },
+  {
+    "objectID": "slides/06_data_io.html#summary로-값의-범위를-확인한다",
+    "href": "slides/06_data_io.html#summary로-값의-범위를-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "summary()로 값의 범위를 확인한다",
+    "text": "summary()로 값의 범위를 확인한다\nsummary(sample_metadata)\n\n숫자형 열의 최솟값과 최댓값이 예상 범위인지 확인합니다.\n논리형 열의 TRUE, FALSE 개수를 확인합니다.\n결측값이 있으면 NA's 개수가 표시됩니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#결측값이-하나라도-있는지-확인한다",
+    "href": "slides/06_data_io.html#결측값이-하나라도-있는지-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "결측값이 하나라도 있는지 확인한다",
+    "text": "결측값이 하나라도 있는지 확인한다\nanyNA(sample_metadata)\n\n결측값이 하나라도 있으면 TRUE입니다.\nFALSE라고 해서 모든 값이 생물학적으로 타당하다는 뜻은 아닙니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#열별-결측값-개수를-확인한다",
+    "href": "slides/06_data_io.html#열별-결측값-개수를-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "열별 결측값 개수를 확인한다",
+    "text": "열별 결측값 개수를 확인한다\ncolSums(is.na(sample_metadata))\n\nis.na()가 각 셀의 결측 여부를 확인합니다.\ncolSums()가 열마다 TRUE의 개수를 더합니다.\n어느 열에 결측값이 있는지 빠르게 알 수 있습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#결측값이-있는-행을-확인한다",
+    "href": "slides/06_data_io.html#결측값이-있는-행을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "결측값이 있는 행을 확인한다",
+    "text": "결측값이 있는 행을 확인한다\nincomplete_rows &lt;- !complete.cases(sample_metadata)\nsample_metadata[incomplete_rows, ]\n\ncomplete.cases()는 모든 열에 값이 있는 행을 찾습니다.\n!를 붙이면 결측값이 하나라도 있는 행을 찾습니다.\n결측값을 삭제하거나 대체하기 전에 해당 행을 먼저 살펴봅니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#중복된-샘플-이름을-확인한다",
+    "href": "slides/06_data_io.html#중복된-샘플-이름을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "중복된 샘플 이름을 확인한다",
+    "text": "중복된 샘플 이름을 확인한다\nduplicated(sample_metadata$sample_id)\nany(duplicated(sample_metadata$sample_id))\n\nduplicated()는 앞에서 이미 나온 값을 TRUE로 표시합니다.\n샘플 ID는 보통 각 행을 구분해야 하므로 중복 여부를 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#범주형-열의-값을-확인한다",
+    "href": "slides/06_data_io.html#범주형-열의-값을-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "범주형 열의 값을 확인한다",
+    "text": "범주형 열의 값을 확인한다\nunique(sample_metadata$condition)\nunique(sample_metadata$batch)\n\nunique()는 중복을 제거한 고유한 값을 보여 줍니다.\n철자가 다른 값이나 예상하지 못한 범주가 있는지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#숫자형-열을-간단히-점검한다",
+    "href": "slides/06_data_io.html#숫자형-열을-간단히-점검한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "숫자형 열을 간단히 점검한다",
+    "text": "숫자형 열을 간단히 점검한다\nmin(sample_metadata$cell_count)\nmax(sample_metadata$cell_count)\nmean(sample_metadata$cell_count)\n\n값의 범위와 대표값을 확인합니다.\n결측값이 있는 열에는 필요할 때 na.rm = TRUE를 사용합니다.\n\nmean(sample_metadata$doublet_rate, na.rm = TRUE)"
+  },
+  {
+    "objectID": "slides/06_data_io.html#분석용-열을-추가할-수-있다",
+    "href": "slides/06_data_io.html#분석용-열을-추가할-수-있다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "분석용 열을 추가할 수 있다",
+    "text": "분석용 열을 추가할 수 있다\nsample_metadata$cell_count_k &lt;-\n  sample_metadata$cell_count / 1000\n\nhead(sample_metadata)\n원본 파일 자체를 바꾸지 않고, R에서 불러온 데이터 프레임에 새 열을 추가합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#저장할-폴더가-있는지-확인한다",
+    "href": "slides/06_data_io.html#저장할-폴더가-있는지-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "저장할 폴더가 있는지 확인한다",
+    "text": "저장할 폴더가 있는지 확인한다\ndir.exists(\"results\")\n\n폴더가 있으면 TRUE, 없으면 FALSE입니다.\n파일을 저장하기 전에 대상 폴더가 준비되어 있어야 합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#dir.create로-결과-폴더를-만든다",
+    "href": "slides/06_data_io.html#dir.create로-결과-폴더를-만든다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "dir.create()로 결과 폴더를 만든다",
+    "text": "dir.create()로 결과 폴더를 만든다\ndir.create(\"results\", showWarnings = FALSE)\n\n폴더가 없으면 새로 만듭니다.\nshowWarnings = FALSE는 이미 폴더가 있을 때의 경고를 숨깁니다.\n분석 결과와 원본 데이터를 분리할 수 있습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#write.csv로-데이터-프레임을-저장한다",
+    "href": "slides/06_data_io.html#write.csv로-데이터-프레임을-저장한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "write.csv()로 데이터 프레임을 저장한다",
+    "text": "write.csv()로 데이터 프레임을 저장한다\noutput_path &lt;- \"results/sample_metadata_checked.csv\"\n\nwrite.csv(\n  sample_metadata,\n  output_path,\n  row.names = FALSE\n)\n\nrow.names = FALSE는 불필요한 행 번호 열을 저장하지 않습니다.\n원본 파일과 다른 경로에 저장하여 원본을 보존합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#저장된-파일이-있는지-확인한다",
+    "href": "slides/06_data_io.html#저장된-파일이-있는지-확인한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "저장된 파일이 있는지 확인한다",
+    "text": "저장된 파일이 있는지 확인한다\nfile.exists(output_path)\n코드가 오류 없이 끝났더라도 결과 파일이 실제로 생성됐는지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#저장한-파일을-다시-불러온다",
+    "href": "slides/06_data_io.html#저장한-파일을-다시-불러온다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "저장한 파일을 다시 불러온다",
+    "text": "저장한 파일을 다시 불러온다\nsaved_metadata &lt;- read.csv(output_path)\n\nhead(saved_metadata)\ndim(saved_metadata)\nstr(saved_metadata)\n\n저장 후 다시 불러오는 과정을 읽기 검증이라고 할 수 있습니다.\n행 수, 열 수, 열 이름과 자료형이 예상과 같은지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#원본과-저장-결과의-크기를-비교한다",
+    "href": "slides/06_data_io.html#원본과-저장-결과의-크기를-비교한다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "원본과 저장 결과의 크기를 비교한다",
+    "text": "원본과 저장 결과의 크기를 비교한다\ndim(sample_metadata)\ndim(saved_metadata)\n\nnames(sample_metadata)\nnames(saved_metadata)\n추가한 열을 포함하여 행과 열이 빠짐없이 저장됐는지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#흔한-오류-1-작업-폴더가-다르다",
+    "href": "slides/06_data_io.html#흔한-오류-1-작업-폴더가-다르다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "흔한 오류 1: 작업 폴더가 다르다",
+    "text": "흔한 오류 1: 작업 폴더가 다르다\ngetwd()\nfile.exists(\"data/sample_metadata.csv\")\ncannot open the connection 오류가 나오면 다음을 확인합니다.\n\n프로젝트 루트에서 실행했는가?\ndata 폴더가 있는가?\n파일 이름과 확장자가 정확한가?"
+  },
+  {
+    "objectID": "slides/06_data_io.html#흔한-오류-2-경로의-철자가-다르다",
+    "href": "slides/06_data_io.html#흔한-오류-2-경로의-철자가-다르다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "흔한 오류 2: 경로의 철자가 다르다",
+    "text": "흔한 오류 2: 경로의 철자가 다르다\n# read.csv(\"datas/sample_metadata.csv\")\n\n실제 폴더 이름은 data입니다.\n대소문자, 공백, 확장자 .csv를 모두 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#흔한-오류-3-행-번호가-열로-저장된다",
+    "href": "slides/06_data_io.html#흔한-오류-3-행-번호가-열로-저장된다",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "흔한 오류 3: 행 번호가 열로 저장된다",
+    "text": "흔한 오류 3: 행 번호가 열로 저장된다\nwrite.csv(\n  sample_metadata,\n  \"results/sample_metadata_checked.csv\",\n  row.names = FALSE\n)\nrow.names = FALSE를 생략하면 원하지 않는 행 번호 열이 추가될 수 있습니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#실습-1-파일-불러오기",
+    "href": "slides/06_data_io.html#실습-1-파일-불러오기",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "실습 1: 파일 불러오기",
+    "text": "실습 1: 파일 불러오기\ninput_path &lt;- \"data/sample_metadata.csv\"\nfile.exists(input_path)\n\nsample_metadata &lt;- read.csv(input_path)\nhead(sample_metadata)\n파일 경로와 처음 몇 행이 예상한 모습인지 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#실습-2-구조와-이상-여부-점검하기",
+    "href": "slides/06_data_io.html#실습-2-구조와-이상-여부-점검하기",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "실습 2: 구조와 이상 여부 점검하기",
+    "text": "실습 2: 구조와 이상 여부 점검하기\ndim(sample_metadata)\nnames(sample_metadata)\nstr(sample_metadata)\nsummary(sample_metadata)\ncolSums(is.na(sample_metadata))\n결측값이 있는 열과 해당 행을 찾아봅니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#실습-3-결과-열-추가하기",
+    "href": "slides/06_data_io.html#실습-3-결과-열-추가하기",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "실습 3: 결과 열 추가하기",
+    "text": "실습 3: 결과 열 추가하기\nsample_metadata$cell_count_k &lt;-\n  sample_metadata$cell_count / 1000\n\nhead(sample_metadata)\n새 열의 값과 자료형을 확인합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#실습-4-저장하고-다시-확인하기",
+    "href": "slides/06_data_io.html#실습-4-저장하고-다시-확인하기",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "실습 4: 저장하고 다시 확인하기",
+    "text": "실습 4: 저장하고 다시 확인하기\ndir.create(\"results\", showWarnings = FALSE)\noutput_path &lt;- \"results/sample_metadata_checked.csv\"\n\nwrite.csv(sample_metadata, output_path, row.names = FALSE)\nsaved_metadata &lt;- read.csv(output_path)\n\ndim(saved_metadata)\nnames(saved_metadata)\n원본 데이터 프레임과 저장 결과의 크기를 비교합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#오늘-배운-내용",
+    "href": "slides/06_data_io.html#오늘-배운-내용",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\nCSV는 표 형태의 데이터를 저장하는 텍스트 파일입니다.\n프로젝트 내부에서는 상대 경로를 사용합니다.\nread.csv()로 파일을 데이터 프레임으로 불러옵니다.\n구조, 자료형, 결측값, 중복값을 불러온 직후 점검합니다.\nwrite.csv()로 결과를 저장하고 다시 읽어 검증합니다."
+  },
+  {
+    "objectID": "slides/06_data_io.html#종료-점검과-다음-차시",
+    "href": "slides/06_data_io.html#종료-점검과-다음-차시",
+    "title": "6차시: 데이터 불러오기와 저장하기",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n상대 경로를 사용하면 어떤 점이 좋습니까?\n파일을 불러온 직후 어떤 항목을 확인해야 합니까?\n열별 결측값 개수는 어떻게 계산합니까?\nCSV 저장 시 row.names = FALSE를 사용하는 이유는 무엇입니까?\n\n다음 차시: 여러 조건을 결합하여 필요한 행을 선택하고 코드의 실행 흐름 제어하기"
+  },
+  {
+    "objectID": "slides/04_matrices_and_factors.html#학습-목표",
+    "href": "slides/04_matrices_and_factors.html#학습-목표",
+    "title": "4차시: 행렬과 팩터",
+    "section": "학습 목표",
+    "text": "학습 목표\n\n벡터를 이용해 행렬을 만들 수 있다.\n행과 열을 선택하고 기본 요약값을 계산할 수 있다.\n범주형 데이터를 팩터로 표현할 수 있다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#오늘의-학습-목표",
+    "href": "slides/02_variables_and_types.html#오늘의-학습-목표",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n값을 변수에 저장하고 다시 사용할 수 있다.\n숫자형, 문자형, 논리형 자료를 구분할 수 있다.\n객체의 값과 자료형을 확인할 수 있다.\n결측값을 확인하고 기본 자료형을 변환할 수 있다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#선수-지식",
+    "href": "slides/02_variables_and_types.html#선수-지식",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "선수 지식",
+    "text": "선수 지식\n\nRStudio에서 R 스크립트를 열고 저장할 수 있습니다.\nCtrl + Enter로 코드를 실행할 수 있습니다.\n&lt;-를 사용해 값을 변수에 저장할 수 있습니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#차시-복습-변수는-값에-붙이는-이름이다",
+    "href": "slides/02_variables_and_types.html#차시-복습-변수는-값에-붙이는-이름이다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "1차시 복습: 변수는 값에 붙이는 이름이다",
+    "text": "1차시 복습: 변수는 값에 붙이는 이름이다\ncell_count &lt;- 1250\ncell_count\n\n&lt;- 오른쪽의 값을 왼쪽 이름에 저장합니다.\n저장한 값은 변수 이름으로 다시 사용할 수 있습니다.\nR에서는 생성된 변수를 객체라고도 부릅니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#의미가-분명한-변수-이름을-사용한다",
+    "href": "slides/02_variables_and_types.html#의미가-분명한-변수-이름을-사용한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "의미가 분명한 변수 이름을 사용한다",
+    "text": "의미가 분명한 변수 이름을 사용한다\nsample_name &lt;- \"control_1\"\ncell_count &lt;- 1250\npassed_qc &lt;- TRUE\n\n이름만 보고 값의 의미를 짐작할 수 있게 작성합니다.\n여러 단어는 밑줄로 연결하는 snake_case를 사용합니다.\nR은 대소문자를 구분합니다. cell_count와 Cell_count는 다릅니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#변수-이름을-작성할-때-주의한다",
+    "href": "slides/02_variables_and_types.html#변수-이름을-작성할-때-주의한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "변수 이름을 작성할 때 주의한다",
+    "text": "변수 이름을 작성할 때 주의한다\n좋은 이름:\nsample_name &lt;- \"control_1\"\nmito_percent &lt;- 4.2\n피해야 할 이름:\nx &lt;- \"control_1\"\nmy.sample.name &lt;- \"control_1\"\n\n숫자로 시작하거나 공백이 들어간 이름은 사용할 수 없습니다.\n이 과정에서는 일관되게 snake_case를 사용합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#자료형은-값의-종류를-나타낸다",
+    "href": "slides/02_variables_and_types.html#자료형은-값의-종류를-나타낸다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "자료형은 값의 종류를 나타낸다",
+    "text": "자료형은 값의 종류를 나타낸다\nR은 값의 종류에 따라 저장하고 처리하는 방법을 결정합니다.\n\n\n\n자료형\n예\n의미\n\n\n\n\n숫자형\n1250, 4.2\n계산할 수 있는 수\n\n\n문자형\n\"control_1\"\n글자나 이름\n\n\n논리형\nTRUE, FALSE\n참 또는 거짓"
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#숫자형은-계산할-수-있는-값이다",
+    "href": "slides/02_variables_and_types.html#숫자형은-계산할-수-있는-값이다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "숫자형은 계산할 수 있는 값이다",
+    "text": "숫자형은 계산할 수 있는 값이다\ncell_count &lt;- 1250\nmito_percent &lt;- 4.2\n\ncell_count + 250\nmito_percent / 100\n\n정수와 소수는 모두 숫자형으로 다룰 수 있습니다.\n숫자형 값에는 산술 연산을 적용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#문자형은-따옴표로-감싼다",
+    "href": "slides/02_variables_and_types.html#문자형은-따옴표로-감싼다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "문자형은 따옴표로 감싼다",
+    "text": "문자형은 따옴표로 감싼다\nsample_name &lt;- \"control_1\"\ncondition &lt;- \"treated\"\n\nsample_name\ncondition\n\n샘플 이름이나 실험 조건처럼 글자로 된 값을 저장합니다.\n큰따옴표 또는 작은따옴표를 사용할 수 있습니다.\n이 과정에서는 큰따옴표를 기본으로 사용합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#따옴표가-없으면-변수-이름으로-해석한다",
+    "href": "slides/02_variables_and_types.html#따옴표가-없으면-변수-이름으로-해석한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "따옴표가 없으면 변수 이름으로 해석한다",
+    "text": "따옴표가 없으면 변수 이름으로 해석한다\ncondition &lt;- \"treated\"\ncondition\n다음 코드는 treated라는 변수를 찾으므로 오류가 발생합니다.\n# condition &lt;- treated\n\n글자를 저장할 때 따옴표를 빠뜨리지 않았는지 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#논리형은-참과-거짓을-나타낸다",
+    "href": "slides/02_variables_and_types.html#논리형은-참과-거짓을-나타낸다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "논리형은 참과 거짓을 나타낸다",
+    "text": "논리형은 참과 거짓을 나타낸다\npassed_qc &lt;- TRUE\nis_treated &lt;- FALSE\n\npassed_qc\nis_treated\n\n논리형 값은 TRUE와 FALSE 두 가지입니다.\n따옴표 없이 대문자로 작성합니다.\n품질 기준 통과 여부나 조건의 만족 여부를 표현할 때 사용합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#비교-연산의-결과는-논리형이다",
+    "href": "slides/02_variables_and_types.html#비교-연산의-결과는-논리형이다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "비교 연산의 결과는 논리형이다",
+    "text": "비교 연산의 결과는 논리형이다\ncell_count &lt;- 1250\ncell_count &gt; 1000\ncell_count == 1250\ncell_count &lt; 500\n\n\n\n연산자\n의미\n\n\n\n\n&gt;\n왼쪽이 더 크다\n\n\n&lt;\n왼쪽이 더 작다\n\n\n==\n두 값이 같다\n\n\n\n\n= 하나가 아니라 == 두 개로 같은지 비교합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#값을-출력해-현재-상태를-확인한다",
+    "href": "slides/02_variables_and_types.html#값을-출력해-현재-상태를-확인한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "값을 출력해 현재 상태를 확인한다",
+    "text": "값을 출력해 현재 상태를 확인한다\nsample_name &lt;- \"control_1\"\nsample_name\nprint(sample_name)\n\n변수 이름을 실행하면 저장된 값이 출력됩니다.\nprint()를 사용해도 값을 출력할 수 있습니다.\n입문 단계에서는 자주 출력하여 중간 결과를 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#class로-자료형을-확인한다",
+    "href": "slides/02_variables_and_types.html#class로-자료형을-확인한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "class()로 자료형을 확인한다",
+    "text": "class()로 자료형을 확인한다\ncell_count &lt;- 1250\nsample_name &lt;- \"control_1\"\npassed_qc &lt;- TRUE\n\nclass(cell_count)\nclass(sample_name)\nclass(passed_qc)\nclass()는 객체를 사용할 때 알아야 하는 자료형을 보여 줍니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#typeof는-내부-저장-방식을-보여-준다",
+    "href": "slides/02_variables_and_types.html#typeof는-내부-저장-방식을-보여-준다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "typeof()는 내부 저장 방식을 보여 준다",
+    "text": "typeof()는 내부 저장 방식을 보여 준다\ntypeof(cell_count)\ntypeof(sample_name)\ntypeof(passed_qc)\n\ntypeof()는 R이 값을 내부적으로 저장한 방식을 보여 줍니다.\n1250은 보통 double로 표시됩니다.\n지금은 class()를 중심으로 확인하고, typeof()는 차이를 관찰합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#변수에는-새-값을-다시-저장할-수-있다",
+    "href": "slides/02_variables_and_types.html#변수에는-새-값을-다시-저장할-수-있다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "변수에는 새 값을 다시 저장할 수 있다",
+    "text": "변수에는 새 값을 다시 저장할 수 있다\ncell_count &lt;- 1250\ncell_count\n\ncell_count &lt;- 1400\ncell_count\n\n같은 변수에 새 값을 저장하면 이전 값은 바뀝니다.\n코드를 실행한 순서에 따라 현재 값이 결정됩니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#변수를-사용하면-계산을-다시-수행하기-쉽다",
+    "href": "slides/02_variables_and_types.html#변수를-사용하면-계산을-다시-수행하기-쉽다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "변수를 사용하면 계산을 다시 수행하기 쉽다",
+    "text": "변수를 사용하면 계산을 다시 수행하기 쉽다\ncell_count &lt;- 1250\nfiltered_cell_count &lt;- 1100\n\nremoved_cell_count &lt;- cell_count - filtered_cell_count\nremoved_cell_count\n원래 값이 바뀌면 같은 계산 코드를 다시 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#na는-값이-없음을-나타낸다",
+    "href": "slides/02_variables_and_types.html#na는-값이-없음을-나타낸다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "NA는 값이 없음을 나타낸다",
+    "text": "NA는 값이 없음을 나타낸다\nsample_name &lt;- \"control_1\"\ncell_count &lt;- NA\n\nsample_name\ncell_count\n\nNA는 아직 측정되지 않았거나 알 수 없는 값을 나타냅니다.\n숫자 0이나 빈 문자열 \"\"과 의미가 다릅니다.\nNA는 따옴표 없이 작성합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#is.na로-결측값을-확인한다",
+    "href": "slides/02_variables_and_types.html#is.na로-결측값을-확인한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "is.na()로 결측값을 확인한다",
+    "text": "is.na()로 결측값을 확인한다\ncell_count &lt;- NA\nis.na(cell_count)\n\nsample_name &lt;- \"control_1\"\nis.na(sample_name)\n\n결측값이면 TRUE, 아니면 FALSE를 반환합니다.\ncell_count == NA로 결측값을 검사하지 않습니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#결측값이-포함된-계산을-살펴본다",
+    "href": "slides/02_variables_and_types.html#결측값이-포함된-계산을-살펴본다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "결측값이 포함된 계산을 살펴본다",
+    "text": "결측값이 포함된 계산을 살펴본다\ncell_count &lt;- NA\ncell_count + 100\n\n알 수 없는 값에 100을 더해도 결과는 알 수 없습니다.\n따라서 계산 결과도 NA가 됩니다.\n결측값을 어떻게 처리할지는 분석 목적에 따라 결정해야 합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#자료형을-변환할-수-있다",
+    "href": "slides/02_variables_and_types.html#자료형을-변환할-수-있다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "자료형을 변환할 수 있다",
+    "text": "자료형을 변환할 수 있다\ncell_count_text &lt;- \"1250\"\ncell_count &lt;- as.numeric(cell_count_text)\n\ncell_count\nclass(cell_count)\n\nas.numeric()은 숫자형으로 변환합니다.\n숫자처럼 보이는 문자도 변환 전에는 문자형입니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#자주-사용하는-자료형-변환-함수",
+    "href": "slides/02_variables_and_types.html#자주-사용하는-자료형-변환-함수",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "자주 사용하는 자료형 변환 함수",
+    "text": "자주 사용하는 자료형 변환 함수\nas.character(1250)\nas.numeric(\"1250\")\nas.logical(\"TRUE\")\n\n\n\n함수\n변환 결과\n\n\n\n\nas.numeric()\n숫자형\n\n\nas.character()\n문자형\n\n\nas.logical()\n논리형"
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#모든-문자를-숫자로-바꿀-수는-없다",
+    "href": "slides/02_variables_and_types.html#모든-문자를-숫자로-바꿀-수는-없다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "모든 문자를 숫자로 바꿀 수는 없다",
+    "text": "모든 문자를 숫자로 바꿀 수는 없다\nas.numeric(\"1250\")\n다음 코드는 변환할 수 없는 문자 때문에 경고가 발생하고 NA를 만듭니다.\n# as.numeric(\"one thousand\")\n\n경고는 코드가 중단되지는 않았지만 확인할 문제가 있다는 뜻입니다.\n변환 전에는 값이 기대한 형태인지 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#흔한-오류-1-대소문자가-다르다",
+    "href": "slides/02_variables_and_types.html#흔한-오류-1-대소문자가-다르다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "흔한 오류 1: 대소문자가 다르다",
+    "text": "흔한 오류 1: 대소문자가 다르다\nsample_name &lt;- \"control_1\"\nsample_name\n다음 코드는 서로 다른 이름을 사용하므로 오류가 발생합니다.\n# Sample_name\n\n객체를 찾을 수 없다는 오류가 나오면 철자와 대소문자를 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#흔한-오류-2-숫자처럼-보이는-문자로-계산한다",
+    "href": "slides/02_variables_and_types.html#흔한-오류-2-숫자처럼-보이는-문자로-계산한다",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "흔한 오류 2: 숫자처럼 보이는 문자로 계산한다",
+    "text": "흔한 오류 2: 숫자처럼 보이는 문자로 계산한다\ncell_count_text &lt;- \"1250\"\nclass(cell_count_text)\n\ncell_count &lt;- as.numeric(cell_count_text)\ncell_count + 100\n\n따옴표로 감싼 값은 문자형입니다.\n계산이 필요하면 적절한 자료형으로 변환합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#실습-1-세-가지-자료형-만들기",
+    "href": "slides/02_variables_and_types.html#실습-1-세-가지-자료형-만들기",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "실습 1: 세 가지 자료형 만들기",
+    "text": "실습 1: 세 가지 자료형 만들기\n다음 정보를 각각 알맞은 변수에 저장합니다.\nsample_name &lt;- \"control_1\"\ncell_count &lt;- 1250\npassed_qc &lt;- TRUE\n각 변수의 값과 class() 결과를 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#실습-2-결측값-확인하기",
+    "href": "slides/02_variables_and_types.html#실습-2-결측값-확인하기",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "실습 2: 결측값 확인하기",
+    "text": "실습 2: 결측값 확인하기\ndoublet_rate &lt;- NA\n\ndoublet_rate\nis.na(doublet_rate)\n\ndoublet_rate의 값은 무엇입니까?\nis.na(doublet_rate)는 왜 TRUE를 반환합니까?"
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#실습-3-자료형-변환하기",
+    "href": "slides/02_variables_and_types.html#실습-3-자료형-변환하기",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "실습 3: 자료형 변환하기",
+    "text": "실습 3: 자료형 변환하기\ncell_count_text &lt;- \"1250\"\ncell_count &lt;- as.numeric(cell_count_text)\n\nclass(cell_count_text)\nclass(cell_count)\n변환 전후의 값과 자료형을 비교합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#실습-4-오류를-찾아-수정하기",
+    "href": "slides/02_variables_and_types.html#실습-4-오류를-찾아-수정하기",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "실습 4: 오류를 찾아 수정하기",
+    "text": "실습 4: 오류를 찾아 수정하기\n다음 코드에서 잘못된 부분을 찾습니다.\n# sample_name &lt;- control_1\n# Cell_count + 100\n\n문자형 값에 필요한 기호는 무엇입니까?\n변수 이름의 철자와 대소문자는 일치합니까?\n수정한 코드를 실행하여 결과를 확인합니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#오늘-배운-내용",
+    "href": "slides/02_variables_and_types.html#오늘-배운-내용",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n변수는 값을 저장하고 다시 사용하기 위한 이름입니다.\n기본 자료형에는 숫자형, 문자형, 논리형이 있습니다.\nclass()와 typeof()로 객체의 자료형을 확인할 수 있습니다.\nNA는 값이 없음을 나타내고 is.na()로 확인합니다.\nas.numeric() 등의 함수로 자료형을 변환할 수 있습니다."
+  },
+  {
+    "objectID": "slides/02_variables_and_types.html#종료-점검과-다음-차시",
+    "href": "slides/02_variables_and_types.html#종료-점검과-다음-차시",
+    "title": "2차시: 변수와 기본 자료형",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n문자형 값을 저장할 때 왜 따옴표가 필요합니까?\nTRUE와 \"TRUE\"의 자료형은 어떻게 다릅니까?\n결측값은 어떤 함수로 확인합니까?\n숫자처럼 보이는 문자로 계산하려면 무엇을 해야 합니까?\n\n다음 차시: 같은 종류의 여러 값을 벡터로 만들고 선택하기"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "R 기초 프로그래밍",
+    "section": "",
+    "text": "프로그래밍 경험이 거의 없는 생물학 전공 대학원생이 R의 기본 문법과 데이터 처리 방법을 익히고, 이후 Seurat를 활용한 전사체 분석을 학습할 수 있도록 준비하는 과정입니다."
+  },
+  {
+    "objectID": "index.html#강의-구성",
+    "href": "index.html#강의-구성",
+    "title": "R 기초 프로그래밍",
+    "section": "강의 구성",
+    "text": "강의 구성\n\n\n\n차시\n주제\n강의자료\n실습 파일\n\n\n\n\n1\nR과 RStudio 시작하기\n슬라이드\nR 실습\n\n\n2\n변수와 기본 자료형\n슬라이드\nR 실습\n\n\n3\n벡터와 인덱싱\n슬라이드\nR 실습\n\n\n4\n행렬과 팩터\n슬라이드\nR 실습\n\n\n5\n데이터 프레임 다루기\n슬라이드\nR 실습\n\n\n6\n데이터 불러오기와 저장하기\n슬라이드\nR 실습\n\n\n7\n조건식과 데이터 필터링\n슬라이드\nR 실습\n\n\n8\n반복 처리와 벡터화 연산\n슬라이드\nR 실습\n\n\n9\n함수 작성하기\n슬라이드\nR 실습\n\n\n10\n데이터 요약과 시각화\n슬라이드\nR 실습\n\n\n11\n패키지, 리스트와 R 객체\n슬라이드\nR 실습\n\n\n12\n미니 프로젝트 — 전사체 형태의 데이터 분석\n슬라이드\nR 실습"
+  },
+  {
+    "objectID": "index.html#수업-운영",
+    "href": "index.html#수업-운영",
+    "title": "R 기초 프로그래밍",
+    "section": "수업 운영",
+    "text": "수업 운영\n\n총 12회, 회당 1시간으로 진행합니다.\n각 차시는 짧은 개념 설명, 강사 시범, 학생 실습 순서로 구성합니다.\n기본 R 문법을 우선 익힌 뒤 전사체 데이터 분석에 필요한 자료구조로 연결합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#오늘의-학습-목표",
+    "href": "slides/01_getting_started.html#오늘의-학습-목표",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\nR과 RStudio의 역할을 구분할 수 있다.\n콘솔과 스크립트에서 R 코드를 실행할 수 있다.\n오류 메시지를 읽고 간단한 실행 오류를 수정할 수 있다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#전사체-분석에서-r이-필요한-이유",
+    "href": "slides/01_getting_started.html#전사체-분석에서-r이-필요한-이유",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "전사체 분석에서 R이 필요한 이유",
+    "text": "전사체 분석에서 R이 필요한 이유\n\n많은 생명과학 분석 도구가 R로 제공됩니다.\n계산, 데이터 처리, 시각화를 한 환경에서 수행할 수 있습니다.\nR 기초는 Seurat를 이해하고 사용하는 출발점입니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#r은-프로그래밍-언어다",
+    "href": "slides/01_getting_started.html#r은-프로그래밍-언어다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "R은 프로그래밍 언어다",
+    "text": "R은 프로그래밍 언어다\n\nR은 데이터를 계산하고 분석하기 위한 프로그래밍 언어입니다.\n코드를 작성하면 같은 분석을 정확하게 반복할 수 있습니다.\n코드에는 분석 과정이 기록되므로 결과를 재현할 수 있습니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#rstudio는-r을-사용하는-작업-환경이다",
+    "href": "slides/01_getting_started.html#rstudio는-r을-사용하는-작업-환경이다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "RStudio는 R을 사용하는 작업 환경이다",
+    "text": "RStudio는 R을 사용하는 작업 환경이다\n\nRStudio는 R 코드를 편리하게 작성하고 실행하도록 돕습니다.\nR과 RStudio는 서로 다른 소프트웨어입니다.\n컴퓨터에 R이 먼저 설치되어 있어야 합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#rstudio의-네-개-창",
+    "href": "slides/01_getting_started.html#rstudio의-네-개-창",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "RStudio의 네 개 창",
+    "text": "RStudio의 네 개 창\n\n\n\n창\n주요 역할\n\n\n\n\nSource\n스크립트 작성\n\n\nConsole\n명령 실행\n\n\nEnvironment\n생성된 객체 확인\n\n\nFiles·Plots·Packages·Help\n파일, 그래프, 패키지, 도움말 확인"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#콘솔은-명령을-즉시-실행하는-곳이다",
+    "href": "slides/01_getting_started.html#콘솔은-명령을-즉시-실행하는-곳이다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "콘솔은 명령을 즉시 실행하는 곳이다",
+    "text": "콘솔은 명령을 즉시 실행하는 곳이다\n\n&gt; 뒤에 명령을 입력합니다.\nEnter를 누르면 명령이 즉시 실행됩니다.\n빠른 확인과 간단한 계산에 적합합니다.\n\n10 + 5"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#스크립트는-코드를-기록하는-파일이다",
+    "href": "slides/01_getting_started.html#스크립트는-코드를-기록하는-파일이다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "스크립트는 코드를 기록하는 파일이다",
+    "text": "스크립트는 코드를 기록하는 파일이다\n\nR 스크립트는 .R 확장자를 사용합니다.\n여러 줄의 코드를 저장하고 다시 실행할 수 있습니다.\n실제 분석은 콘솔보다 스크립트를 중심으로 진행합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#r은-계산기처럼-사용할-수-있다",
+    "href": "slides/01_getting_started.html#r은-계산기처럼-사용할-수-있다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "R은 계산기처럼 사용할 수 있다",
+    "text": "R은 계산기처럼 사용할 수 있다\n10 + 5\n20 / 4\n(3 + 2) * 4\n\n괄호를 사용하면 계산 순서를 지정할 수 있습니다.\n입력한 코드와 출력된 결과를 구분해서 읽습니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#변수는-값에-붙이는-이름이다",
+    "href": "slides/01_getting_started.html#변수는-값에-붙이는-이름이다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "변수는 값에 붙이는 이름이다",
+    "text": "변수는 값에 붙이는 이름이다\ncell_count &lt;- 1250\n\n계산에 사용할 값을 이름으로 저장합니다.\n저장한 값은 같은 이름으로 다시 사용할 수 있습니다.\n의미가 분명한 이름을 사용하면 코드를 이해하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#는-값을-저장하는-연산자다",
+    "href": "slides/01_getting_started.html#는-값을-저장하는-연산자다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "<-는 값을 저장하는 연산자다",
+    "text": "&lt;-는 값을 저장하는 연산자다\ncell_count &lt;- 1250\n\n오른쪽의 1250을 왼쪽의 cell_count에 저장합니다.\n\n\n이 과정에서는 기본 대입 연산자로 &lt;-를 사용합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#주석은-코드를-설명하는-메모다",
+    "href": "slides/01_getting_started.html#주석은-코드를-설명하는-메모다",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "주석은 코드를 설명하는 메모다",
+    "text": "주석은 코드를 설명하는 메모다\n# 세 샘플의 전체 세포 수를 계산한다.\ntotal_cells &lt;- 1200 + 1350 + 980\n\n# 뒤의 내용은 실행되지 않습니다.\n코드의 목적이나 중요한 학습 포인트를 기록합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#첫-번째-r-스크립트-만들기",
+    "href": "slides/01_getting_started.html#첫-번째-r-스크립트-만들기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "첫 번째 R 스크립트 만들기",
+    "text": "첫 번째 R 스크립트 만들기\n\nFile &gt; New File &gt; R Script를 선택합니다.\n주석을 한 줄 입력합니다.\nlabs/01_getting_started.R로 저장합니다.\n\n# 1차시 실습: R과 RStudio 시작하기"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#한-줄의-코드를-실행하기",
+    "href": "slides/01_getting_started.html#한-줄의-코드를-실행하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "한 줄의 코드를 실행하기",
+    "text": "한 줄의 코드를 실행하기\n\n실행할 줄에 커서를 놓습니다.\nCtrl + Enter를 누릅니다.\nConsole에서 결과를 확인합니다.\n\ncell_count &lt;- 1250\ncell_count"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#여러-줄의-코드를-실행하기",
+    "href": "slides/01_getting_started.html#여러-줄의-코드를-실행하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "여러 줄의 코드를 실행하기",
+    "text": "여러 줄의 코드를 실행하기\n실행할 영역을 선택하고 Ctrl + Enter를 누릅니다.\ncontrol_cells &lt;- 1200\ntreated_cells &lt;- 1350\ntotal_cells &lt;- control_cells + treated_cells\ntotal_cells\n코드는 위에서 아래로 실행됩니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#environment에서-변수-확인하기",
+    "href": "slides/01_getting_started.html#environment에서-변수-확인하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "Environment에서 변수 확인하기",
+    "text": "Environment에서 변수 확인하기\n\n실행된 변수는 Environment 창에 나타납니다.\n변수 이름과 현재 값을 확인할 수 있습니다.\n스크립트에 코드를 쓰는 것만으로는 변수가 생성되지 않습니다.\n\n\n코드를 작성한 다음 반드시 실행해야 합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#오류-메시지를-읽는-첫-번째-방법",
+    "href": "slides/01_getting_started.html#오류-메시지를-읽는-첫-번째-방법",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "오류 메시지를 읽는 첫 번째 방법",
+    "text": "오류 메시지를 읽는 첫 번째 방법\ncell_count &lt;- 1250\ncell_cout\n\n오류가 발생한 코드와 메시지를 함께 봅니다.\n변수 이름의 철자를 먼저 확인합니다.\n코드를 수정하고 해당 줄을 다시 실행합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#실습-준비-파일-저장하기",
+    "href": "slides/01_getting_started.html#실습-준비-파일-저장하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "실습 준비: 파일 저장하기",
+    "text": "실습 준비: 파일 저장하기\n\nlabs/01_getting_started.R을 엽니다.\n자신의 이름과 날짜를 주석으로 작성합니다.\n파일을 저장합니다.\n\n# 이름: 홍길동\n# 날짜: 2026-07-12"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#실습-1-기본-계산-실행하기",
+    "href": "slides/01_getting_started.html#실습-1-기본-계산-실행하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "실습 1: 기본 계산 실행하기",
+    "text": "실습 1: 기본 계산 실행하기\n1200 + 1350 + 980\n1200 / 3\n(1200 + 1350 + 980) / 3\n\n세 값의 합계는 얼마입니까?\n세 값의 평균은 얼마입니까?"
+  },
+  {
+    "objectID": "slides/01_getting_started.html#실습-2-값을-변수에-저장하기",
+    "href": "slides/01_getting_started.html#실습-2-값을-변수에-저장하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "실습 2: 값을 변수에 저장하기",
+    "text": "실습 2: 값을 변수에 저장하기\ncontrol_1_cells &lt;- 1200\ncontrol_2_cells &lt;- 1350\ntreated_cells &lt;- 980\n\n세 줄을 실행합니다.\nEnvironment에서 변수 이름과 값을 확인합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#실습-3-저장한-값으로-계산하기",
+    "href": "slides/01_getting_started.html#실습-3-저장한-값으로-계산하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "실습 3: 저장한 값으로 계산하기",
+    "text": "실습 3: 저장한 값으로 계산하기\ntotal_cells &lt;- control_1_cells +\n  control_2_cells +\n  treated_cells\n\ntotal_cells\n세 샘플의 평균을 계산해 mean_cells에 저장합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#실습-4-오류를-찾아-수정하기",
+    "href": "slides/01_getting_started.html#실습-4-오류를-찾아-수정하기",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "실습 4: 오류를 찾아 수정하기",
+    "text": "실습 4: 오류를 찾아 수정하기\nsample_volume &lt;- 5\nsample_concentration &lt;- 20\n\nsample_amount &lt;- sample_volum * sample_concentration\nsample_amount\n\n오류 메시지를 확인합니다.\n잘못된 변수 이름을 찾습니다.\n코드를 수정하고 다시 실행합니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#오늘-배운-내용",
+    "href": "slides/01_getting_started.html#오늘-배운-내용",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\nR은 코드를 실행하는 프로그래밍 언어입니다.\nRStudio는 R 작업을 돕는 환경입니다.\nConsole은 즉시 실행하고, 스크립트는 코드를 기록합니다.\n&lt;-로 값을 변수에 저장합니다.\n오류 메시지는 문제를 수정하는 단서입니다."
+  },
+  {
+    "objectID": "slides/01_getting_started.html#종료-점검과-다음-차시",
+    "href": "slides/01_getting_started.html#종료-점검과-다음-차시",
+    "title": "1차시: R과 RStudio 시작하기",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\nR과 RStudio는 어떻게 다릅니까?\nConsole과 스크립트는 언제 사용합니까?\n&lt;-는 어떤 역할을 합니까?\n객체를 찾을 수 없다는 오류가 나오면 무엇을 먼저 확인합니까?\n\n다음 차시: 숫자형, 문자형, 논리형과 결측값 NA"
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#오늘의-학습-목표",
+    "href": "slides/03_vectors_and_indexing.html#오늘의-학습-목표",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n같은 종류의 여러 값을 벡터로 만들 수 있다.\n위치, 이름, 조건을 이용해 벡터의 일부를 선택할 수 있다.\n벡터에 연산과 기초 통계 함수를 적용할 수 있다.\n결측값이 포함된 벡터를 확인하고 요약할 수 있다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#선수-지식",
+    "href": "slides/03_vectors_and_indexing.html#선수-지식",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n&lt;-로 값을 변수에 저장할 수 있습니다.\n숫자형, 문자형, 논리형을 구분할 수 있습니다.\nclass(), is.na()로 객체를 확인할 수 있습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#차시-복습-변수-하나에-값-하나-저장하기",
+    "href": "slides/03_vectors_and_indexing.html#차시-복습-변수-하나에-값-하나-저장하기",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "2차시 복습: 변수 하나에 값 하나 저장하기",
+    "text": "2차시 복습: 변수 하나에 값 하나 저장하기\ncontrol_1_cells &lt;- 1200\ncontrol_2_cells &lt;- 1350\ntreated_1_cells &lt;- 980\n\n변수가 많아질수록 같은 코드를 반복해서 작성하게 됩니다.\n여러 값을 하나의 객체로 묶으면 함께 처리하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터는-여러-값을-순서대로-모은-객체다",
+    "href": "slides/03_vectors_and_indexing.html#벡터는-여러-값을-순서대로-모은-객체다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터는 여러 값을 순서대로 모은 객체다",
+    "text": "벡터는 여러 값을 순서대로 모은 객체다\ncell_counts &lt;- c(1200, 1350, 980)\ncell_counts\n\nc()는 여러 값을 하나로 결합합니다.\n벡터의 각 값을 원소라고 합니다.\n원소는 입력한 순서대로 저장됩니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#문자형과-논리형-벡터도-만들-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#문자형과-논리형-벡터도-만들-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "문자형과 논리형 벡터도 만들 수 있다",
+    "text": "문자형과 논리형 벡터도 만들 수 있다\nsample_names &lt;- c(\"control_1\", \"control_2\", \"treated_1\")\npassed_qc &lt;- c(TRUE, TRUE, FALSE)\n\nsample_names\npassed_qc\n벡터는 숫자뿐 아니라 문자와 논리값도 담을 수 있습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터의-원소는-같은-자료형을-가진다",
+    "href": "slides/03_vectors_and_indexing.html#벡터의-원소는-같은-자료형을-가진다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터의 원소는 같은 자료형을 가진다",
+    "text": "벡터의 원소는 같은 자료형을 가진다\nmixed_values &lt;- c(1200, \"control_1\", TRUE)\nmixed_values\nclass(mixed_values)\n\nR은 하나의 벡터에서 원소의 자료형을 맞춥니다.\n위 예에서는 모든 값이 문자형으로 변환됩니다.\n서로 다른 종류의 정보를 한 벡터에 섞지 않는 것이 좋습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터의-값과-구조를-확인한다",
+    "href": "slides/03_vectors_and_indexing.html#벡터의-값과-구조를-확인한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터의 값과 구조를 확인한다",
+    "text": "벡터의 값과 구조를 확인한다\ncell_counts &lt;- c(1200, 1350, 980)\n\ncell_counts\nclass(cell_counts)\ntypeof(cell_counts)\nlength(cell_counts)\n\nclass()와 typeof()는 자료형을 확인합니다.\nlength()는 원소의 개수를 반환합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#규칙적인-숫자-벡터를-만들-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#규칙적인-숫자-벡터를-만들-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "규칙적인 숫자 벡터를 만들 수 있다",
+    "text": "규칙적인 숫자 벡터를 만들 수 있다\nsample_numbers &lt;- 1:5\nsample_numbers\n\neven_numbers &lt;- seq(from = 2, to = 10, by = 2)\neven_numbers\n\n:는 1씩 증가하거나 감소하는 연속된 숫자를 만듭니다.\nseq()는 시작, 끝, 간격을 지정할 수 있습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#같은-값을-반복할-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#같은-값을-반복할-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "같은 값을 반복할 수 있다",
+    "text": "같은 값을 반복할 수 있다\ncontrol_labels &lt;- rep(\"control\", times = 3)\ncontrol_labels\n\nqc_flags &lt;- rep(TRUE, times = 4)\nqc_flags\nrep()는 같은 값이나 벡터를 지정한 횟수만큼 반복합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#인덱싱은-필요한-원소를-선택하는-방법이다",
+    "href": "slides/03_vectors_and_indexing.html#인덱싱은-필요한-원소를-선택하는-방법이다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "인덱싱은 필요한 원소를 선택하는 방법이다",
+    "text": "인덱싱은 필요한 원소를 선택하는 방법이다\ncell_counts &lt;- c(1200, 1350, 980)\ncell_counts[1]\n\n대괄호 [] 안에 선택 기준을 작성합니다.\nR의 위치 번호는 1부터 시작합니다.\ncell_counts[1]은 첫 번째 원소를 선택합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#위치로-여러-원소를-선택한다",
+    "href": "slides/03_vectors_and_indexing.html#위치로-여러-원소를-선택한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "위치로 여러 원소를 선택한다",
+    "text": "위치로 여러 원소를 선택한다\ncell_counts &lt;- c(1200, 1350, 980, 1420)\n\ncell_counts[c(1, 3)]\ncell_counts[2:4]\n\n선택할 위치도 벡터로 전달할 수 있습니다.\n선택 결과 역시 벡터입니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#음수-위치는-해당-원소를-제외한다",
+    "href": "slides/03_vectors_and_indexing.html#음수-위치는-해당-원소를-제외한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "음수 위치는 해당 원소를 제외한다",
+    "text": "음수 위치는 해당 원소를 제외한다\ncell_counts &lt;- c(1200, 1350, 980, 1420)\n\ncell_counts[-1]\ncell_counts[-c(1, 3)]\n\n음수 위치는 그 위치를 빼고 나머지를 선택합니다.\n양수 위치와 음수 위치를 한 번에 섞어 사용할 수 없습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터의-원소에-이름을-붙일-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#벡터의-원소에-이름을-붙일-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터의 원소에 이름을 붙일 수 있다",
+    "text": "벡터의 원소에 이름을 붙일 수 있다\ncell_counts &lt;- c(\n  control_1 = 1200,\n  control_2 = 1350,\n  treated_1 = 980\n)\n\ncell_counts\nnames(cell_counts)\n이름을 붙이면 각 값이 어떤 샘플에 해당하는지 알기 쉽습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#이름으로-원소를-선택한다",
+    "href": "slides/03_vectors_and_indexing.html#이름으로-원소를-선택한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "이름으로 원소를 선택한다",
+    "text": "이름으로 원소를 선택한다\ncell_counts[\"control_2\"]\ncell_counts[c(\"control_1\", \"treated_1\")]\n\n위치를 외우지 않고 의미 있는 이름으로 선택할 수 있습니다.\n이름은 따옴표로 감싼 문자형 값입니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#비교-연산은-논리형-벡터를-만든다",
+    "href": "slides/03_vectors_and_indexing.html#비교-연산은-논리형-벡터를-만든다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "비교 연산은 논리형 벡터를 만든다",
+    "text": "비교 연산은 논리형 벡터를 만든다\ncell_counts &lt;- c(1200, 1350, 980, 1420)\n\ncell_counts &gt;= 1200\n각 원소를 1200과 비교하여 TRUE 또는 FALSE를 반환합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#논리형-벡터로-원소를-선택한다",
+    "href": "slides/03_vectors_and_indexing.html#논리형-벡터로-원소를-선택한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "논리형 벡터로 원소를 선택한다",
+    "text": "논리형 벡터로 원소를 선택한다\nenough_cells &lt;- cell_counts &gt;= 1200\nenough_cells\n\ncell_counts[enough_cells]\n\nTRUE인 위치의 원소만 선택됩니다.\n비교와 선택을 한 줄로 작성할 수도 있습니다.\n\ncell_counts[cell_counts &gt;= 1200]"
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#문자형-벡터도-조건으로-선택할-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#문자형-벡터도-조건으로-선택할-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "문자형 벡터도 조건으로 선택할 수 있다",
+    "text": "문자형 벡터도 조건으로 선택할 수 있다\nconditions &lt;- c(\"control\", \"control\", \"treated\", \"treated\")\ncell_counts &lt;- c(1200, 1350, 980, 1420)\n\nconditions == \"treated\"\ncell_counts[conditions == \"treated\"]\n두 벡터의 같은 위치가 같은 샘플을 나타내도록 순서를 맞춰야 합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터-연산은-모든-원소에-적용된다",
+    "href": "slides/03_vectors_and_indexing.html#벡터-연산은-모든-원소에-적용된다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터 연산은 모든 원소에 적용된다",
+    "text": "벡터 연산은 모든 원소에 적용된다\ncell_counts &lt;- c(1200, 1350, 980)\n\ncell_counts + 100\ncell_counts * 2\ncell_counts / 1000\n\n반복문을 작성하지 않아도 각 원소에 계산이 적용됩니다.\n이를 벡터화 연산이라고 합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#같은-길이의-벡터끼리-계산할-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#같은-길이의-벡터끼리-계산할-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "같은 길이의 벡터끼리 계산할 수 있다",
+    "text": "같은 길이의 벡터끼리 계산할 수 있다\nraw_counts &lt;- c(1200, 1350, 980)\nfiltered_counts &lt;- c(1100, 1250, 900)\n\nremoved_counts &lt;- raw_counts - filtered_counts\nremoved_counts\n같은 위치의 원소끼리 계산됩니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#벡터-길이가-다르면-주의한다",
+    "href": "slides/03_vectors_and_indexing.html#벡터-길이가-다르면-주의한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "벡터 길이가 다르면 주의한다",
+    "text": "벡터 길이가 다르면 주의한다\ncell_counts &lt;- c(1200, 1350, 980, 1420)\noffsets &lt;- c(10, 20)\n\ncell_counts + offsets\n\n짧은 벡터가 반복되어 계산될 수 있습니다.\n이를 재활용 규칙이라고 합니다.\n의도하지 않은 계산을 피하려면 벡터 길이를 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#기초-통계-함수로-벡터를-요약한다",
+    "href": "slides/03_vectors_and_indexing.html#기초-통계-함수로-벡터를-요약한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "기초 통계 함수로 벡터를 요약한다",
+    "text": "기초 통계 함수로 벡터를 요약한다\ncell_counts &lt;- c(1200, 1350, 980, 1420)\n\nsum(cell_counts)\nmean(cell_counts)\nmedian(cell_counts)\nmin(cell_counts)\nmax(cell_counts)\n여러 값을 하나의 대표값으로 요약할 수 있습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#summary로-여러-요약값을-확인한다",
+    "href": "slides/03_vectors_and_indexing.html#summary로-여러-요약값을-확인한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "summary()로 여러 요약값을 확인한다",
+    "text": "summary()로 여러 요약값을 확인한다\nsummary(cell_counts)\nsummary()는 최솟값, 사분위수, 중앙값, 평균, 최댓값을 함께 보여 줍니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#na가-있으면-요약-결과도-na가-된다",
+    "href": "slides/03_vectors_and_indexing.html#na가-있으면-요약-결과도-na가-된다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "NA가 있으면 요약 결과도 NA가 된다",
+    "text": "NA가 있으면 요약 결과도 NA가 된다\ncell_counts &lt;- c(1200, 1350, NA, 1420)\n\nmean(cell_counts)\n알 수 없는 값이 포함되어 있으므로 평균도 바로 계산할 수 없습니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#na.rm-true로-결측값을-제외할-수-있다",
+    "href": "slides/03_vectors_and_indexing.html#na.rm-true로-결측값을-제외할-수-있다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "na.rm = TRUE로 결측값을 제외할 수 있다",
+    "text": "na.rm = TRUE로 결측값을 제외할 수 있다\nmean(cell_counts, na.rm = TRUE)\nsum(cell_counts, na.rm = TRUE)\n\nna.rm은 결측값 제거 여부를 정하는 인자입니다.\nTRUE로 지정하면 NA를 제외하고 계산합니다.\n결측값을 제외해도 되는지는 분석 목적에 따라 판단해야 합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#결측값의-위치와-개수를-확인한다",
+    "href": "slides/03_vectors_and_indexing.html#결측값의-위치와-개수를-확인한다",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "결측값의 위치와 개수를 확인한다",
+    "text": "결측값의 위치와 개수를 확인한다\nis.na(cell_counts)\nsum(is.na(cell_counts))\n\nis.na()는 각 원소가 결측값인지 확인합니다.\nR에서 TRUE는 계산할 때 1처럼 사용할 수 있습니다.\n따라서 sum(is.na(...))는 결측값의 개수를 셉니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#실습-1-벡터-만들고-확인하기",
+    "href": "slides/03_vectors_and_indexing.html#실습-1-벡터-만들고-확인하기",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "실습 1: 벡터 만들고 확인하기",
+    "text": "실습 1: 벡터 만들고 확인하기\nsample_names &lt;- c(\"control_1\", \"control_2\", \"treated_1\")\ncell_counts &lt;- c(1200, 1350, 980)\npassed_qc &lt;- c(TRUE, TRUE, FALSE)\n각 벡터의 값, 자료형, 길이를 확인합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#실습-2-필요한-원소-선택하기",
+    "href": "slides/03_vectors_and_indexing.html#실습-2-필요한-원소-선택하기",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "실습 2: 필요한 원소 선택하기",
+    "text": "실습 2: 필요한 원소 선택하기\ncell_counts[2]\ncell_counts[c(1, 3)]\ncell_counts[cell_counts &gt;= 1200]\n위치 선택과 조건 선택의 결과를 비교합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#실습-3-벡터-계산하고-요약하기",
+    "href": "slides/03_vectors_and_indexing.html#실습-3-벡터-계산하고-요약하기",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "실습 3: 벡터 계산하고 요약하기",
+    "text": "실습 3: 벡터 계산하고 요약하기\nfiltered_counts &lt;- c(1100, 1250, 900)\nremoved_counts &lt;- cell_counts - filtered_counts\n\nremoved_counts\nmean(filtered_counts)\nmax(filtered_counts)\n어떤 샘플의 제거된 세포 수가 가장 많습니까?"
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#실습-4-결측값-다루기",
+    "href": "slides/03_vectors_and_indexing.html#실습-4-결측값-다루기",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "실습 4: 결측값 다루기",
+    "text": "실습 4: 결측값 다루기\ngene_counts &lt;- c(18000, NA, 19500)\n\nis.na(gene_counts)\nsum(is.na(gene_counts))\nmean(gene_counts, na.rm = TRUE)\nna.rm = TRUE를 사용하기 전후의 평균 결과를 비교합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#오늘-배운-내용",
+    "href": "slides/03_vectors_and_indexing.html#오늘-배운-내용",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\nc()로 같은 종류의 여러 값을 벡터로 만듭니다.\n[] 안에 위치, 이름, 조건을 지정하여 원소를 선택합니다.\n벡터화 연산은 각 원소에 같은 계산을 적용합니다.\nmean(), sum() 등의 함수로 벡터를 요약합니다.\nNA가 있으면 확인한 뒤 필요할 때 na.rm = TRUE를 사용합니다."
+  },
+  {
+    "objectID": "slides/03_vectors_and_indexing.html#종료-점검과-다음-차시",
+    "href": "slides/03_vectors_and_indexing.html#종료-점검과-다음-차시",
+    "title": "3차시: 벡터와 인덱싱",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\nR에서 벡터의 첫 번째 원소는 어떤 위치 번호를 가집니까?\ncell_counts[-1]은 무엇을 선택합니까?\n조건 인덱싱에서 어떤 위치의 원소가 선택됩니까?\nNA를 제외하고 평균을 구하려면 어떻게 작성합니까?\n\n다음 차시: 벡터를 행과 열로 배치한 행렬과 범주형 자료를 표현하는 팩터"
+  },
+  {
+    "objectID": "slides/05_data_frames.html#오늘의-학습-목표",
+    "href": "slides/05_data_frames.html#오늘의-학습-목표",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n여러 자료형으로 구성된 데이터 프레임을 만들 수 있다.\n데이터 프레임의 구조를 확인하고 행과 열을 선택할 수 있다.\n새로운 열을 추가하고 기존 값을 수정할 수 있다.\n결측값이 있는 위치와 개수를 확인할 수 있다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#선수-지식",
+    "href": "slides/05_data_frames.html#선수-지식",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n벡터를 만들고 원소를 선택할 수 있습니다.\n행렬에서 [행, 열]로 값을 선택할 수 있습니다.\n범주형 값을 팩터로 표현할 수 있습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#여러-벡터로-샘플-정보를-관리할-때의-문제",
+    "href": "slides/05_data_frames.html#여러-벡터로-샘플-정보를-관리할-때의-문제",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "여러 벡터로 샘플 정보를 관리할 때의 문제",
+    "text": "여러 벡터로 샘플 정보를 관리할 때의 문제\nsample_names &lt;- c(\"control_1\", \"control_2\", \"treated_1\")\nconditions &lt;- c(\"control\", \"control\", \"treated\")\ncell_counts &lt;- c(1200, 1350, 980)\n\n세 벡터의 같은 위치가 같은 샘플을 나타냅니다.\n벡터가 많아지면 서로의 순서와 길이를 맞추기 어렵습니다.\n관련된 벡터를 하나의 표로 묶으면 관리하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#데이터-프레임은-행과-열로-이루어진-표다",
+    "href": "slides/05_data_frames.html#데이터-프레임은-행과-열로-이루어진-표다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "데이터 프레임은 행과 열로 이루어진 표다",
+    "text": "데이터 프레임은 행과 열로 이루어진 표다\n\n\n\nsample_name\ncondition\ncell_count\npassed_qc\n\n\n\n\ncontrol_1\ncontrol\n1200\nTRUE\n\n\ncontrol_2\ncontrol\n1350\nTRUE\n\n\ntreated_1\ntreated\n980\nFALSE\n\n\n\n\n한 행은 하나의 관측 대상, 여기서는 샘플 하나를 나타냅니다.\n한 열은 하나의 변수, 즉 샘플의 한 가지 특성을 나타냅니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#데이터-프레임은-열마다-자료형이-달라도-된다",
+    "href": "slides/05_data_frames.html#데이터-프레임은-열마다-자료형이-달라도-된다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "데이터 프레임은 열마다 자료형이 달라도 된다",
+    "text": "데이터 프레임은 열마다 자료형이 달라도 된다\n\n\n\n열\n자료형\n\n\n\n\nsample_name\n문자형\n\n\ncondition\n문자형 또는 팩터\n\n\ncell_count\n숫자형\n\n\npassed_qc\n논리형\n\n\n\n행렬은 모든 원소의 자료형이 같지만, 데이터 프레임은 열마다 다른 자료형을 가질 수 있습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#data.frame으로-데이터-프레임을-만든다",
+    "href": "slides/05_data_frames.html#data.frame으로-데이터-프레임을-만든다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "data.frame()으로 데이터 프레임을 만든다",
+    "text": "data.frame()으로 데이터 프레임을 만든다\nsample_info &lt;- data.frame(\n  sample_name = c(\"control_1\", \"control_2\", \"treated_1\"),\n  condition = c(\"control\", \"control\", \"treated\"),\n  cell_count = c(1200, 1350, 980),\n  passed_qc = c(TRUE, TRUE, FALSE)\n)\n\nsample_info\n각 인자는 데이터 프레임의 한 열이 됩니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#모든-열의-길이가-같아야-한다",
+    "href": "slides/05_data_frames.html#모든-열의-길이가-같아야-한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "모든 열의 길이가 같아야 한다",
+    "text": "모든 열의 길이가 같아야 한다\nsample_names &lt;- c(\"control_1\", \"control_2\", \"treated_1\")\ncell_counts &lt;- c(1200, 1350, 980)\n\nlength(sample_names)\nlength(cell_counts)\n\n한 행에 각 열의 값이 하나씩 필요합니다.\n길이가 맞지 않으면 데이터 프레임을 만들 때 오류가 발생할 수 있습니다.\n생성 전에 각 벡터의 길이를 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#데이터-프레임을-출력해-전체-모습을-확인한다",
+    "href": "slides/05_data_frames.html#데이터-프레임을-출력해-전체-모습을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "데이터 프레임을 출력해 전체 모습을 확인한다",
+    "text": "데이터 프레임을 출력해 전체 모습을 확인한다\nsample_info\nprint(sample_info)\n\n작은 데이터 프레임은 전체를 출력해 확인할 수 있습니다.\n데이터가 크면 일부와 구조를 먼저 확인하는 편이 좋습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#head와-tail로-일부-행을-확인한다",
+    "href": "slides/05_data_frames.html#head와-tail로-일부-행을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "head()와 tail()로 일부 행을 확인한다",
+    "text": "head()와 tail()로 일부 행을 확인한다\nhead(sample_info)\ntail(sample_info)\n\nhead()는 처음 6개 행을 보여 줍니다.\ntail()은 마지막 6개 행을 보여 줍니다.\n두 번째 인자로 확인할 행의 수를 지정할 수 있습니다.\n\nhead(sample_info, 2)"
+  },
+  {
+    "objectID": "slides/05_data_frames.html#데이터-프레임의-크기를-확인한다",
+    "href": "slides/05_data_frames.html#데이터-프레임의-크기를-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "데이터 프레임의 크기를 확인한다",
+    "text": "데이터 프레임의 크기를 확인한다\ndim(sample_info)\nnrow(sample_info)\nncol(sample_info)\n\ndim()은 행 수와 열 수를 차례로 반환합니다.\nnrow()는 행 수, ncol()은 열 수를 반환합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#열-이름을-확인한다",
+    "href": "slides/05_data_frames.html#열-이름을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "열 이름을 확인한다",
+    "text": "열 이름을 확인한다\nnames(sample_info)\ncolnames(sample_info)\n\n두 함수 모두 데이터 프레임의 열 이름을 보여 줍니다.\n정확한 열 이름을 확인하면 철자 오류를 줄일 수 있습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#str로-구조를-확인한다",
+    "href": "slides/05_data_frames.html#str로-구조를-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "str()로 구조를 확인한다",
+    "text": "str()로 구조를 확인한다\nstr(sample_info)\nstr()는 다음 정보를 간결하게 보여 줍니다.\n\n데이터 프레임의 행과 열 개수\n각 열의 이름과 자료형\n각 열에 저장된 값의 일부"
+  },
+  {
+    "objectID": "slides/05_data_frames.html#summary로-열별-요약을-확인한다",
+    "href": "slides/05_data_frames.html#summary로-열별-요약을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "summary()로 열별 요약을 확인한다",
+    "text": "summary()로 열별 요약을 확인한다\nsummary(sample_info)\n\n숫자형 열은 최솟값, 평균, 중앙값 등을 보여 줍니다.\n문자형과 논리형 열은 자료형에 맞는 정보를 보여 줍니다.\n분석을 시작할 때 데이터의 전체적인 모습을 파악하는 데 유용합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#로-한-열을-선택한다",
+    "href": "slides/05_data_frames.html#로-한-열을-선택한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "$로 한 열을 선택한다",
+    "text": "$로 한 열을 선택한다\nsample_info$cell_count\nsample_info$condition\n\n$ 뒤에 열 이름을 작성합니다.\n결과는 해당 열의 벡터입니다.\n열 이름을 직접 알고 있을 때 읽기 쉬운 방법입니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#로-한-열을-선택한다-1",
+    "href": "slides/05_data_frames.html#로-한-열을-선택한다-1",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "[[ ]]로 한 열을 선택한다",
+    "text": "[[ ]]로 한 열을 선택한다\nsample_info[[\"cell_count\"]]\n\ncolumn_name &lt;- \"cell_count\"\nsample_info[[column_name]]\n\n[[ ]]의 결과도 한 열의 벡터입니다.\n열 이름을 변수에 저장해 선택할 때 유용합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#행-열로-위치를-지정한다",
+    "href": "slides/05_data_frames.html#행-열로-위치를-지정한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "[행, 열]로 위치를 지정한다",
+    "text": "[행, 열]로 위치를 지정한다\nsample_info[1, 2]\nsample_info[1, ]\nsample_info[, 2]\n\n쉼표 앞은 행, 뒤는 열입니다.\n자리를 비워 두면 모든 행 또는 모든 열을 뜻합니다.\nsample_info[1, ]은 첫 번째 행의 모든 열을 선택합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#여러-행을-선택한다",
+    "href": "slides/05_data_frames.html#여러-행을-선택한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "여러 행을 선택한다",
+    "text": "여러 행을 선택한다\nsample_info[c(1, 3), ]\nsample_info[1:2, ]\n벡터 인덱싱과 마찬가지로 선택할 행 번호를 벡터로 전달할 수 있습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#열-이름으로-여러-열을-선택한다",
+    "href": "slides/05_data_frames.html#열-이름으로-여러-열을-선택한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "열 이름으로 여러 열을 선택한다",
+    "text": "열 이름으로 여러 열을 선택한다\nsample_info[, c(\"sample_name\", \"cell_count\")]\n선택 결과가 여러 열이면 데이터 프레임 형태가 유지됩니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#한-열-선택-결과의-차이를-관찰한다",
+    "href": "slides/05_data_frames.html#한-열-선택-결과의-차이를-관찰한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "한 열 선택 결과의 차이를 관찰한다",
+    "text": "한 열 선택 결과의 차이를 관찰한다\nsample_info$cell_count\nsample_info[, \"cell_count\"]\nsample_info[, \"cell_count\", drop = FALSE]\n\n앞의 두 결과는 보통 벡터입니다.\ndrop = FALSE를 사용하면 한 열이어도 데이터 프레임을 유지합니다.\n현재 필요한 결과 형태가 벡터인지 표인지 생각하고 선택합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#논리형-벡터로-행을-선택할-수-있다",
+    "href": "slides/05_data_frames.html#논리형-벡터로-행을-선택할-수-있다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "논리형 벡터로 행을 선택할 수 있다",
+    "text": "논리형 벡터로 행을 선택할 수 있다\nsample_info$passed_qc\nsample_info[sample_info$passed_qc, ]\npassed_qc가 TRUE인 행만 선택됩니다.\n\n여러 조건을 결합하는 자세한 방법은 7차시에서 학습합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#비교-결과로-행을-선택할-수-있다",
+    "href": "slides/05_data_frames.html#비교-결과로-행을-선택할-수-있다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "비교 결과로 행을 선택할 수 있다",
+    "text": "비교 결과로 행을 선택할 수 있다\nenough_cells &lt;- sample_info$cell_count &gt;= 1200\nenough_cells\n\nsample_info[enough_cells, ]\n\n열을 벡터로 선택합니다.\n각 원소를 기준과 비교합니다.\n결과가 TRUE인 행을 선택합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#로-새로운-열을-추가한다",
+    "href": "slides/05_data_frames.html#로-새로운-열을-추가한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "$로 새로운 열을 추가한다",
+    "text": "$로 새로운 열을 추가한다\nsample_info$cell_count_k &lt;- sample_info$cell_count / 1000\nsample_info\n\n존재하지 않는 열 이름에 값을 저장하면 새 열이 만들어집니다.\n새 열의 값 개수는 데이터 프레임의 행 수와 맞아야 합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#기존-열-전체를-수정한다",
+    "href": "slides/05_data_frames.html#기존-열-전체를-수정한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "기존 열 전체를 수정한다",
+    "text": "기존 열 전체를 수정한다\nsample_info$condition &lt;- factor(sample_info$condition)\nstr(sample_info)\n같은 열 이름에 새 값을 저장하면 기존 열이 바뀝니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#특정-위치의-값을-수정한다",
+    "href": "slides/05_data_frames.html#특정-위치의-값을-수정한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "특정 위치의 값을 수정한다",
+    "text": "특정 위치의 값을 수정한다\nsample_info[3, \"cell_count\"] &lt;- 1050\nsample_info\n\n세 번째 행의 cell_count 값만 변경합니다.\n수정 전에는 선택한 행과 열이 맞는지 먼저 확인합니다.\n\nsample_info[3, \"cell_count\"]"
+  },
+  {
+    "objectID": "slides/05_data_frames.html#조건에-맞는-값을-수정한다",
+    "href": "slides/05_data_frames.html#조건에-맞는-값을-수정한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "조건에 맞는 값을 수정한다",
+    "text": "조건에 맞는 값을 수정한다\nfailed_rows &lt;- !sample_info$passed_qc\nsample_info[failed_rows, \"cell_count\"] &lt;- NA\nsample_info\n\n!는 논리값을 반대로 바꿉니다.\nQC를 통과하지 못한 행의 세포 수를 결측값으로 변경했습니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#is.na로-결측값을-확인한다",
+    "href": "slides/05_data_frames.html#is.na로-결측값을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "is.na()로 결측값을 확인한다",
+    "text": "is.na()로 결측값을 확인한다\nis.na(sample_info)\n각 셀이 결측값인지 같은 크기의 논리형 결과로 보여 줍니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#열별-결측값-개수를-확인한다",
+    "href": "slides/05_data_frames.html#열별-결측값-개수를-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "열별 결측값 개수를 확인한다",
+    "text": "열별 결측값 개수를 확인한다\nsum(is.na(sample_info$cell_count))\n\nis.na()는 결측값 위치에 TRUE를 반환합니다.\nsum()은 TRUE의 개수를 세어 결측값 개수를 계산합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#complete.cases로-완전한-행을-확인한다",
+    "href": "slides/05_data_frames.html#complete.cases로-완전한-행을-확인한다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "complete.cases()로 완전한 행을 확인한다",
+    "text": "complete.cases()로 완전한 행을 확인한다\ncomplete.cases(sample_info)\nsample_info[complete.cases(sample_info), ]\n\n모든 열에 값이 있는 행은 TRUE입니다.\n결측값이 하나라도 있는 행은 FALSE입니다.\n행을 제외하기 전에는 결측 이유와 분석 목적을 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#흔한-오류-1-열-이름의-철자가-다르다",
+    "href": "slides/05_data_frames.html#흔한-오류-1-열-이름의-철자가-다르다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "흔한 오류 1: 열 이름의 철자가 다르다",
+    "text": "흔한 오류 1: 열 이름의 철자가 다르다\nnames(sample_info)\nsample_info$cell_count\n# sample_info$cell_counts\n원하는 결과가 나오지 않으면 names()로 실제 열 이름을 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#흔한-오류-2-행과-열의-순서를-바꾼다",
+    "href": "slides/05_data_frames.html#흔한-오류-2-행과-열의-순서를-바꾼다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "흔한 오류 2: 행과 열의 순서를 바꾼다",
+    "text": "흔한 오류 2: 행과 열의 순서를 바꾼다\nsample_info[1, 2]\n\n쉼표 앞은 행, 뒤는 열입니다.\n코드를 실행하기 전에 [행, 열]이라고 읽어 봅니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#흔한-오류-3-원본을-바로-덮어쓴다",
+    "href": "slides/05_data_frames.html#흔한-오류-3-원본을-바로-덮어쓴다",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "흔한 오류 3: 원본을 바로 덮어쓴다",
+    "text": "흔한 오류 3: 원본을 바로 덮어쓴다\nsample_info_qc &lt;- sample_info[complete.cases(sample_info), ]\n\n학습 중에는 수정 결과를 새 이름에 저장하면 비교하기 쉽습니다.\n원본을 바꾸기 전에는 변경할 위치와 결과를 먼저 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#실습-1-샘플-표-만들기",
+    "href": "slides/05_data_frames.html#실습-1-샘플-표-만들기",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "실습 1: 샘플 표 만들기",
+    "text": "실습 1: 샘플 표 만들기\nsample_info &lt;- data.frame(\n  sample_name = c(\"control_1\", \"control_2\", \"treated_1\", \"treated_2\"),\n  condition = c(\"control\", \"control\", \"treated\", \"treated\"),\n  cell_count = c(1200, 1350, 980, 1420),\n  passed_qc = c(TRUE, TRUE, FALSE, TRUE)\n)\nstr(), dim(), names()로 구조를 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#실습-2-행과-열-선택하기",
+    "href": "slides/05_data_frames.html#실습-2-행과-열-선택하기",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "실습 2: 행과 열 선택하기",
+    "text": "실습 2: 행과 열 선택하기\nsample_info$cell_count\nsample_info[1:2, ]\nsample_info[, c(\"sample_name\", \"passed_qc\")]\n각 결과가 벡터인지 데이터 프레임인지 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#실습-3-열-추가하고-값-수정하기",
+    "href": "slides/05_data_frames.html#실습-3-열-추가하고-값-수정하기",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "실습 3: 열 추가하고 값 수정하기",
+    "text": "실습 3: 열 추가하고 값 수정하기\nsample_info$cell_count_k &lt;- sample_info$cell_count / 1000\nsample_info[3, \"cell_count\"] &lt;- 1050\nsample_info\n새 열과 수정된 값이 예상한 위치에 있는지 확인합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#실습-4-결측값-점검하기",
+    "href": "slides/05_data_frames.html#실습-4-결측값-점검하기",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "실습 4: 결측값 점검하기",
+    "text": "실습 4: 결측값 점검하기\nsample_info$doublet_rate &lt;- c(3.2, NA, 4.1, 2.8)\n\nis.na(sample_info$doublet_rate)\nsum(is.na(sample_info$doublet_rate))\ncomplete.cases(sample_info)\n어떤 샘플에 결측값이 있는지 선택해 봅니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#오늘-배운-내용",
+    "href": "slides/05_data_frames.html#오늘-배운-내용",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n데이터 프레임은 행마다 관측 대상, 열마다 변수를 저장합니다.\nstr(), dim(), names() 등으로 구조를 확인합니다.\n$, [[ ]], [행, 열]을 사용해 필요한 부분을 선택합니다.\n$ 또는 [행, 열]을 사용해 열을 추가하고 값을 수정합니다.\nis.na()와 complete.cases()로 결측값을 점검합니다."
+  },
+  {
+    "objectID": "slides/05_data_frames.html#종료-점검과-다음-차시",
+    "href": "slides/05_data_frames.html#종료-점검과-다음-차시",
+    "title": "5차시: 데이터 프레임 다루기",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n데이터 프레임과 행렬의 자료형에는 어떤 차이가 있습니까?\n첫 번째 행의 모든 열을 선택하려면 어떻게 작성합니까?\nsample_info$cell_count의 결과는 어떤 형태입니까?\n열별 결측값 개수는 어떻게 계산합니까?\n\n다음 차시: CSV 파일을 데이터 프레임으로 불러오고 분석 결과 저장하기"
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#오늘의-학습-목표",
+    "href": "slides/07_conditions_and_filtering.html#오늘의-학습-목표",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n비교 연산자로 조건을 만들 수 있다.\n논리 연산자로 여러 조건을 결합할 수 있다.\n조건을 이용해 데이터 프레임의 행을 선택할 수 있다.\nif, if ... else, ifelse()를 상황에 맞게 사용할 수 있다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#선수-지식",
+    "href": "slides/07_conditions_and_filtering.html#선수-지식",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n논리형 값 TRUE, FALSE를 구분할 수 있습니다.\n벡터를 조건으로 인덱싱할 수 있습니다.\n데이터 프레임에서 $와 [행, 열]을 사용할 수 있습니다.\nread.csv()로 CSV 파일을 불러올 수 있습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#차시의-샘플-메타데이터를-사용한다",
+    "href": "slides/07_conditions_and_filtering.html#차시의-샘플-메타데이터를-사용한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "6차시의 샘플 메타데이터를 사용한다",
+    "text": "6차시의 샘플 메타데이터를 사용한다\nsample_metadata &lt;- read.csv(\"data/sample_metadata.csv\")\nhead(sample_metadata)\n이번 차시에서는 불러온 표에서 원하는 샘플을 조건에 따라 선택합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#조건식의-결과는-논리값이다",
+    "href": "slides/07_conditions_and_filtering.html#조건식의-결과는-논리값이다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "조건식의 결과는 논리값이다",
+    "text": "조건식의 결과는 논리값이다\ncell_count &lt;- 1240\n\ncell_count &gt;= 1200\ncell_count &lt; 1000\n\n조건이 맞으면 TRUE, 맞지 않으면 FALSE입니다.\n이 논리값을 선택과 실행 흐름에 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#크기를-비교하는-연산자",
+    "href": "slides/07_conditions_and_filtering.html#크기를-비교하는-연산자",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "크기를 비교하는 연산자",
+    "text": "크기를 비교하는 연산자\n\n\n\n연산자\n의미\n예\n\n\n\n\n&gt;\n크다\nx &gt; 10\n\n\n&gt;=\n크거나 같다\nx &gt;= 10\n\n\n&lt;\n작다\nx &lt; 10\n\n\n&lt;=\n작거나 같다\nx &lt;= 10\n\n\n\n경계값을 포함할지 생각한 뒤 &gt;와 &gt;=를 구분합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#같은지-또는-다른지-비교한다",
+    "href": "slides/07_conditions_and_filtering.html#같은지-또는-다른지-비교한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "같은지 또는 다른지 비교한다",
+    "text": "같은지 또는 다른지 비교한다\n\n\n\n연산자\n의미\n예\n\n\n\n\n==\n같다\ncondition == \"treated\"\n\n\n!=\n다르다\ncondition != \"treated\"\n\n\n\ncondition &lt;- \"control\"\n\ncondition == \"control\"\ncondition != \"treated\""
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#대입과-비교를-구분한다",
+    "href": "slides/07_conditions_and_filtering.html#대입과-비교를-구분한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "대입과 비교를 구분한다",
+    "text": "대입과 비교를 구분한다\ncondition &lt;- \"control\"\ncondition == \"control\"\n\n&lt;-는 값을 변수에 저장합니다.\n==는 두 값이 같은지 비교합니다.\n조건식에서 = 하나를 잘못 사용하지 않도록 주의합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#벡터를-비교하면-원소마다-결과가-나온다",
+    "href": "slides/07_conditions_and_filtering.html#벡터를-비교하면-원소마다-결과가-나온다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "벡터를 비교하면 원소마다 결과가 나온다",
+    "text": "벡터를 비교하면 원소마다 결과가 나온다\ncell_counts &lt;- c(1240, 1385, 1090, 1520)\ncell_counts &gt;= 1200\n비교 결과는 원래 벡터와 길이가 같은 논리형 벡터입니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#데이터-프레임의-열로-조건을-만든다",
+    "href": "slides/07_conditions_and_filtering.html#데이터-프레임의-열로-조건을-만든다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "데이터 프레임의 열로 조건을 만든다",
+    "text": "데이터 프레임의 열로 조건을 만든다\nenough_cells &lt;- sample_metadata$cell_count &gt;= 1200\nenough_cells\n각 값은 같은 행에 있는 샘플이 조건을 만족하는지 나타냅니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#조건으로-행을-선택한다",
+    "href": "slides/07_conditions_and_filtering.html#조건으로-행을-선택한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "조건으로 행을 선택한다",
+    "text": "조건으로 행을 선택한다\nsample_metadata[enough_cells, ]\n\n대괄호의 쉼표 앞에 논리형 벡터를 넣습니다.\nTRUE인 행만 선택됩니다.\n쉼표 뒤를 비워 모든 열을 유지합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#조건을-직접-작성할-수도-있다",
+    "href": "slides/07_conditions_and_filtering.html#조건을-직접-작성할-수도-있다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "조건을 직접 작성할 수도 있다",
+    "text": "조건을 직접 작성할 수도 있다\nsample_metadata[\n  sample_metadata$cell_count &gt;= 1200,\n]\n조건을 변수에 먼저 저장하면 중간 결과를 확인하기 쉽고, 직접 작성하면 코드가 짧아집니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#문자형-열도-비교할-수-있다",
+    "href": "slides/07_conditions_and_filtering.html#문자형-열도-비교할-수-있다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "문자형 열도 비교할 수 있다",
+    "text": "문자형 열도 비교할 수 있다\nis_treated &lt;- sample_metadata$condition == \"treated\"\nis_treated\n\nsample_metadata[is_treated, ]\n문자형 값을 비교할 때는 따옴표와 철자를 확인합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#in으로-여러-값-중-하나인지-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#in으로-여러-값-중-하나인지-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "%in%으로 여러 값 중 하나인지 확인한다",
+    "text": "%in%으로 여러 값 중 하나인지 확인한다\nselected_batches &lt;- c(\"batch_1\", \"batch_3\")\n\nsample_metadata$batch %in% selected_batches\n\n왼쪽 값이 오른쪽 벡터에 포함되어 있으면 TRUE입니다.\n여러 범주 중 하나에 해당하는 행을 찾을 때 편리합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#는-두-조건이-모두-참인지-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#는-두-조건이-모두-참인지-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "&는 두 조건이 모두 참인지 확인한다",
+    "text": "&는 두 조건이 모두 참인지 확인한다\nenough_cells &lt;- sample_metadata$cell_count &gt;= 1200\nlow_mito &lt;- sample_metadata$mito_percent &lt; 8\n\nenough_cells & low_mito\n\n\n\n조건 1\n조건 2\n& 결과\n\n\n\n\nTRUE\nTRUE\nTRUE\n\n\nTRUE\nFALSE\nFALSE\n\n\nFALSE\nTRUE\nFALSE\n\n\nFALSE\nFALSE\nFALSE"
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#는-하나-이상의-조건이-참인지-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#는-하나-이상의-조건이-참인지-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "|는 하나 이상의 조건이 참인지 확인한다",
+    "text": "|는 하나 이상의 조건이 참인지 확인한다\nfew_cells &lt;- sample_metadata$cell_count &lt; 1200\nhigh_mito &lt;- sample_metadata$mito_percent &gt;= 8\n\nfew_cells | high_mito\n두 조건 중 하나라도 TRUE이면 결과는 TRUE입니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#는-논리값을-반대로-바꾼다",
+    "href": "slides/07_conditions_and_filtering.html#는-논리값을-반대로-바꾼다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "!는 논리값을 반대로 바꾼다",
+    "text": "!는 논리값을 반대로 바꾼다\nsample_metadata$passed_qc\n!sample_metadata$passed_qc\n\nTRUE는 FALSE로 바뀝니다.\nFALSE는 TRUE로 바뀝니다.\n조건을 만족하지 않는 행을 찾을 때 사용합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#여러-조건을-결합해-행을-선택한다",
+    "href": "slides/07_conditions_and_filtering.html#여러-조건을-결합해-행을-선택한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "여러 조건을 결합해 행을 선택한다",
+    "text": "여러 조건을 결합해 행을 선택한다\nqc_condition &lt;-\n  sample_metadata$cell_count &gt;= 1200 &\n  sample_metadata$mito_percent &lt; 8\n\nsample_metadata[qc_condition, ]\n각 비교식을 줄로 나누면 긴 조건도 읽기 쉽습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#괄호로-조건의-의미를-분명히-한다",
+    "href": "slides/07_conditions_and_filtering.html#괄호로-조건의-의미를-분명히-한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "괄호로 조건의 의미를 분명히 한다",
+    "text": "괄호로 조건의 의미를 분명히 한다\nselected_condition &lt;-\n  sample_metadata$condition == \"treated\" &\n  (sample_metadata$batch == \"batch_1\" |\n    sample_metadata$batch == \"batch_2\")\n\n괄호 안의 조건을 먼저 계산합니다.\n&와 |를 함께 쓸 때는 괄호로 의도를 표시합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#조건식에는-교육용-기준을-사용한다",
+    "href": "slides/07_conditions_and_filtering.html#조건식에는-교육용-기준을-사용한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "조건식에는 교육용 기준을 사용한다",
+    "text": "조건식에는 교육용 기준을 사용한다\nqc_condition &lt;-\n  sample_metadata$cell_count &gt;= 1200 &\n  sample_metadata$median_genes &gt;= 2000 &\n  sample_metadata$mito_percent &lt; 8\n\n이 수치는 R 조건식 연습을 위한 예시입니다. 실제 QC 기준은 조직, 실험법, 샘플 상태와 분포를 검토하여 정해야 합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#조건을-만족하는-행의-개수를-센다",
+    "href": "slides/07_conditions_and_filtering.html#조건을-만족하는-행의-개수를-센다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "조건을 만족하는 행의 개수를 센다",
+    "text": "조건을 만족하는 행의 개수를 센다\nsum(qc_condition)\n\n계산에서 TRUE는 1, FALSE는 0처럼 사용됩니다.\n따라서 sum()으로 조건을 만족하는 개수를 셀 수 있습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#any는-하나라도-참인지-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#any는-하나라도-참인지-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "any()는 하나라도 참인지 확인한다",
+    "text": "any()는 하나라도 참인지 확인한다\nany(sample_metadata$mito_percent &gt;= 8)\n하나 이상의 샘플이 조건을 만족하면 TRUE를 반환합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#all은-모두-참인지-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#all은-모두-참인지-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "all()은 모두 참인지 확인한다",
+    "text": "all()은 모두 참인지 확인한다\nall(sample_metadata$cell_count &gt;= 900)\n모든 샘플이 조건을 만족해야 TRUE를 반환합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#which는-참인-위치를-반환한다",
+    "href": "slides/07_conditions_and_filtering.html#which는-참인-위치를-반환한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "which()는 참인 위치를 반환한다",
+    "text": "which()는 참인 위치를 반환한다\nwhich(sample_metadata$passed_qc)\n\n논리형 결과 대신 행 번호가 필요할 때 사용합니다.\n행 선택에는 논리형 벡터를 직접 사용하는 편이 더 읽기 쉬운 경우가 많습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#na와-비교하면-결과도-na다",
+    "href": "slides/07_conditions_and_filtering.html#na와-비교하면-결과도-na다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "NA와 비교하면 결과도 NA다",
+    "text": "NA와 비교하면 결과도 NA다\nsample_metadata$doublet_rate &lt;= 4\n\n알 수 없는 값이 기준 이하인지도 알 수 없습니다.\n따라서 해당 위치의 비교 결과는 NA입니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#결측값을-제외하는-조건을-함께-작성한다",
+    "href": "slides/07_conditions_and_filtering.html#결측값을-제외하는-조건을-함께-작성한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "결측값을 제외하는 조건을 함께 작성한다",
+    "text": "결측값을 제외하는 조건을 함께 작성한다\nknown_doublet_rate &lt;- !is.na(sample_metadata$doublet_rate)\nlow_doublet_rate &lt;- sample_metadata$doublet_rate &lt;= 4\n\ndoublet_condition &lt;- known_doublet_rate & low_doublet_rate\nsample_metadata[doublet_condition, ]\n결측값을 임의로 통과 또는 탈락시키지 말고 처리 원칙을 먼저 정합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#if는-조건에-따라-코드를-실행한다",
+    "href": "slides/07_conditions_and_filtering.html#if는-조건에-따라-코드를-실행한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "if는 조건에 따라 코드를 실행한다",
+    "text": "if는 조건에 따라 코드를 실행한다\ncell_count &lt;- 1240\n\nif (cell_count &gt;= 1200) {\n  print(\"세포 수 기준을 만족합니다.\")\n}\n\n괄호 안의 조건이 TRUE일 때만 중괄호 안을 실행합니다.\n들여쓰기는 공백 2칸을 사용합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#if-...-else는-두-실행-경로를-만든다",
+    "href": "slides/07_conditions_and_filtering.html#if-...-else는-두-실행-경로를-만든다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "if ... else는 두 실행 경로를 만든다",
+    "text": "if ... else는 두 실행 경로를 만든다\ncell_count &lt;- 980\n\nif (cell_count &gt;= 1200) {\n  qc_message &lt;- \"세포 수 기준 통과\"\n} else {\n  qc_message &lt;- \"세포 수 기준 미달\"\n}\n\nqc_message\n조건이 TRUE이면 첫 블록, FALSE이면 else 블록을 실행합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#if에는-길이-1인-조건이-필요하다",
+    "href": "slides/07_conditions_and_filtering.html#if에는-길이-1인-조건이-필요하다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "if에는 길이 1인 조건이 필요하다",
+    "text": "if에는 길이 1인 조건이 필요하다\nall_passed &lt;- all(sample_metadata$passed_qc)\n\nif (all_passed) {\n  print(\"모든 샘플이 QC를 통과했습니다.\")\n} else {\n  print(\"QC를 통과하지 못한 샘플이 있습니다.\")\n}\n열 전체처럼 여러 논리값을 if에 직접 넣지 않습니다.\n# if (sample_metadata$passed_qc) { ... }"
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#와-는-if의-단일-조건을-결합한다",
+    "href": "slides/07_conditions_and_filtering.html#와-는-if의-단일-조건을-결합한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "&&와 ||는 if의 단일 조건을 결합한다",
+    "text": "&&와 ||는 if의 단일 조건을 결합한다\ncell_count &lt;- 1240\nmito_percent &lt;- 4.2\n\nif (cell_count &gt;= 1200 && mito_percent &lt; 8) {\n  print(\"두 기준을 모두 만족합니다.\")\n}\n\n&&는 단일 조건 두 개가 모두 참인지 확인합니다.\n||는 단일 조건 중 하나 이상이 참인지 확인합니다.\n벡터의 원소별 비교에는 &와 |를 사용합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#ifelse는-원소마다-값을-선택한다",
+    "href": "slides/07_conditions_and_filtering.html#ifelse는-원소마다-값을-선택한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "ifelse()는 원소마다 값을 선택한다",
+    "text": "ifelse()는 원소마다 값을 선택한다\nqc_labels &lt;- ifelse(\n  sample_metadata$passed_qc,\n  \"pass\",\n  \"fail\"\n)\n\nqc_labels\n\n첫 번째 인자의 각 논리값을 확인합니다.\nTRUE이면 두 번째 값, FALSE이면 세 번째 값을 반환합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#if와-ifelse를-구분한다",
+    "href": "slides/07_conditions_and_filtering.html#if와-ifelse를-구분한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "if와 ifelse()를 구분한다",
+    "text": "if와 ifelse()를 구분한다\n\n\n\n목적\n사용\n\n\n\n\n조건에 따라 코드 블록 하나를 실행\nif, if ... else\n\n\n벡터의 각 원소에 결과값 부여\nifelse()\n\n\n\nsample_metadata$qc_label &lt;- ifelse(\n  sample_metadata$passed_qc,\n  \"pass\",\n  \"fail\"\n)"
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#필터링-결과는-새-변수에-저장한다",
+    "href": "slides/07_conditions_and_filtering.html#필터링-결과는-새-변수에-저장한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "필터링 결과는 새 변수에 저장한다",
+    "text": "필터링 결과는 새 변수에 저장한다\nqc_passed_metadata &lt;- sample_metadata[qc_condition, ]\n\nqc_passed_metadata\nnrow(qc_passed_metadata)\n\n원본을 보존하면 기준과 결과를 비교하기 쉽습니다.\n조건을 확인한 뒤 결과를 새 이름에 저장합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#필터링-결과를-저장할-수-있다",
+    "href": "slides/07_conditions_and_filtering.html#필터링-결과를-저장할-수-있다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "필터링 결과를 저장할 수 있다",
+    "text": "필터링 결과를 저장할 수 있다\ndir.create(\"results\", showWarnings = FALSE)\n\nwrite.csv(\n  qc_passed_metadata,\n  \"results/qc_passed_metadata.csv\",\n  row.names = FALSE\n)\n저장한 기준과 파일 이름이 무엇을 의미하는지 기록합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#흔한-오류-1-대신-를-사용한다",
+    "href": "slides/07_conditions_and_filtering.html#흔한-오류-1-대신-를-사용한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "흔한 오류 1: & 대신 &&를 사용한다",
+    "text": "흔한 오류 1: & 대신 &&를 사용한다\ncondition_1 &lt;- sample_metadata$cell_count &gt;= 1200\ncondition_2 &lt;- sample_metadata$mito_percent &lt; 8\n\ncondition_1 & condition_2\n\n데이터 프레임의 각 행을 비교할 때는 &를 사용합니다.\n&&는 첫 번째 값만 확인하므로 행별 필터링에 적합하지 않습니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#흔한-오류-2-문자에-따옴표가-없다",
+    "href": "slides/07_conditions_and_filtering.html#흔한-오류-2-문자에-따옴표가-없다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "흔한 오류 2: 문자에 따옴표가 없다",
+    "text": "흔한 오류 2: 문자에 따옴표가 없다\nsample_metadata$condition == \"treated\"\n# sample_metadata$condition == treated\n문자형 값은 따옴표로 감쌉니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#흔한-오류-3-결측값을-na로-확인한다",
+    "href": "slides/07_conditions_and_filtering.html#흔한-오류-3-결측값을-na로-확인한다",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "흔한 오류 3: 결측값을 == NA로 확인한다",
+    "text": "흔한 오류 3: 결측값을 == NA로 확인한다\nis.na(sample_metadata$doublet_rate)\n# sample_metadata$doublet_rate == NA\n결측값은 is.na()로 확인합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-1-단일-조건으로-필터링하기",
+    "href": "slides/07_conditions_and_filtering.html#실습-1-단일-조건으로-필터링하기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 1: 단일 조건으로 필터링하기",
+    "text": "실습 1: 단일 조건으로 필터링하기\nenough_cells &lt;- sample_metadata$cell_count &gt;= 1200\nsample_metadata[enough_cells, ]\n\ntreated_samples &lt;- sample_metadata$condition == \"treated\"\nsample_metadata[treated_samples, ]\n각 조건을 만족하는 샘플 수를 sum()으로 계산합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-2-여러-조건-결합하기",
+    "href": "slides/07_conditions_and_filtering.html#실습-2-여러-조건-결합하기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 2: 여러 조건 결합하기",
+    "text": "실습 2: 여러 조건 결합하기\nqc_condition &lt;-\n  sample_metadata$cell_count &gt;= 1200 &\n  sample_metadata$median_genes &gt;= 2000 &\n  sample_metadata$mito_percent &lt; 8\n\nsample_metadata[qc_condition, ]\n각 조건을 따로 실행한 뒤 결합 결과와 비교합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-3-결측값이-있는-조건-다루기",
+    "href": "slides/07_conditions_and_filtering.html#실습-3-결측값이-있는-조건-다루기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 3: 결측값이 있는 조건 다루기",
+    "text": "실습 3: 결측값이 있는 조건 다루기\ndoublet_condition &lt;-\n  !is.na(sample_metadata$doublet_rate) &\n  sample_metadata$doublet_rate &lt;= 4\n\nsample_metadata[doublet_condition, ]\n결측값을 제외하는 조건이 없을 때와 결과를 비교합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#실습-4-조건에-따라-결과-만들기",
+    "href": "slides/07_conditions_and_filtering.html#실습-4-조건에-따라-결과-만들기",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "실습 4: 조건에 따라 결과 만들기",
+    "text": "실습 4: 조건에 따라 결과 만들기\nsample_metadata$qc_label &lt;- ifelse(\n  qc_condition,\n  \"pass\",\n  \"review\"\n)\n\nsample_metadata[, c(\"sample_id\", \"qc_label\")]\nif ... else로 전체 데이터의 QC 상태 메시지도 만듭니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#오늘-배운-내용",
+    "href": "slides/07_conditions_and_filtering.html#오늘-배운-내용",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n비교 연산자는 조건별 TRUE, FALSE를 만듭니다.\n&, |, !로 여러 조건을 결합하거나 반대로 바꿉니다.\n논리형 벡터를 [행, 열]의 행 위치에 사용해 필터링합니다.\n결측값이 있는 조건에는 is.na() 처리를 함께 고려합니다.\n단일 실행 흐름에는 if, 원소별 결과에는 ifelse()를 사용합니다."
+  },
+  {
+    "objectID": "slides/07_conditions_and_filtering.html#종료-점검과-다음-차시",
+    "href": "slides/07_conditions_and_filtering.html#종료-점검과-다음-차시",
+    "title": "7차시: 조건식과 데이터 필터링",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n=와 ==는 어떻게 다릅니까?\n두 조건을 모두 만족하는 행은 어떤 연산자로 찾습니까?\n결측값 여부는 어떤 함수로 확인합니까?\nif와 ifelse()는 언제 각각 사용합니까?\n\n다음 차시: 여러 값에 같은 작업을 반복하고 벡터화 연산과 비교하기"
+  },
+  {
+    "objectID": "slides/09_functions.html#오늘의-학습-목표",
+    "href": "slides/09_functions.html#오늘의-학습-목표",
+    "title": "9차시: 함수 작성하기",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n함수의 입력, 처리, 반환값을 구분할 수 있다.\n한 가지 역할을 수행하는 간단한 함수를 작성할 수 있다.\n기본값이 있는 인자와 이름이 있는 인자를 사용할 수 있다.\n작성한 함수를 단일 값, 벡터, 데이터 프레임 열에 재사용할 수 있다."
+  },
+  {
+    "objectID": "slides/09_functions.html#선수-지식",
+    "href": "slides/09_functions.html#선수-지식",
+    "title": "9차시: 함수 작성하기",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n변수, 벡터, 조건문을 사용할 수 있습니다.\n데이터 프레임의 열을 선택할 수 있습니다.\n같은 작업을 반복문이나 벡터화 연산으로 적용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#반복되는-계산을-살펴본다",
+    "href": "slides/09_functions.html#반복되는-계산을-살펴본다",
+    "title": "9차시: 함수 작성하기",
+    "section": "반복되는 계산을 살펴본다",
+    "text": "반복되는 계산을 살펴본다\ncontrol_count_k &lt;- 1240 / 1000\ntreated_count_k &lt;- 1520 / 1000\nanother_count_k &lt;- 1430 / 1000\n\n같은 계산을 여러 곳에서 반복하고 있습니다.\n계산 방법이 바뀌면 여러 줄을 모두 수정해야 합니다.\n계산에 이름을 붙여 재사용하면 코드를 관리하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수는-입력을-받아-작업하고-결과를-돌려준다",
+    "href": "slides/09_functions.html#함수는-입력을-받아-작업하고-결과를-돌려준다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수는 입력을 받아 작업하고 결과를 돌려준다",
+    "text": "함수는 입력을 받아 작업하고 결과를 돌려준다\n입력값 → 처리 과정 → 반환값\n 1240  →  1000으로 나누기  →  1.24\nR에서 이미 사용한 함수도 같은 구조를 가집니다.\nmean(c(1200, 1350, 980))"
+  },
+  {
+    "objectID": "slides/09_functions.html#함수의-기본-구조",
+    "href": "slides/09_functions.html#함수의-기본-구조",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수의 기본 구조",
+    "text": "함수의 기본 구조\nfunction_name &lt;- function(argument) {\n  result &lt;- argument를 사용한 계산\n  return(result)\n}\n\nfunction_name: 함수에 붙이는 이름\nargument: 함수가 받을 입력의 이름\n{ }: 함수가 수행할 코드\nreturn(): 호출한 곳으로 돌려줄 결과"
+  },
+  {
+    "objectID": "slides/09_functions.html#첫-번째-함수를-작성한다",
+    "href": "slides/09_functions.html#첫-번째-함수를-작성한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "첫 번째 함수를 작성한다",
+    "text": "첫 번째 함수를 작성한다\nto_thousands &lt;- function(cell_count) {\n  result &lt;- cell_count / 1000\n  return(result)\n}\n이 코드는 함수를 정의할 뿐, 아직 계산을 실행하지는 않습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수를-호출하면-코드가-실행된다",
+    "href": "slides/09_functions.html#함수를-호출하면-코드가-실행된다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수를 호출하면 코드가 실행된다",
+    "text": "함수를 호출하면 코드가 실행된다\nto_thousands(1240)\nto_thousands(1520)\n호출할 때 전달한 값이 함수 안의 cell_count에 들어갑니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수의-세-부분을-구분한다",
+    "href": "slides/09_functions.html#함수의-세-부분을-구분한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수의 세 부분을 구분한다",
+    "text": "함수의 세 부분을 구분한다\nto_thousands &lt;- function(cell_count) {\n  result &lt;- cell_count / 1000\n  return(result)\n}\n\n\n\n부분\n코드\n\n\n\n\n입력\ncell_count\n\n\n처리\ncell_count / 1000\n\n\n반환\nreturn(result)"
+  },
+  {
+    "objectID": "slides/09_functions.html#반환값을-변수에-저장한다",
+    "href": "slides/09_functions.html#반환값을-변수에-저장한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "반환값을 변수에 저장한다",
+    "text": "반환값을 변수에 저장한다\ncontrol_count_k &lt;- to_thousands(1240)\ncontrol_count_k\n\n함수의 결과는 다른 값처럼 변수에 저장할 수 있습니다.\n반환값을 다음 계산의 입력으로 사용할 수도 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#마지막-표현식도-자동으로-반환된다",
+    "href": "slides/09_functions.html#마지막-표현식도-자동으로-반환된다",
+    "title": "9차시: 함수 작성하기",
+    "section": "마지막 표현식도 자동으로 반환된다",
+    "text": "마지막 표현식도 자동으로 반환된다\nto_thousands &lt;- function(cell_count) {\n  cell_count / 1000\n}\n\nto_thousands(1240)\n\nR은 함수에서 마지막으로 계산된 값을 자동 반환합니다.\n입문 단계에서는 반환 위치를 분명히 보여 주고 싶을 때 return()을 사용합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#print와-return은-역할이-다르다",
+    "href": "slides/09_functions.html#print와-return은-역할이-다르다",
+    "title": "9차시: 함수 작성하기",
+    "section": "print()와 return()은 역할이 다르다",
+    "text": "print()와 return()은 역할이 다르다\nshow_cell_count &lt;- function(cell_count) {\n  print(cell_count)\n}\n\ndouble_cell_count &lt;- function(cell_count) {\n  result &lt;- cell_count * 2\n  return(result)\n}\n\nprint()는 값을 화면에 보여 줍니다.\nreturn()은 함수의 결과를 호출한 곳으로 돌려줍니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#여러-입력을-받을-수-있다",
+    "href": "slides/09_functions.html#여러-입력을-받을-수-있다",
+    "title": "9차시: 함수 작성하기",
+    "section": "여러 입력을 받을 수 있다",
+    "text": "여러 입력을 받을 수 있다\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  retention &lt;- filtered_count / raw_count\n  return(retention)\n}\n\ncalculate_retention(1500, 1200)\n쉼표로 여러 인자를 구분합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#위치에-따라-인자를-전달한다",
+    "href": "slides/09_functions.html#위치에-따라-인자를-전달한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "위치에 따라 인자를 전달한다",
+    "text": "위치에 따라 인자를 전달한다\ncalculate_retention(1500, 1200)\n\n첫 번째 값은 raw_count에 들어갑니다.\n두 번째 값은 filtered_count에 들어갑니다.\n순서가 바뀌면 계산 결과도 달라질 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#이름을-적어-인자를-전달한다",
+    "href": "slides/09_functions.html#이름을-적어-인자를-전달한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "이름을 적어 인자를 전달한다",
+    "text": "이름을 적어 인자를 전달한다\ncalculate_retention(\n  raw_count = 1500,\n  filtered_count = 1200\n)\n\n각 값의 의미가 분명해집니다.\n이름을 모두 적으면 순서를 바꾸어도 됩니다.\n\ncalculate_retention(filtered_count = 1200, raw_count = 1500)"
+  },
+  {
+    "objectID": "slides/09_functions.html#인자에-기본값을-지정할-수-있다",
+    "href": "slides/09_functions.html#인자에-기본값을-지정할-수-있다",
+    "title": "9차시: 함수 작성하기",
+    "section": "인자에 기본값을 지정할 수 있다",
+    "text": "인자에 기본값을 지정할 수 있다\npasses_cell_count &lt;- function(cell_count, min_cells = 1200) {\n  result &lt;- cell_count &gt;= min_cells\n  return(result)\n}\nmin_cells를 생략하면 기본값 1200을 사용합니다.\npasses_cell_count(1240)\npasses_cell_count(1240, min_cells = 1300)"
+  },
+  {
+    "objectID": "slides/09_functions.html#필수-인자와-기본-인자를-구분한다",
+    "href": "slides/09_functions.html#필수-인자와-기본-인자를-구분한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "필수 인자와 기본 인자를 구분한다",
+    "text": "필수 인자와 기본 인자를 구분한다\npasses_cell_count &lt;- function(cell_count, min_cells = 1200) {\n  cell_count &gt;= min_cells\n}\n\ncell_count는 호출할 때 반드시 전달해야 합니다.\nmin_cells는 필요할 때만 다른 값으로 바꿉니다.\n필수 인자를 앞에, 기본값이 있는 인자를 뒤에 배치합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#하나의-함수는-한-가지-역할에-집중한다",
+    "href": "slides/09_functions.html#하나의-함수는-한-가지-역할에-집중한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "하나의 함수는 한 가지 역할에 집중한다",
+    "text": "하나의 함수는 한 가지 역할에 집중한다\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  filtered_count / raw_count\n}\n좋은 함수는 다음 질문에 답하기 쉽습니다.\n\n이 함수는 무엇을 계산하는가?\n어떤 입력이 필요한가?\n어떤 값을 반환하는가?"
+  },
+  {
+    "objectID": "slides/09_functions.html#함수-이름은-동작을-나타내게-작성한다",
+    "href": "slides/09_functions.html#함수-이름은-동작을-나타내게-작성한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수 이름은 동작을 나타내게 작성한다",
+    "text": "함수 이름은 동작을 나타내게 작성한다\ncalculate_retention()\npasses_cell_count()\nlabel_qc()\n\n함수 이름에도 snake_case를 사용합니다.\ncalculate, check, convert, label처럼 동작을 나타내는 단어가 유용합니다.\n이름만 보고 목적을 짐작할 수 있어야 합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#벡터화-연산을-사용한-함수는-벡터도-처리한다",
+    "href": "slides/09_functions.html#벡터화-연산을-사용한-함수는-벡터도-처리한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "벡터화 연산을 사용한 함수는 벡터도 처리한다",
+    "text": "벡터화 연산을 사용한 함수는 벡터도 처리한다\ncell_counts &lt;- c(1240, 1385, 1090, 1520)\n\nto_thousands(cell_counts)\npasses_cell_count(cell_counts)\n함수 안의 /와 &gt;=가 벡터의 모든 원소에 적용됩니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#데이터-프레임-열을-함수에-전달한다",
+    "href": "slides/09_functions.html#데이터-프레임-열을-함수에-전달한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "데이터 프레임 열을 함수에 전달한다",
+    "text": "데이터 프레임 열을 함수에 전달한다\nsample_metadata &lt;- read.csv(\"data/sample_metadata.csv\")\n\nsample_metadata$cell_count_k &lt;-\n  to_thousands(sample_metadata$cell_count)\n\nhead(sample_metadata)\n함수를 한 번 정의한 뒤 여러 데이터에 같은 계산을 적용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#여러-qc-기준을-함수로-묶는다",
+    "href": "slides/09_functions.html#여러-qc-기준을-함수로-묶는다",
+    "title": "9차시: 함수 작성하기",
+    "section": "여러 QC 기준을 함수로 묶는다",
+    "text": "여러 QC 기준을 함수로 묶는다\npasses_qc &lt;- function(\n  cell_count,\n  median_genes,\n  mito_percent,\n  min_cells = 1200,\n  min_genes = 2000,\n  max_mito = 8\n) {\n  result &lt;-\n    cell_count &gt;= min_cells &\n    median_genes &gt;= min_genes &\n    mito_percent &lt; max_mito\n\n  return(result)\n}"
+  },
+  {
+    "objectID": "slides/09_functions.html#qc-함수를-단일-샘플에-사용한다",
+    "href": "slides/09_functions.html#qc-함수를-단일-샘플에-사용한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "QC 함수를 단일 샘플에 사용한다",
+    "text": "QC 함수를 단일 샘플에 사용한다\npasses_qc(\n  cell_count = 1240,\n  median_genes = 2180,\n  mito_percent = 4.2\n)\n각 인자 이름을 적으면 어떤 측정값을 전달하는지 분명합니다.\n\nQC 수치는 함수 학습을 위한 예시이며 실제 분석 기준은 데이터와 실험 맥락에 따라 정해야 합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#qc-함수를-벡터에-사용한다",
+    "href": "slides/09_functions.html#qc-함수를-벡터에-사용한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "QC 함수를 벡터에 사용한다",
+    "text": "QC 함수를 벡터에 사용한다\nqc_result &lt;- passes_qc(\n  cell_count = sample_metadata$cell_count,\n  median_genes = sample_metadata$median_genes,\n  mito_percent = sample_metadata$mito_percent\n)\n\nqc_result\n각 행의 같은 위치에 있는 값들이 함께 계산됩니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#기본-기준을-바꾸어-재사용한다",
+    "href": "slides/09_functions.html#기본-기준을-바꾸어-재사용한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "기본 기준을 바꾸어 재사용한다",
+    "text": "기본 기준을 바꾸어 재사용한다\nstrict_qc_result &lt;- passes_qc(\n  cell_count = sample_metadata$cell_count,\n  median_genes = sample_metadata$median_genes,\n  mito_percent = sample_metadata$mito_percent,\n  min_cells = 1300,\n  max_mito = 6\n)\n함수 본문을 수정하지 않고 호출할 때 기준을 바꿀 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#결과-레이블-함수는-별도로-작성한다",
+    "href": "slides/09_functions.html#결과-레이블-함수는-별도로-작성한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "결과 레이블 함수는 별도로 작성한다",
+    "text": "결과 레이블 함수는 별도로 작성한다\nlabel_qc &lt;- function(passed_qc) {\n  label &lt;- ifelse(passed_qc, \"pass\", \"review\")\n  return(label)\n}\n\nlabel_qc(qc_result)\n조건 계산과 문자 레이블 생성을 서로 다른 함수로 나누었습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수를-연결해-결과-열을-만든다",
+    "href": "slides/09_functions.html#함수를-연결해-결과-열을-만든다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수를 연결해 결과 열을 만든다",
+    "text": "함수를 연결해 결과 열을 만든다\nsample_metadata$qc_result &lt;- qc_result\nsample_metadata$qc_label &lt;- label_qc(qc_result)\n\nsample_metadata[, c(\"sample_id\", \"qc_result\", \"qc_label\")]\n작은 함수의 결과를 다음 함수의 입력으로 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#결측값을-처리하는-함수를-작성한다",
+    "href": "slides/09_functions.html#결측값을-처리하는-함수를-작성한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "결측값을 처리하는 함수를 작성한다",
+    "text": "결측값을 처리하는 함수를 작성한다\nlabel_doublet_rate &lt;- function(doublet_rate, max_rate = 4) {\n  label &lt;- ifelse(\n    is.na(doublet_rate),\n    \"missing\",\n    ifelse(doublet_rate &lt;= max_rate, \"pass\", \"review\")\n  )\n\n  return(label)\n}\n먼저 결측값인지 확인한 뒤 측정값을 기준과 비교합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수-안의-변수는-지역-변수다",
+    "href": "slides/09_functions.html#함수-안의-변수는-지역-변수다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수 안의 변수는 지역 변수다",
+    "text": "함수 안의 변수는 지역 변수다\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  retention &lt;- filtered_count / raw_count\n  return(retention)\n}\n\ncalculate_retention(1500, 1200)\n\nretention은 함수가 실행되는 동안 함수 안에서 만들어집니다.\n함수 밖의 작업에 필요하면 반환값을 변수에 저장합니다.\n\nsample_retention &lt;- calculate_retention(1500, 1200)"
+  },
+  {
+    "objectID": "slides/09_functions.html#함수-밖의-값을-몰래-사용하지-않는다",
+    "href": "slides/09_functions.html#함수-밖의-값을-몰래-사용하지-않는다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수 밖의 값을 몰래 사용하지 않는다",
+    "text": "함수 밖의 값을 몰래 사용하지 않는다\n피해야 할 예:\n# min_cells가 함수 밖에 있어야만 실행된다.\n# passes_cell_count &lt;- function(cell_count) {\n#   cell_count &gt;= min_cells\n# }\n권장 예:\npasses_cell_count &lt;- function(cell_count, min_cells = 1200) {\n  cell_count &gt;= min_cells\n}\n필요한 값은 인자로 명시합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#is.numeric으로-입력-자료형을-확인한다",
+    "href": "slides/09_functions.html#is.numeric으로-입력-자료형을-확인한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "is.numeric()으로 입력 자료형을 확인한다",
+    "text": "is.numeric()으로 입력 자료형을 확인한다\nis.numeric(1240)\nis.numeric(\"1240\")\n함수의 입력이 예상한 자료형인지 확인할 때 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#잘못된-입력에는-오류를-발생시킬-수-있다",
+    "href": "slides/09_functions.html#잘못된-입력에는-오류를-발생시킬-수-있다",
+    "title": "9차시: 함수 작성하기",
+    "section": "잘못된 입력에는 오류를 발생시킬 수 있다",
+    "text": "잘못된 입력에는 오류를 발생시킬 수 있다\nto_thousands_checked &lt;- function(cell_count) {\n  if (!is.numeric(cell_count)) {\n    stop(\"cell_count는 숫자형이어야 합니다.\")\n  }\n\n  result &lt;- cell_count / 1000\n  return(result)\n}\nstop()은 설명이 포함된 오류를 발생시키고 함수 실행을 중단합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#올바른-입력과-잘못된-입력을-시험한다",
+    "href": "slides/09_functions.html#올바른-입력과-잘못된-입력을-시험한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "올바른 입력과 잘못된 입력을 시험한다",
+    "text": "올바른 입력과 잘못된 입력을 시험한다\nto_thousands_checked(1240)\n다음 코드는 입력 확인을 시험할 때 한 줄씩 실행합니다.\n# to_thousands_checked(\"1240\")\n전체 실습 파일 실행을 막지 않도록 의도적 오류는 주석 처리합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수는-정의한-뒤에-호출한다",
+    "href": "slides/09_functions.html#함수는-정의한-뒤에-호출한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수는 정의한 뒤에 호출한다",
+    "text": "함수는 정의한 뒤에 호출한다\nto_thousands &lt;- function(cell_count) {\n  cell_count / 1000\n}\n\nto_thousands(1240)\nR 스크립트는 위에서 아래로 실행되므로 함수 정의가 호출보다 먼저 실행되어야 합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수를-작은-입력으로-확인한다",
+    "href": "slides/09_functions.html#함수를-작은-입력으로-확인한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수를 작은 입력으로 확인한다",
+    "text": "함수를 작은 입력으로 확인한다\nto_thousands(1000)\npasses_cell_count(1200)\ncalculate_retention(100, 80)\n\n결과를 쉽게 예상할 수 있는 값을 사용합니다.\n경계값과 결측값도 확인합니다.\n\npasses_cell_count(1199)\npasses_cell_count(NA)"
+  },
+  {
+    "objectID": "slides/09_functions.html#stopifnot으로-예상-결과를-확인한다",
+    "href": "slides/09_functions.html#stopifnot으로-예상-결과를-확인한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "stopifnot()으로 예상 결과를 확인한다",
+    "text": "stopifnot()으로 예상 결과를 확인한다\nstopifnot(to_thousands(1000) == 1)\nstopifnot(passes_cell_count(1200) == TRUE)\nstopifnot(calculate_retention(100, 80) == 0.8)\n\n조건이 모두 TRUE이면 아무것도 출력하지 않습니다.\n하나라도 FALSE이면 실행을 멈추므로 예상 결과 검증에 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#함수-위에-목적과-입력을-기록한다",
+    "href": "slides/09_functions.html#함수-위에-목적과-입력을-기록한다",
+    "title": "9차시: 함수 작성하기",
+    "section": "함수 위에 목적과 입력을 기록한다",
+    "text": "함수 위에 목적과 입력을 기록한다\n# 필터링 후 남은 세포 비율을 계산한다.\n# raw_count와 filtered_count는 같은 길이의 숫자형 값이다.\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  filtered_count / raw_count\n}\n코드만으로 알기 어려운 입력 조건과 단위를 주석으로 설명합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#흔한-오류-1-함수를-정의만-하고-호출하지-않는다",
+    "href": "slides/09_functions.html#흔한-오류-1-함수를-정의만-하고-호출하지-않는다",
+    "title": "9차시: 함수 작성하기",
+    "section": "흔한 오류 1: 함수를 정의만 하고 호출하지 않는다",
+    "text": "흔한 오류 1: 함수를 정의만 하고 호출하지 않는다\nto_thousands &lt;- function(cell_count) {\n  cell_count / 1000\n}\n\nto_thousands(1240)\n함수 정의와 함수 호출은 서로 다른 단계입니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#흔한-오류-2-괄호나-중괄호를-닫지-않는다",
+    "href": "slides/09_functions.html#흔한-오류-2-괄호나-중괄호를-닫지-않는다",
+    "title": "9차시: 함수 작성하기",
+    "section": "흔한 오류 2: 괄호나 중괄호를 닫지 않는다",
+    "text": "흔한 오류 2: 괄호나 중괄호를 닫지 않는다\npasses_cell_count &lt;- function(cell_count, min_cells = 1200) {\n  result &lt;- cell_count &gt;= min_cells\n  return(result)\n}\n\n함수 이름 뒤의 ()와 본문을 감싸는 {}를 짝지어 작성합니다.\n코드를 들여쓰면 구조를 확인하기 쉽습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#흔한-오류-3-반환할-값을-만들지-않는다",
+    "href": "slides/09_functions.html#흔한-오류-3-반환할-값을-만들지-않는다",
+    "title": "9차시: 함수 작성하기",
+    "section": "흔한 오류 3: 반환할 값을 만들지 않는다",
+    "text": "흔한 오류 3: 반환할 값을 만들지 않는다\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  retention &lt;- filtered_count / raw_count\n  return(retention)\n}\n계산한 변수 이름과 return()에 적은 이름의 철자를 확인합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#실습-1-단위-변환-함수-만들기",
+    "href": "slides/09_functions.html#실습-1-단위-변환-함수-만들기",
+    "title": "9차시: 함수 작성하기",
+    "section": "실습 1: 단위 변환 함수 만들기",
+    "text": "실습 1: 단위 변환 함수 만들기\nto_thousands &lt;- function(cell_count) {\n  result &lt;- cell_count / 1000\n  return(result)\n}\n\nto_thousands(1240)\nto_thousands(c(1240, 1385, 1090))\n단일 값과 벡터에서 모두 예상한 결과가 나오는지 확인합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#실습-2-여러-입력과-기본값-사용하기",
+    "href": "slides/09_functions.html#실습-2-여러-입력과-기본값-사용하기",
+    "title": "9차시: 함수 작성하기",
+    "section": "실습 2: 여러 입력과 기본값 사용하기",
+    "text": "실습 2: 여러 입력과 기본값 사용하기\ncalculate_retention &lt;- function(raw_count, filtered_count) {\n  filtered_count / raw_count\n}\n\npasses_cell_count &lt;- function(cell_count, min_cells = 1200) {\n  cell_count &gt;= min_cells\n}\n위치 인자, 이름이 있는 인자, 변경한 기본값으로 각각 호출합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#실습-3-qc-함수-재사용하기",
+    "href": "slides/09_functions.html#실습-3-qc-함수-재사용하기",
+    "title": "9차시: 함수 작성하기",
+    "section": "실습 3: QC 함수 재사용하기",
+    "text": "실습 3: QC 함수 재사용하기\nqc_result &lt;- passes_qc(\n  sample_metadata$cell_count,\n  sample_metadata$median_genes,\n  sample_metadata$mito_percent\n)\n\nsample_metadata$qc_label &lt;- label_qc(qc_result)\n함수 결과를 데이터 프레임에 추가하고 선택된 행을 확인합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#실습-4-함수-결과-검증하기",
+    "href": "slides/09_functions.html#실습-4-함수-결과-검증하기",
+    "title": "9차시: 함수 작성하기",
+    "section": "실습 4: 함수 결과 검증하기",
+    "text": "실습 4: 함수 결과 검증하기\nstopifnot(to_thousands(1000) == 1)\nstopifnot(calculate_retention(100, 80) == 0.8)\nstopifnot(passes_cell_count(1200) == TRUE)\n직접 만든 함수마다 쉽게 예상할 수 있는 확인 예제를 작성합니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#오늘-배운-내용",
+    "href": "slides/09_functions.html#오늘-배운-내용",
+    "title": "9차시: 함수 작성하기",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n함수는 입력을 받아 한 가지 작업을 수행하고 결과를 반환합니다.\n인자는 위치 또는 이름으로 전달하고 기본값을 지정할 수 있습니다.\n벡터화된 계산을 사용한 함수는 벡터와 데이터 프레임 열에도 재사용할 수 있습니다.\n필요한 값은 함수 밖에서 가져오지 않고 인자로 명시합니다.\n작은 입력과 stopifnot()으로 함수 결과를 확인할 수 있습니다."
+  },
+  {
+    "objectID": "slides/09_functions.html#종료-점검과-다음-차시",
+    "href": "slides/09_functions.html#종료-점검과-다음-차시",
+    "title": "9차시: 함수 작성하기",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\n함수의 입력, 처리, 반환값은 각각 무엇입니까?\nprint()와 return()은 어떻게 다릅니까?\n기본 인자는 어떤 상황에서 유용합니까?\n함수를 작성한 뒤 어떤 값으로 시험해야 합니까?\n\n다음 차시: 그룹별로 데이터를 요약하고 목적에 맞는 그래프로 표현하기"
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#오늘의-학습-목표",
+    "href": "slides/11_packages_lists_and_objects.html#오늘의-학습-목표",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "오늘의 학습 목표",
+    "text": "오늘의 학습 목표\n\n패키지의 역할을 설명하고 설치와 불러오기를 구분할 수 있다.\n서로 다른 종류의 데이터를 리스트에 저장하고 꺼낼 수 있다.\nclass(), str(), attributes()로 객체 구조를 조사할 수 있다.\n복합 R 객체를 RDS 파일로 저장하고 다시 불러올 수 있다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#선수-지식",
+    "href": "slides/11_packages_lists_and_objects.html#선수-지식",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "선수 지식",
+    "text": "선수 지식\n\n함수와 인자의 역할을 설명할 수 있습니다.\n벡터, 행렬, 데이터 프레임을 만들고 값을 선택할 수 있습니다.\nCSV 파일을 불러오고 저장할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#r의-기능은-패키지로-확장된다",
+    "href": "slides/11_packages_lists_and_objects.html#r의-기능은-패키지로-확장된다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "R의 기능은 패키지로 확장된다",
+    "text": "R의 기능은 패키지로 확장된다\n\n패키지는 함수, 데이터, 도움말을 묶어 배포하는 단위입니다.\nR을 설치하면 기본 패키지와 권장 패키지가 함께 제공됩니다.\n필요한 외부 패키지를 추가하면 새로운 분석 기능을 사용할 수 있습니다.\nSeurat도 단일세포 전사체 분석 기능을 제공하는 R 패키지입니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지-사용은-두-단계로-나뉜다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지-사용은-두-단계로-나뉜다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지 사용은 두 단계로 나뉜다",
+    "text": "패키지 사용은 두 단계로 나뉜다\n1. 설치: 컴퓨터에 패키지를 내려받아 준비한다.\n2. 불러오기: 현재 R 세션에서 패키지를 사용하도록 연결한다.\n설치는 보통 한 번, 불러오기는 R을 새로 시작할 때마다 수행합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#install.packages로-외부-패키지를-설치한다",
+    "href": "slides/11_packages_lists_and_objects.html#install.packages로-외부-패키지를-설치한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "install.packages()로 외부 패키지를 설치한다",
+    "text": "install.packages()로 외부 패키지를 설치한다\n# install.packages(\"ggplot2\")\n\n따옴표 안에 패키지 이름을 작성합니다.\n인터넷 연결이 필요합니다.\n설치는 콘솔에서 한 번 실행하고 수업 스크립트에는 반복해서 넣지 않습니다.\n\n\n이 차시에서는 추가 설치 없이 기본 R만으로 실습합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#큰-패키지는-설치-전에-준비-사항을-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#큰-패키지는-설치-전에-준비-사항을-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "큰 패키지는 설치 전에 준비 사항을 확인한다",
+    "text": "큰 패키지는 설치 전에 준비 사항을 확인한다\n# install.packages(\"Seurat\")\n\nSeurat처럼 의존 패키지가 많은 패키지는 설치 시간이 오래 걸릴 수 있습니다.\nR 버전, 운영체제, 설치 오류 메시지를 함께 확인합니다.\n수업 중 매번 다시 설치하지 않습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#library로-패키지를-현재-세션에-불러온다",
+    "href": "slides/11_packages_lists_and_objects.html#library로-패키지를-현재-세션에-불러온다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "library()로 패키지를 현재 세션에 불러온다",
+    "text": "library()로 패키지를 현재 세션에 불러온다\n# library(ggplot2)\n\n패키지 이름에 따옴표를 쓰지 않는 형태를 주로 사용합니다.\n설치되지 않은 패키지는 library()로 불러올 수 없습니다.\nR을 다시 시작하면 필요한 패키지를 다시 불러옵니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#설치와-불러오기를-구분한다",
+    "href": "slides/11_packages_lists_and_objects.html#설치와-불러오기를-구분한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "설치와 불러오기를 구분한다",
+    "text": "설치와 불러오기를 구분한다\n\n\n\n목적\n함수\n실행 빈도\n\n\n\n\n컴퓨터에 패키지 준비\ninstall.packages()\n보통 한 번\n\n\n현재 세션에서 사용\nlibrary()\n새 세션마다\n\n\n\n오류 메시지에 “there is no package called”가 나오면 설치 여부를 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지가-설치됐는지-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지가-설치됐는지-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지가 설치됐는지 확인한다",
+    "text": "패키지가 설치됐는지 확인한다\n\"stats\" %in% rownames(installed.packages())\n\ninstalled.packages()는 설치된 패키지 정보를 반환합니다.\n패키지 이름이 목록에 있는지 %in%으로 확인할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#requirenamespace로-조용히-확인할-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#requirenamespace로-조용히-확인할-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "requireNamespace()로 조용히 확인할 수 있다",
+    "text": "requireNamespace()로 조용히 확인할 수 있다\nrequireNamespace(\"stats\", quietly = TRUE)\nrequireNamespace(\"a_package_not_installed\", quietly = TRUE)\n\n설치되어 있으면 TRUE, 없으면 FALSE입니다.\n패키지를 검색 경로에 연결하지 않고 설치 여부만 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지-버전을-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지-버전을-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지 버전을 확인한다",
+    "text": "패키지 버전을 확인한다\npackageVersion(\"stats\")\n\n같은 코드도 패키지 버전에 따라 동작이 달라질 수 있습니다.\n재현 가능한 분석 기록에는 R과 주요 패키지 버전이 중요합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#패키지함수로-출처를-명시한다",
+    "href": "slides/11_packages_lists_and_objects.html#패키지함수로-출처를-명시한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "패키지::함수로 출처를 명시한다",
+    "text": "패키지::함수로 출처를 명시한다\nstats::median(c(1200, 1350, 980))\nutils::head(sample_metadata)\n\n패키지를 library()로 불러오지 않고 특정 함수를 사용할 수 있습니다.\n함수가 어느 패키지에서 왔는지 코드에 분명히 표시됩니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#같은-이름의-함수가-있을-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#같은-이름의-함수가-있을-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "같은 이름의 함수가 있을 수 있다",
+    "text": "같은 이름의 함수가 있을 수 있다\n여러 패키지가 같은 이름의 함수를 제공하면 어떤 함수가 사용되는지 혼동할 수 있습니다.\npackage_name::function_name()\n:: 표기를 사용하면 원하는 패키지의 함수를 명시적으로 선택할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#도움말에서-함수의-패키지를-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#도움말에서-함수의-패키지를-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "도움말에서 함수의 패키지를 확인한다",
+    "text": "도움말에서 함수의 패키지를 확인한다\n?stats::median\n도움말의 제목과 설명에서 함수가 속한 패키지, 인자, 반환값, 예제를 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#sessioninfo로-실행-환경을-기록한다",
+    "href": "slides/11_packages_lists_and_objects.html#sessioninfo로-실행-환경을-기록한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "sessionInfo()로 실행 환경을 기록한다",
+    "text": "sessionInfo()로 실행 환경을 기록한다\nsessionInfo()\n다음 정보를 확인할 수 있습니다.\n\nR 버전과 운영체제\n현재 연결된 패키지\n불러온 네임스페이스"
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#서로-다른-자료형을-하나로-묶고-싶다",
+    "href": "slides/11_packages_lists_and_objects.html#서로-다른-자료형을-하나로-묶고-싶다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "서로 다른 자료형을 하나로 묶고 싶다",
+    "text": "서로 다른 자료형을 하나로 묶고 싶다\nsample_id &lt;- \"control_1\"\ncell_count &lt;- 1240\npassed_qc &lt;- TRUE\n\n벡터는 원소의 자료형을 하나로 맞춥니다.\n관련된 문자, 숫자, 논리값을 원래 자료형 그대로 묶으려면 리스트를 사용합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#list로-리스트를-만든다",
+    "href": "slides/11_packages_lists_and_objects.html#list로-리스트를-만든다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "list()로 리스트를 만든다",
+    "text": "list()로 리스트를 만든다\nsample_result &lt;- list(\n  \"control_1\",\n  1240,\n  TRUE\n)\n\nsample_result\n리스트의 각 원소는 서로 다른 자료형과 크기를 가질 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#리스트-원소에-이름을-붙인다",
+    "href": "slides/11_packages_lists_and_objects.html#리스트-원소에-이름을-붙인다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "리스트 원소에 이름을 붙인다",
+    "text": "리스트 원소에 이름을 붙인다\nsample_result &lt;- list(\n  sample_id = \"control_1\",\n  cell_count = 1240,\n  passed_qc = TRUE\n)\n\nsample_result\nnames(sample_result)\n이름을 붙이면 각 원소의 의미와 접근 방법이 분명해집니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#로-이름이-있는-원소를-꺼낸다",
+    "href": "slides/11_packages_lists_and_objects.html#로-이름이-있는-원소를-꺼낸다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "$로 이름이 있는 원소를 꺼낸다",
+    "text": "$로 이름이 있는 원소를 꺼낸다\nsample_result$sample_id\nsample_result$cell_count\nsample_result$passed_qc\n$는 원소의 내용을 원래 자료형으로 반환합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#로-원소의-내용을-꺼낸다",
+    "href": "slides/11_packages_lists_and_objects.html#로-원소의-내용을-꺼낸다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "[[ ]]로 원소의 내용을 꺼낸다",
+    "text": "[[ ]]로 원소의 내용을 꺼낸다\nsample_result[[1]]\nsample_result[[\"cell_count\"]]\n\n위치 또는 이름을 사용할 수 있습니다.\n선택한 원소의 내용 자체를 반환합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#는-원소를-포함한-리스트를-반환한다",
+    "href": "slides/11_packages_lists_and_objects.html#는-원소를-포함한-리스트를-반환한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "[ ]는 원소를 포함한 리스트를 반환한다",
+    "text": "[ ]는 원소를 포함한 리스트를 반환한다\nsample_result[1]\nsample_result[\"cell_count\"]\n\n결과는 원소가 하나여도 리스트입니다.\n리스트의 일부를 다시 리스트로 유지할 때 사용합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#와-의-결과를-비교한다",
+    "href": "slides/11_packages_lists_and_objects.html#와-의-결과를-비교한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "[ ]와 [[ ]]의 결과를 비교한다",
+    "text": "[ ]와 [[ ]]의 결과를 비교한다\nclass(sample_result[\"cell_count\"])\nclass(sample_result[[\"cell_count\"]])\n\n\n\n선택 방법\n결과\n\n\n\n\n[ ]\n리스트\n\n\n[[ ]]\n원소의 내용\n\n\n$\n이름으로 선택한 원소의 내용"
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#여러-원소를-리스트로-선택한다",
+    "href": "slides/11_packages_lists_and_objects.html#여러-원소를-리스트로-선택한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "여러 원소를 리스트로 선택한다",
+    "text": "여러 원소를 리스트로 선택한다\nsample_result[c(\"sample_id\", \"passed_qc\")]\n여러 원소를 선택할 때는 [ ] 안에 이름 벡터를 사용합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#리스트에는-벡터와-데이터-프레임도-넣을-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#리스트에는-벡터와-데이터-프레임도-넣을-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "리스트에는 벡터와 데이터 프레임도 넣을 수 있다",
+    "text": "리스트에는 벡터와 데이터 프레임도 넣을 수 있다\nanalysis_result &lt;- list(\n  cell_counts = c(1240, 1385, 1090),\n  qc_labels = c(\"pass\", \"pass\", \"review\"),\n  metadata = sample_metadata\n)\n\nstr(analysis_result)\n각 원소는 길이가 다른 벡터나 전체 데이터 프레임일 수도 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#리스트-안에-리스트를-넣을-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#리스트-안에-리스트를-넣을-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "리스트 안에 리스트를 넣을 수 있다",
+    "text": "리스트 안에 리스트를 넣을 수 있다\nanalysis_parameters &lt;- list(\n  qc = list(\n    min_cells = 1200,\n    min_genes = 2000,\n    max_mito = 8\n  ),\n  project_name = \"training_project\"\n)\n이처럼 리스트가 여러 단계로 들어 있는 구조를 중첩 리스트라고 합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#중첩-리스트의-값에-단계적으로-접근한다",
+    "href": "slides/11_packages_lists_and_objects.html#중첩-리스트의-값에-단계적으로-접근한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "중첩 리스트의 값에 단계적으로 접근한다",
+    "text": "중첩 리스트의 값에 단계적으로 접근한다\nanalysis_parameters$qc$min_cells\nanalysis_parameters[[\"qc\"]][[\"max_mito\"]]\n바깥 원소부터 안쪽 원소로 한 단계씩 이동합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#중간-구조를-확인하면서-접근한다",
+    "href": "slides/11_packages_lists_and_objects.html#중간-구조를-확인하면서-접근한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "중간 구조를 확인하면서 접근한다",
+    "text": "중간 구조를 확인하면서 접근한다\nnames(analysis_parameters)\nnames(analysis_parameters$qc)\nstr(analysis_parameters$qc)\n복잡한 객체에서는 이름을 추측하기보다 각 단계의 구조를 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#기존-리스트-원소를-수정한다",
+    "href": "slides/11_packages_lists_and_objects.html#기존-리스트-원소를-수정한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "기존 리스트 원소를 수정한다",
+    "text": "기존 리스트 원소를 수정한다\nsample_result$cell_count &lt;- 1300\nsample_result$cell_count\n기존 이름에 새 값을 저장하면 해당 원소가 수정됩니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#새-원소를-추가한다",
+    "href": "slides/11_packages_lists_and_objects.html#새-원소를-추가한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "새 원소를 추가한다",
+    "text": "새 원소를 추가한다\nsample_result$mito_percent &lt;- 4.2\nsample_result\n존재하지 않는 이름에 값을 저장하면 새 원소가 추가됩니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#원소를-제거할-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#원소를-제거할-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "원소를 제거할 수 있다",
+    "text": "원소를 제거할 수 있다\nsample_result$mito_percent &lt;- NULL\nsample_result\n리스트 원소에 NULL을 저장하면 해당 원소가 제거됩니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#null과-na는-의미가-다르다",
+    "href": "slides/11_packages_lists_and_objects.html#null과-na는-의미가-다르다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "NULL과 NA는 의미가 다르다",
+    "text": "NULL과 NA는 의미가 다르다\n\nNA: 값이 있어야 하지만 알 수 없는 결측값\nNULL: 객체나 원소 자체가 없음을 나타냄\n\nlist(measured_value = NA)\nlist()\n분석에서 두 값을 같은 의미로 사용하지 않습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#데이터-프레임도-리스트의-한-종류다",
+    "href": "slides/11_packages_lists_and_objects.html#데이터-프레임도-리스트의-한-종류다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "데이터 프레임도 리스트의 한 종류다",
+    "text": "데이터 프레임도 리스트의 한 종류다\nis.list(sample_metadata)\nclass(sample_metadata)\n\n데이터 프레임은 길이가 같은 열 벡터들을 묶은 특별한 리스트입니다.\n데이터 프레임의 $와 [[ ]]가 리스트와 비슷하게 동작하는 이유입니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#분석-결과를-하나의-리스트로-정리한다",
+    "href": "slides/11_packages_lists_and_objects.html#분석-결과를-하나의-리스트로-정리한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "분석 결과를 하나의 리스트로 정리한다",
+    "text": "분석 결과를 하나의 리스트로 정리한다\ncondition_summary &lt;- aggregate(\n  cell_count ~ condition,\n  data = sample_metadata,\n  FUN = mean\n)\n\nanalysis_result &lt;- list(\n  metadata = sample_metadata,\n  summary = condition_summary,\n  parameters = analysis_parameters\n)\n관련된 입력 데이터, 결과, 설정값을 한 객체에 묶을 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#class는-객체의-종류를-알려-준다",
+    "href": "slides/11_packages_lists_and_objects.html#class는-객체의-종류를-알려-준다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "class()는 객체의 종류를 알려 준다",
+    "text": "class()는 객체의 종류를 알려 준다\nclass(sample_metadata)\nclass(sample_metadata$cell_count)\nclass(analysis_result)\n객체의 종류에 따라 사용할 수 있는 함수와 접근 방법이 달라집니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#typeof는-내부-저장-방식을-보여-준다",
+    "href": "slides/11_packages_lists_and_objects.html#typeof는-내부-저장-방식을-보여-준다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "typeof()는 내부 저장 방식을 보여 준다",
+    "text": "typeof()는 내부 저장 방식을 보여 준다\ntypeof(sample_metadata)\ntypeof(analysis_result)\n데이터 프레임과 일반 리스트의 class()는 다르지만 내부적으로 둘 다 리스트 구조를 사용합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#str는-복잡한-객체를-조사하는-출발점이다",
+    "href": "slides/11_packages_lists_and_objects.html#str는-복잡한-객체를-조사하는-출발점이다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "str()는 복잡한 객체를 조사하는 출발점이다",
+    "text": "str()는 복잡한 객체를 조사하는 출발점이다\nstr(analysis_result)\nstr()는 다음 정보를 한 번에 보여 줍니다.\n\n객체와 하위 원소의 종류\n원소 이름과 길이\n저장된 값의 일부"
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#큰-객체는-표시할-깊이를-제한한다",
+    "href": "slides/11_packages_lists_and_objects.html#큰-객체는-표시할-깊이를-제한한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "큰 객체는 표시할 깊이를 제한한다",
+    "text": "큰 객체는 표시할 깊이를 제한한다\nstr(analysis_result, max.level = 2)\n중첩 단계가 많은 객체는 필요한 깊이까지만 확인하면 출력이 지나치게 길어지는 것을 막을 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#names로-현재-단계의-원소-이름을-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#names로-현재-단계의-원소-이름을-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "names()로 현재 단계의 원소 이름을 확인한다",
+    "text": "names()로 현재 단계의 원소 이름을 확인한다\nnames(analysis_result)\nnames(analysis_result$parameters)\nnames(analysis_result$parameters$qc)\n한 단계씩 이름을 확인한 뒤 필요한 원소에 접근합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#attributes로-객체의-속성을-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#attributes로-객체의-속성을-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "attributes()로 객체의 속성을 확인한다",
+    "text": "attributes()로 객체의 속성을 확인한다\nattributes(sample_metadata)\n데이터 프레임에는 다음과 같은 속성이 있습니다.\n\n열 이름을 나타내는 names\n행 이름을 나타내는 row.names\n객체 종류를 나타내는 class"
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#행렬의-속성을-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#행렬의-속성을-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "행렬의 속성을 확인한다",
+    "text": "행렬의 속성을 확인한다\nexample_matrix &lt;- matrix(1:6, nrow = 2)\n\nclass(example_matrix)\nattributes(example_matrix)\n행렬은 차원을 나타내는 dim 속성을 가집니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#object.size로-객체-크기를-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#object.size로-객체-크기를-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "object.size()로 객체 크기를 확인한다",
+    "text": "object.size()로 객체 크기를 확인한다\nobject.size(analysis_result)\nformat(object.size(analysis_result), units = \"auto\")\n전사체 분석 객체는 클 수 있으므로 메모리에서 차지하는 크기를 확인하는 습관이 중요합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#함수는-객체의-클래스에-따라-다르게-동작할-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#함수는-객체의-클래스에-따라-다르게-동작할-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "함수는 객체의 클래스에 따라 다르게 동작할 수 있다",
+    "text": "함수는 객체의 클래스에 따라 다르게 동작할 수 있다\nsummary(sample_metadata$cell_count)\nsummary(sample_metadata)\n같은 summary()라도 숫자형 벡터와 데이터 프레임에서 다른 형태의 결과를 만듭니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#사용-가능한-메서드를-확인할-수-있다",
+    "href": "slides/11_packages_lists_and_objects.html#사용-가능한-메서드를-확인할-수-있다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "사용 가능한 메서드를 확인할 수 있다",
+    "text": "사용 가능한 메서드를 확인할 수 있다\nhead(methods(\"summary\"))\n\nR의 일부 함수는 객체 클래스에 맞는 메서드를 선택합니다.\n입문 단계에서는 먼저 class()와 도움말로 올바른 사용법을 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#복잡한-분석-객체는-구조를-먼저-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#복잡한-분석-객체는-구조를-먼저-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "복잡한 분석 객체는 구조를 먼저 확인한다",
+    "text": "복잡한 분석 객체는 구조를 먼저 확인한다\n1. class(object)\n2. str(object, max.level = 2)\n3. names(object)\n4. 필요한 하위 원소의 class()와 names()\n처음부터 깊은 위치를 추측하지 않고 바깥 구조부터 단계적으로 살펴봅니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#seurat-객체도-여러-정보를-담는-복합-객체다",
+    "href": "slides/11_packages_lists_and_objects.html#seurat-객체도-여러-정보를-담는-복합-객체다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "Seurat 객체도 여러 정보를 담는 복합 객체다",
+    "text": "Seurat 객체도 여러 정보를 담는 복합 객체다\nSeurat 객체에는 일반적으로 다음과 같은 종류의 정보가 함께 들어 있습니다.\n\n발현 데이터\n세포 메타데이터\n차원 축소 결과\n분석 과정에서 생성된 결과와 설정\n\n실제 접근 방법은 Seurat 버전과 객체 클래스의 공식 사용법을 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#복잡한-객체는-제공된-접근-함수를-우선-사용한다",
+    "href": "slides/11_packages_lists_and_objects.html#복잡한-객체는-제공된-접근-함수를-우선-사용한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "복잡한 객체는 제공된 접근 함수를 우선 사용한다",
+    "text": "복잡한 객체는 제공된 접근 함수를 우선 사용한다\n\n객체 내부 구조는 패키지 버전에 따라 달라질 수 있습니다.\n내부 위치를 직접 수정하면 객체의 일관성이 깨질 수 있습니다.\n패키지가 제공하는 함수와 공식 도움말을 우선 사용합니다.\n문제가 생기면 class(), str(), 패키지 버전을 함께 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#csv는-복합-객체-전체를-저장할-수-없다",
+    "href": "slides/11_packages_lists_and_objects.html#csv는-복합-객체-전체를-저장할-수-없다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "CSV는 복합 객체 전체를 저장할 수 없다",
+    "text": "CSV는 복합 객체 전체를 저장할 수 없다\n\nCSV는 하나의 직사각형 표를 저장하기에 적합합니다.\n리스트 안의 행렬, 데이터 프레임, 설정값을 한 CSV에 그대로 저장할 수 없습니다.\nR 객체 구조 전체를 보존하려면 RDS 형식을 사용할 수 있습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#saverds로-객체-하나를-저장한다",
+    "href": "slides/11_packages_lists_and_objects.html#saverds로-객체-하나를-저장한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "saveRDS()로 객체 하나를 저장한다",
+    "text": "saveRDS()로 객체 하나를 저장한다\ndir.create(\"results\", showWarnings = FALSE)\n\nsaveRDS(\n  analysis_result,\n  \"results/analysis_result.rds\"\n)\nRDS 파일은 객체의 자료형과 중첩 구조를 함께 보존합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#readrds로-객체를-다시-불러온다",
+    "href": "slides/11_packages_lists_and_objects.html#readrds로-객체를-다시-불러온다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "readRDS()로 객체를 다시 불러온다",
+    "text": "readRDS()로 객체를 다시 불러온다\nrestored_result &lt;- readRDS(\"results/analysis_result.rds\")\n\nclass(restored_result)\nnames(restored_result)\nstr(restored_result, max.level = 2)\nreadRDS()의 결과를 원하는 변수 이름에 저장합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#저장-전후-객체가-같은지-확인한다",
+    "href": "slides/11_packages_lists_and_objects.html#저장-전후-객체가-같은지-확인한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "저장 전후 객체가 같은지 확인한다",
+    "text": "저장 전후 객체가 같은지 확인한다\nidentical(analysis_result, restored_result)\nTRUE이면 자료형과 값, 구조가 모두 같습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#csv와-rds를-목적에-맞게-선택한다",
+    "href": "slides/11_packages_lists_and_objects.html#csv와-rds를-목적에-맞게-선택한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "CSV와 RDS를 목적에 맞게 선택한다",
+    "text": "CSV와 RDS를 목적에 맞게 선택한다\n\n\n\n형식\n적합한 대상\n특징\n\n\n\n\nCSV\n데이터 프레임, 요약표\n다른 프로그램에서도 열기 쉬움\n\n\nRDS\n리스트, 모델, 복합 R 객체\nR 객체 구조를 그대로 보존\n\n\n\n공유 목적과 다시 사용할 방법을 고려해 저장 형식을 선택합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#흔한-오류-1-설치와-불러오기를-혼동한다",
+    "href": "slides/11_packages_lists_and_objects.html#흔한-오류-1-설치와-불러오기를-혼동한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "흔한 오류 1: 설치와 불러오기를 혼동한다",
+    "text": "흔한 오류 1: 설치와 불러오기를 혼동한다\n# 한 번 설치\n# install.packages(\"package_name\")\n\n# 새 R 세션에서 불러오기\n# library(package_name)\n설치 명령을 분석 스크립트가 실행될 때마다 반복하지 않습니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#흔한-오류-2-와-를-혼동한다",
+    "href": "slides/11_packages_lists_and_objects.html#흔한-오류-2-와-를-혼동한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "흔한 오류 2: [ ]와 [[ ]]를 혼동한다",
+    "text": "흔한 오류 2: [ ]와 [[ ]]를 혼동한다\nclass(sample_result[\"cell_count\"])\nclass(sample_result[[\"cell_count\"]])\n필요한 결과가 리스트인지 원소 내용인지 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#흔한-오류-3-내부-구조를-추측한다",
+    "href": "slides/11_packages_lists_and_objects.html#흔한-오류-3-내부-구조를-추측한다",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "흔한 오류 3: 내부 구조를 추측한다",
+    "text": "흔한 오류 3: 내부 구조를 추측한다\nclass(analysis_result)\nnames(analysis_result)\nstr(analysis_result, max.level = 2)\n존재하지 않는 이름을 반복해서 시도하기보다 구조와 이름을 먼저 조사합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-1-패키지-상태-확인하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-1-패키지-상태-확인하기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 1: 패키지 상태 확인하기",
+    "text": "실습 1: 패키지 상태 확인하기\n\"stats\" %in% rownames(installed.packages())\nrequireNamespace(\"stats\", quietly = TRUE)\npackageVersion(\"stats\")\nstats::median(c(1200, 1350, 980))\n설치, 불러오기, :: 사용의 차이를 설명합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-2-이름이-있는-리스트-만들기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-2-이름이-있는-리스트-만들기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 2: 이름이 있는 리스트 만들기",
+    "text": "실습 2: 이름이 있는 리스트 만들기\nsample_result &lt;- list(\n  sample_id = \"control_1\",\n  cell_count = 1240,\n  passed_qc = TRUE\n)\n\nsample_result$cell_count\nsample_result[[\"cell_count\"]]\nsample_result[\"cell_count\"]\n세 선택 결과의 자료형을 비교합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-3-중첩된-분석-객체-탐색하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-3-중첩된-분석-객체-탐색하기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 3: 중첩된 분석 객체 탐색하기",
+    "text": "실습 3: 중첩된 분석 객체 탐색하기\nnames(analysis_result)\nstr(analysis_result, max.level = 2)\nanalysis_result$parameters$qc$min_cells\n바깥 단계부터 이름과 구조를 확인해 필요한 값에 접근합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#실습-4-rds로-저장하고-복원하기",
+    "href": "slides/11_packages_lists_and_objects.html#실습-4-rds로-저장하고-복원하기",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "실습 4: RDS로 저장하고 복원하기",
+    "text": "실습 4: RDS로 저장하고 복원하기\nsaveRDS(analysis_result, \"results/analysis_result.rds\")\nrestored_result &lt;- readRDS(\"results/analysis_result.rds\")\n\nidentical(analysis_result, restored_result)\n복원한 객체의 클래스, 이름, 구조도 확인합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#오늘-배운-내용",
+    "href": "slides/11_packages_lists_and_objects.html#오늘-배운-내용",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "오늘 배운 내용",
+    "text": "오늘 배운 내용\n\n패키지 설치와 현재 세션에 불러오기는 서로 다른 과정입니다.\n리스트는 자료형과 크기가 다른 여러 객체를 함께 저장합니다.\n[ ]는 리스트를, [[ ]]와 $는 원소 내용을 반환합니다.\n복잡한 객체는 class(), str(), names(), attributes()로 조사합니다.\nRDS는 복합 R 객체의 구조를 보존하여 저장합니다."
+  },
+  {
+    "objectID": "slides/11_packages_lists_and_objects.html#종료-점검과-다음-차시",
+    "href": "slides/11_packages_lists_and_objects.html#종료-점검과-다음-차시",
+    "title": "11차시: 패키지, 리스트와 R 객체",
+    "section": "종료 점검과 다음 차시",
+    "text": "종료 점검과 다음 차시\n\ninstall.packages()와 library()는 어떻게 다릅니까?\n리스트의 [ ]와 [[ ]]는 어떤 결과를 반환합니까?\n처음 보는 복잡한 객체는 어떤 순서로 조사합니까?\nCSV 대신 RDS를 사용하는 것이 적합한 상황은 언제입니까?\n\n다음 차시: 지금까지 배운 내용을 연결해 전사체 형태의 데이터를 분석하는 미니 프로젝트"
+  }
+]
